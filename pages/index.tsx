@@ -6,7 +6,7 @@ import { GetStaticProps } from 'next'
 import { HeroSection } from '@components/FrontPage/Hero'
 import { Stats } from '@components/Stats'
 import { TrianglePattern } from '@components/Icons/TrianglePattern'
-import { getAccommodations } from '@api/accommodations'
+import { getAccommodations } from '@queries/accommodations'
 import { qk } from '@constants/queryKeys'
 
 export const getStaticProps: GetStaticProps = async () => {

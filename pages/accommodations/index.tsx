@@ -32,7 +32,7 @@ import { DatePicker } from '@components/DatePicker'
 import { GetStaticProps } from 'next'
 import NextLink from 'next/link'
 import { StarRating } from '@components/StarRating'
-import { getAccommodations } from '@api/accommodations'
+import { getAccommodations } from '@queries/accommodations'
 import { qk } from '@constants/queryKeys'
 import { useState } from 'react'
 

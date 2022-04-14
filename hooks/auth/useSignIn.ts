@@ -1,5 +1,5 @@
 import { Auth } from '@interfaces/auth'
-import { signIn } from '@api/auth'
+import { signIn } from '@queries/auth'
 import { useMutation } from 'react-query'
 
 export function useSignIn({ email, password }: Auth.User) {

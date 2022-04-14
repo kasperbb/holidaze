@@ -1,4 +1,4 @@
-import { searchAccommodations } from '@api/accommodations'
+import { searchAccommodations } from '@queries/accommodations'
 import { useQuery } from 'react-query'
 
 export function useSearchAccommodations(query: string) {

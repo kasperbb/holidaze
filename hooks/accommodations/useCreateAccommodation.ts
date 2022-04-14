@@ -1,6 +1,6 @@
 import { Accommodation, AddAccommodation } from '@interfaces/accommodation'
 
-import { createAccommodation } from '@api/accommodations'
+import { createAccommodation } from '@queries/accommodations'
 import { useMutation } from 'react-query'
 
 export function useCreateAccommodation(hotelObj: AddAccommodation) {

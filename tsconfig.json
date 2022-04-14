@@ -33,7 +33,7 @@
       "@utils/*": ["utils/*"],
       "@theme/*": ["theme/*"],
       "@lib/*": ["lib/*"],
-      "@api/*": ["api/*"]
+      "@queries/*": ["queries/*"]
     },
     "incremental": true
   },

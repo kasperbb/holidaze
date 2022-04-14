@@ -1,4 +1,4 @@
-import { getAccommodation, getAccommodationPaths } from '@api/accommodations'
+import { getAccommodation, getAccommodationPaths } from '@queries/accommodations'
 import { Box, Button, chakra, Container, Flex, FormControl, FormLabel, Grid, GridItem, Heading, Link, Text, VisuallyHidden } from '@chakra-ui/react'
 import { Card } from '@components/Card'
 import { DatePicker } from '@components/DatePicker'

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from 'react-query'
 
 import { routes } from '@constants/routes'
-import { signOut } from '@api/auth'
+import { signOut } from '@queries/auth'
 import { useRouter } from 'next/router'
 
 export function useSignOut() {

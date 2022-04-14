@@ -31,6 +31,9 @@ export const AuthProvider: FC = ({ children }) => {
   }, [])
 
   async function updateSupabaseCookie(event: AuthChangeEvent, session: Session | null) {
+    if (!session) {
+      throw new Error('wtf no session')
+    }
     await fetch('/api/auth', {
       method: 'POST',
       headers: new Headers({ 'Content-Type': 'application/json' }),
