@@ -30,7 +30,7 @@ import { QueryClient, dehydrate, useQuery } from 'react-query'
 import { Card } from '@components/Card'
 import { DatePicker } from '@components/DatePicker'
 import { GetStaticProps } from 'next'
-import NextLink from 'next/link'
+import { HorizontalAccommodationCard } from '@components/HorizontalAccommodationCard'
 import { StarRating } from '@components/StarRating'
 import { getAccommodations } from '@queries/accommodations'
 import { qk } from '@constants/queryKeys'
@@ -135,37 +135,7 @@ export default function Accommodations() {
         </GridItem>
         <GridItem width="full" colSpan={4}>
           {data?.map(item => (
-            <Card
-              key={item.id}
-              variant="horizontal"
-              imageSrc={item.images ? item.images[0] : '/placeholder.png'}
-              imageAlt="Holidaze"
-              mb={4}
-              contentProps={{ width: 'full', display: 'flex', flexDirection: 'column' }}
-            >
-              <NextLink href={`/accommodations/${item.id}`} passHref>
-                <Link display="block" flex="1 1 0%" _hover={{ textDecoration: 'none' }} mb={4}>
-                  <Heading as="h3" fontSize="25px" fontWeight="semibold">
-                    {item.name}
-                  </Heading>
-                </Link>
-              </NextLink>
-
-              <Flex align="center" justify="space-between" gap={10}>
-                <Flex align="center" color="orange.800" fontWeight="bold" fontSize="sm" gap={2} aria-label="Average rating">
-                  <Badge display="flex" alignItems="center" fontSize="sm" borderRadius="md" colorScheme="orange" px={1}>
-                    4/5
-                  </Badge>
-                  Average
-                </Flex>
-                <Text fontSize="20px" fontWeight="semibold" color="success.500" whiteSpace="nowrap">
-                  €{item.price}
-                  <chakra.span fontSize="14px" color="text.secondary" fontWeight="normal" ml={2}>
-                    per night
-                  </chakra.span>
-                </Text>
-              </Flex>
-            </Card>
+            <HorizontalAccommodationCard key={item.id} {...item} />
           ))}
         </GridItem>
       </Grid>
