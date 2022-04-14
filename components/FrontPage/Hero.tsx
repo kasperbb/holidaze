@@ -8,6 +8,9 @@ export function HeroSection() {
       alignItems="center"
       backgroundImage="linear-gradient(180deg, rgba(56,58,78,.6) 0%, rgba(11,12,18,.4) 100%), url('/hero2.jpg')"
       backgroundPosition="center"
+      backgroundRepeat="no-repeat"
+      backgroundSize="cover"
+      width="full"
       height="100vh"
     >
       <Container>
