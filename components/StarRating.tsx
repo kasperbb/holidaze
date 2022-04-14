@@ -1,7 +1,6 @@
 import { Flex, chakra } from '@chakra-ui/react'
 
 import { AiFillStar } from 'react-icons/ai'
-import { CSSProperties } from '@emotion/serialize'
 
 type ThresholdTuple = [firstStar: number, secondStar: number, thirdStar: number, fourthStar: number, fifthStar: number]
 

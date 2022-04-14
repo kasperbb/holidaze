@@ -1,4 +1,4 @@
-import { Container, Flex, Grid, Heading, IconButton, Link, Select, Text, chakra } from '@chakra-ui/react'
+import { Container, Flex, Grid, Heading, IconButton, Link, Select, Text } from '@chakra-ui/react'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
 import { Card } from '@components/Card'
@@ -49,16 +49,16 @@ export default function AdminHotels() {
       </Card>
 
       <Grid templateColumns="repeat(2, 1fr)" gap={4} width="full" my={10}>
-        {data?.map(hotel => (
-          <Card key={hotel.id} variant="horizontal" imageSrc={hotel.images ? hotel.images[0] : '/placeholder.png'}>
-            <NextLink href={`/admin/hotels/${hotel.id}`} passHref>
+        {data?.map(({ id, images, name, description }) => (
+          <Card key={id} variant="horizontal" imageSrc={images ? images[0] : '/placeholder.png'}>
+            <NextLink href={`${routes.admin.accommodations.base}/${id}`} passHref>
               <Link>
                 <Heading as="h3" fontSize="19px" fontWeight={600}>
-                  {hotel.name}
+                  {name}
                 </Heading>
               </Link>
             </NextLink>
-            <Text sx={{ ...maxLines(3) }}>{hotel.description}</Text>
+            <Text sx={{ ...maxLines(3) }}>{description}</Text>
           </Card>
         ))}
       </Grid>

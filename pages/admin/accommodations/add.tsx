@@ -114,7 +114,7 @@ export default function AdminAddHotel() {
               Images
             </FormLabel>
             <ImageUpload multiple value={images} onChange={onChange} maxNumber={5} inputProps={{ id: 'images', name: 'images' }} dataURLKey="data_url">
-              {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
+              {({ imageList, onImageUpload, dragProps }) => (
                 <Flex
                   justify={imageList.length ? 'start' : 'center'}
                   align="center"

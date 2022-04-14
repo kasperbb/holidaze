@@ -21,14 +21,12 @@ import {
   RangeSliderFilledTrack,
   RangeSliderThumb,
   RangeSliderTrack,
-  Spinner,
   Text,
   chakra,
 } from '@chakra-ui/react'
-import { FiBookmark, FiChevronDown, FiSearch } from 'react-icons/fi'
+import { FiChevronDown, FiSearch } from 'react-icons/fi'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
-import { AiFillStar } from 'react-icons/ai'
 import { Card } from '@components/Card'
 import { DatePicker } from '@components/DatePicker'
 import { GetStaticProps } from 'next'

@@ -1,4 +1,4 @@
-import { chakra, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
+import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
 import React, { forwardRef, LegacyRef, useState } from 'react'
 import ReactDatePicker, { type ReactDatePickerProps } from 'react-datepicker'
 import { FiCalendar } from 'react-icons/fi'
