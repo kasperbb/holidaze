@@ -2,7 +2,7 @@ import { Box } from '@chakra-ui/react'
 import { FC } from 'react'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { Sidebar } from '../Sidebar'
+import { Sidebar } from './Sidebar'
 import { useRouter } from 'next/router'
 
 export const Layout: FC = ({ children }) => {

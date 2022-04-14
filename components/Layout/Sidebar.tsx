@@ -1,19 +1,4 @@
-import {
-  Box,
-  BoxProps,
-  CloseButton,
-  Drawer,
-  DrawerContent,
-  Flex,
-  FlexProps,
-  Icon,
-  IconButton,
-  Link,
-  LinkProps,
-  Text,
-  useColorModeValue,
-  useDisclosure,
-} from '@chakra-ui/react'
+import { Box, BoxProps, CloseButton, Drawer, DrawerContent, Flex, FlexProps, Icon, IconButton, Link, LinkProps, Text, useDisclosure } from '@chakra-ui/react'
 import React, { ReactNode } from 'react'
 
 import { ADMIN_NAV_ITEMS } from '@constants/nav'
@@ -26,7 +11,7 @@ import { useRouter } from 'next/router'
 export function Sidebar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
-    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
+    <Box minH="100vh">
       <SidebarContent isOpen={isOpen} onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
 
       <Drawer autoFocus={false} isOpen={isOpen} placement="left" onClose={onClose} returnFocusOnClose={false} onOverlayClick={onClose} size="full">
@@ -51,17 +36,7 @@ interface SidebarProps extends BoxProps {
 
 const SidebarContent = ({ isOpen, onClose, ...rest }: SidebarProps) => {
   return (
-    <Box
-      bg={useColorModeValue('white', 'gray.900')}
-      borderRight="1px"
-      borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-      borderEndRadius="lg"
-      boxShadow="rgba(0, 0, 0, 0.04) 0px 2px 48px 0px"
-      w={{ base: 'full', md: 60 }}
-      pos="fixed"
-      h="full"
-      {...rest}
-    >
+    <Box borderEndRadius="lg" boxShadow="rgba(0, 0, 0, 0.04) 0px 2px 48px 0px" w={{ base: 'full', md: 60 }} pos="fixed" h="full" {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent={isOpen ? 'space-between' : 'center'}>
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
           Logo
@@ -114,9 +89,8 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       px={{ base: 4, md: 24 }}
       height="20"
       alignItems="center"
-      bg={useColorModeValue('white', 'gray.900')}
       borderBottomWidth="1px"
-      borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
+      borderBottomColor="gray.200"
       justifyContent="flex-start"
       {...rest}
     >

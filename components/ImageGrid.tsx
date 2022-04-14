@@ -27,20 +27,18 @@ export function ImageGrid({ images }: ImageGridProps) {
         <GridItem
           rowSpan={2}
           colSpan={isDesktop ? 3 : 5}
-          bg="tomato"
           borderRadius="2xl"
           overflow="hidden"
           cursor="pointer"
           onClick={() => isDesktop && handleImageClick(0)}
         >
-          <Image src={images[0]} alt="" width="full" height="full" objectFit="cover" />
+          <Image src={images[0]} fallbackSrc="/placeholder.png" alt="" width="full" height="full" objectFit="cover" />
         </GridItem>
         {isDesktop &&
           images.slice(1, 4).map((image, index) => (
             <GridItem
               key={image}
               colSpan={1}
-              bg="tomato"
               borderRadius="2xl"
               opacity={0.6}
               overflow="hidden"
@@ -49,7 +47,7 @@ export function ImageGrid({ images }: ImageGridProps) {
               _hover={{ opacity: 1 }}
               onClick={() => handleImageClick(index + 1)}
             >
-              <Image src={image} alt="" width="full" height="full" objectFit="cover" />
+              <Image src={image} fallbackSrc="/placeholder.png" alt="" width="full" height="full" objectFit="cover" />
             </GridItem>
           ))}
       </Grid>

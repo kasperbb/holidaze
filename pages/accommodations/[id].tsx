@@ -10,6 +10,9 @@ import { type GetStaticProps } from 'next/types'
 import { dehydrate, QueryClient, useQuery } from 'react-query'
 import NextLink from 'next/link'
 import { qk } from '@constants/queryKeys'
+import { FiPlus } from 'react-icons/fi'
+import { Reviews } from '@components/Accommodations/Reviews'
+import { routes } from '@constants/routes'
 
 export const getStaticProps: GetStaticProps = async ctx => {
   const queryClient = new QueryClient()
@@ -51,9 +54,19 @@ export default function AccommodationDetails({ id }: { id: number }) {
       <ImageGrid images={data.images} />
 
       <Box mb={{ base: 0, md: 14 }} mt={8}>
-        <Heading as="h1" fontSize={['4xl', '5xl', '6xl']}>
-          {data.name}
-        </Heading>
+        <Flex align="center" justify="space-between">
+          <Heading as="h1" fontSize={['4xl', '5xl', '6xl']}>
+            {data.name}
+          </Heading>
+
+          {user && (
+            <NextLink href={`${routes.admin.accommodations.base}/${data.id}`} passHref>
+              <Button as={Link} variant="outline">
+                Edit Accommodation
+              </Button>
+            </NextLink>
+          )}
+        </Flex>
 
         <Text mt={4}>{data.description}</Text>
       </Box>
@@ -104,26 +117,10 @@ export default function AccommodationDetails({ id }: { id: number }) {
           </Box>
 
           <Box mt={14}>
-            <Heading as="h2" fontSize="2xl" mb={6}>
-              Reviews
-            </Heading>
-
-            <Flex direction="column" gap={6}>
-              {Array.from({ length: 6 }).map((_, index) => (
-                <Review key={index} />
-              ))}
-            </Flex>
+            <Reviews />
           </Box>
         </GridItem>
       </Grid>
-
-      {user && (
-        <NextLink href={`/admin/hotels/${data.id}`} passHref>
-          <Button as={Link} position="fixed" bottom={5} right={5}>
-            Edit Hotel
-          </Button>
-        </NextLink>
-      )}
     </Container>
   )
 }

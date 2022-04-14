@@ -22,7 +22,7 @@ export function Herobar() {
             <DatePicker selected={new Date()} onChange={date => console.log(date)} />
           </FormControl>
 
-          <IconButton icon={<FiSearch />} variant="primary" aria-label="Search" />
+          <IconButton icon={<FiSearch />} variant="primary" p={3} aria-label="Search" />
         </Flex>
       </Hide>
       <Show below="sm">

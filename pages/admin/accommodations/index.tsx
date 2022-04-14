@@ -42,7 +42,7 @@ export default function AdminHotels() {
             </Select>
 
             <NextLink href={routes.admin.accommodations.add} passHref>
-              <IconButton as="a" icon={<FiPlus />} variant="primary" aria-label="Go back" />
+              <IconButton as="a" icon={<FiPlus />} variant="primary" p={3} aria-label="Add accommodation" />
             </NextLink>
           </Flex>
         </Flex>

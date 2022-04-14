@@ -17,7 +17,7 @@ const StarIcon = chakra(AiFillStar, {
   },
 })
 
-const defaultRatingThresholds: ThresholdTuple = [0, 1.5, 2.5, 3.5, 4.5]
+const defaultRatingThresholds: ThresholdTuple = [0.5, 1.5, 2.5, 3.5, 4.5]
 
 export function StarRating({ rating, ratingThresholds = defaultRatingThresholds, size = 4, ...rest }: StarRatingProps) {
   function getSizeProps() {
