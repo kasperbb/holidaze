@@ -1,14 +1,10 @@
-import { extendTheme, type ThemeConfig } from '@chakra-ui/react'
-import { Button } from './button'
-import { Card } from './card'
-import { Link } from './link'
-import { Container } from './container'
 import { Heading, Text } from './typography'
 
-const config: ThemeConfig = {
-  initialColorMode: 'light',
-  useSystemColorMode: false,
-}
+import { Button } from './button'
+import { Card } from './card'
+import { Container } from './container'
+import { Link } from './link'
+import { extendTheme } from '@chakra-ui/react'
 
 const fonts = {
   heading: 'Jost, sans-serif',
@@ -86,4 +82,4 @@ const components = {
   Text,
 }
 
-export const theme = extendTheme({ config, fonts, colors, styles, borderRadius, shadows, components })
+export const theme = extendTheme({ fonts, colors, styles, borderRadius, shadows, components })
