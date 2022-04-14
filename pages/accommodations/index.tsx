@@ -2,7 +2,6 @@ import {
   Badge,
   Button,
   Container,
-  Flex,
   FormControl,
   FormLabel,
   Grid,
@@ -11,7 +10,6 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  Link,
   Menu,
   MenuButton,
   MenuItemOption,
@@ -21,8 +19,6 @@ import {
   RangeSliderFilledTrack,
   RangeSliderThumb,
   RangeSliderTrack,
-  Text,
-  chakra,
 } from '@chakra-ui/react'
 import { FiChevronDown, FiSearch } from 'react-icons/fi'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
