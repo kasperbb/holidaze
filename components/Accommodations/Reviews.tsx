@@ -5,10 +5,13 @@ import { FiPlus } from 'react-icons/fi'
 import { Review } from '@components/Review'
 import { StarRating } from '@components/StarRating'
 import { useAuth } from '@context/AuthContext'
+import { useState } from 'react'
 
 export function Reviews() {
   const { isOpen, onToggle } = useDisclosure()
   const { user } = useAuth()
+
+  const [rating, setRating] = useState(0)
 
   return (
     <>
@@ -25,19 +28,21 @@ export function Reviews() {
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
-        <Card mb={10}>
+        <Card as="form" mb={10}>
           <FormControl mb={4}>
             <FormLabel htmlFor="description" color="text.primary">
               Rating
             </FormLabel>
-            <StarRating rating={0} />
+            <StarRating rating={rating} onClick={num => setRating(num)} />
           </FormControl>
-          <FormControl>
+          <FormControl mb={4}>
             <FormLabel htmlFor="description" color="text.primary">
               Description
             </FormLabel>
             <Textarea id="description" />
           </FormControl>
+
+          <Button type="submit">Submit</Button>
         </Card>
       </Collapse>
 

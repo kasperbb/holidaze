@@ -8,7 +8,7 @@ interface StarRatingProps {
   rating: number
   ratingThresholds?: ThresholdTuple
   size?: number
-  hoverEffect?: boolean
+  onClick?: (rating: number) => void
 }
 
 const StarIcon = chakra(AiFillStar, {
@@ -19,24 +19,40 @@ const StarIcon = chakra(AiFillStar, {
 
 const defaultRatingThresholds: ThresholdTuple = [0.5, 1.5, 2.5, 3.5, 4.5]
 
-export function StarRating({ rating, ratingThresholds = defaultRatingThresholds, size = 4, ...rest }: StarRatingProps) {
+export function StarRating({ rating, ratingThresholds = defaultRatingThresholds, size = 4, onClick, ...rest }: StarRatingProps) {
   function getSizeProps() {
     return { width: size ?? 4, height: size ?? 4 }
   }
 
+  if (onClick) {
+    return (
+      <Flex
+        sx={{
+          '& > svg:hover path': {
+            color: 'orange.500',
+          },
+          '& > svg:hover ~ svg path': {
+            color: 'orange.500',
+          },
+        }}
+        direction="row-reverse"
+        justify="start"
+      >
+        {ratingThresholds
+          .map((threshold, index) =>
+            rating >= threshold ? (
+              <StarIcon color="orange.500" cursor="pointer" onClick={() => onClick(index + 1)} {...getSizeProps()} {...rest} />
+            ) : (
+              <StarIcon cursor="pointer" onClick={() => onClick(index + 1)} {...getSizeProps()} {...rest} />
+            )
+          )
+          .reverse()}
+      </Flex>
+    )
+  }
+
   return (
-    <Flex
-      sx={{
-        '& > svg:hover path': {
-          color: 'orange.500',
-        },
-        '& > svg:hover ~ svg path': {
-          color: 'orange.500',
-        },
-      }}
-      direction="row-reverse"
-      justify="start"
-    >
+    <Flex direction="row-reverse" justify="start">
       {ratingThresholds
         .map(threshold => (rating >= threshold ? <StarIcon color="orange.500" {...getSizeProps()} {...rest} /> : <StarIcon {...getSizeProps()} {...rest} />))
         .reverse()}
