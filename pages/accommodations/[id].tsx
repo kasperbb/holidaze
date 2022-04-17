@@ -1,21 +1,23 @@
 import { getAccommodation, getAccommodationPaths } from '@queries/accommodations'
-import { Box, Button, chakra, Container, Flex, FormControl, FormLabel, Grid, GridItem, Heading, Link, Text, VisuallyHidden } from '@chakra-ui/react'
+import { Box, Button, chakra, Container, Flex, FormControl, FormLabel, Grid, GridItem, Heading, Link, Select, HStack, Text, VisuallyHidden } from '@chakra-ui/react'
 import { Card } from '@components/Card'
 import { DatePicker } from '@components/DatePicker'
 import { ImageGrid } from '@components/ImageGrid'
 import { Map } from '@components/Map'
 import { useAuth } from '@context/AuthContext'
-import { type GetStaticProps } from 'next/types'
+import { GetStaticProps } from 'next/types'
 import { dehydrate, QueryClient, useQuery } from 'react-query'
 import NextLink from 'next/link'
 import { qk } from '@constants/queryKeys'
 import { Reviews } from '@components/Accommodations/Reviews'
 import { routes } from '@constants/routes'
+import { getReviews } from '@queries/reviews'
 
 export const getStaticProps: GetStaticProps = async ctx => {
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery([qk.accommodation, ctx.params?.id], () => getAccommodation(Number(ctx.params?.id)))
+  await queryClient.prefetchQuery(['reviews', ctx.params?.id], () => getReviews(Number(ctx.params?.id)))
 
   return {
     props: {
@@ -29,7 +31,7 @@ export const getStaticProps: GetStaticProps = async ctx => {
 export async function getStaticPaths() {
   const paths = await getAccommodationPaths()
 
-  const constructedPaths = paths.map(path => ({ params: { id: path.id.toString() } }))
+  const constructedPaths = paths?.map(path => ({ params: { id: path.id.toString() } }))
 
   return {
     paths: constructedPaths,
@@ -69,7 +71,7 @@ export default function AccommodationDetails({ id }: { id: number }) {
         <Text mt={4}>{data.description}</Text>
       </Box>
 
-      <Grid templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(5, 1fr)' }} gap={{ base: 12, md: 24 }} mt={8}>
+      <Grid width="full" templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(5, 1fr)' }} gap={{ base: 12, md: 24 }} mt={8}>
         <GridItem width="full" colSpan={{ base: 3, md: 2 }}>
           <Heading as="h2" fontSize="2xl" mb={6}>
             Book
@@ -101,6 +103,23 @@ export default function AccommodationDetails({ id }: { id: number }) {
                 </FormLabel>
                 <DatePicker selected={new Date()} onChange={date => console.log(date)} isOutline />
               </FormControl>
+
+              <HStack>
+                <FormControl width="30%" mb={4}>
+                  <FormLabel htmlFor="to" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
+                    Guests
+                  </FormLabel>
+                  <Select>
+                    <option value='option1'>1</option>
+                    <option value='option2'>2</option>
+                    <option value='option3'>3</option>
+                    <option value='option3'>4</option>
+                    <option value='option3'>5</option>
+                  </Select>
+                </FormControl>
+
+                <Button>Test</Button>
+              </HStack>
             </Card>
           </chakra.form>
         </GridItem>
@@ -115,7 +134,7 @@ export default function AccommodationDetails({ id }: { id: number }) {
           </Box>
 
           <Box mt={14}>
-            <Reviews />
+            <Reviews accommodationId={data.id} />
           </Box>
         </GridItem>
       </Grid>

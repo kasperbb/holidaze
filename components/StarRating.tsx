@@ -36,14 +36,14 @@ export function StarRating({ rating, ratingThresholds = defaultRatingThresholds,
           },
         }}
         direction="row-reverse"
-        justify="start"
+        justify="flex-end"
       >
         {ratingThresholds
           .map((threshold, index) =>
             rating >= threshold ? (
-              <StarIcon color="orange.500" cursor="pointer" onClick={() => onClick(index + 1)} {...getSizeProps()} {...rest} />
+              <StarIcon key={threshold} color="orange.500" cursor="pointer" onClick={() => onClick(index + 1)} {...getSizeProps()} {...rest} />
             ) : (
-              <StarIcon cursor="pointer" onClick={() => onClick(index + 1)} {...getSizeProps()} {...rest} />
+              <StarIcon key={threshold} cursor="pointer" onClick={() => onClick(index + 1)} {...getSizeProps()} {...rest} />
             )
           )
           .reverse()}
@@ -54,7 +54,7 @@ export function StarRating({ rating, ratingThresholds = defaultRatingThresholds,
   return (
     <Flex direction="row-reverse" justify="start">
       {ratingThresholds
-        .map(threshold => (rating >= threshold ? <StarIcon color="orange.500" {...getSizeProps()} {...rest} /> : <StarIcon {...getSizeProps()} {...rest} />))
+        .map(threshold => (rating >= threshold ? <StarIcon key={threshold} color="orange.500" {...getSizeProps()} {...rest} /> : <StarIcon key={threshold} {...getSizeProps()} {...rest} />))
         .reverse()}
     </Flex>
   )

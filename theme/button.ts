@@ -1,9 +1,13 @@
 import { ComponentStyleConfig } from '@chakra-ui/react'
 
-const unsetStyles = {
+const sharedStyles = {
   width: 'unset',
   height: 'unset',
   minWidth: 'unset',
+  borderRadius: 'full',
+  fontWeight: 500,
+  fontFamily: 'body',
+  boxShadow: '0 2px 48px 0 rgba(0, 0, 0, 0.04)',
 }
 
 export const Button: ComponentStyleConfig = {
@@ -23,34 +27,26 @@ export const Button: ComponentStyleConfig = {
   },
   variants: {
     primary: {
-      ...unsetStyles,
-      borderRadius: 'full',
-      fontWeight: 500,
+      ...sharedStyles,
       backgroundColor: 'blue.500',
       color: 'white',
-      boxShadow: '0 2px 48px 0 rgba(0, 0, 0, 0.04)',
       _hover: {
         backgroundColor: 'blue.400',
       },
     },
     secondary: {
-      ...unsetStyles,
-      borderRadius: 'full',
-      fontWeight: 500,
+      ...sharedStyles,
       backgroundColor: 'orange.500',
       color: 'white',
-      boxShadow: '0 2px 48px 0 rgba(0, 0, 0, 0.04)',
       _hover: {
         backgroundColor: 'orange.400',
       },
     },
     white: {
-      ...unsetStyles,
+      ...sharedStyles,
       borderRadius: 'full',
-      fontWeight: 500,
       backgroundColor: 'white',
       color: 'blue.500',
-      boxShadow: '0 2px 48px 0 rgba(0, 0, 0, 0.04)',
       _hover: {
         backgroundColor: 'gray.100',
       },

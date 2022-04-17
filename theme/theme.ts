@@ -69,8 +69,11 @@ const styles = {
   global: {
     'html, body': {
       backgroundColor: 'white',
-      fontFamily: 'Jost, sans-serif',
+      fontFamily: 'body',
     },
+    '*': {
+      fontFamily: 'body',
+    }
   },
 }
 

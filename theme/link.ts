@@ -2,6 +2,7 @@ import { ComponentStyleConfig } from '@chakra-ui/react'
 
 export const Link: ComponentStyleConfig = {
   baseStyle: {
+    fontFamily: 'body',
     textDecoration: 'none',
     _hover: {
       textDecoration: 'none',
