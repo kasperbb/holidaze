@@ -5,6 +5,7 @@ import { supabase } from '@lib/supabase'
 
 interface AuthContextValues {
   user: User | null | undefined
+  invalidateUser: () => void
 }
 
 const AuthContext = React.createContext<AuthContextValues | null>(null)
@@ -13,7 +14,7 @@ export const useAuth = () => {
   return useContext(AuthContext) as AuthContextValues
 }
 
-export const AuthProvider: FC = ({ children }) => {
+export const AuthProvider: FC<{ invalideUser: boolean }> = ({ children, invalideUser }) => {
   const [user, setUser] = useState<User | null | undefined>(null)
 
   useEffect(() => {
@@ -30,10 +31,11 @@ export const AuthProvider: FC = ({ children }) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (invalideUser) invalidateUser()
+  }, [invalideUser])
+
   async function updateSupabaseCookie(event: AuthChangeEvent, session: Session | null) {
-    if (!session) {
-      throw new Error('wtf no session')
-    }
     await fetch('/api/auth', {
       method: 'POST',
       headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -42,10 +44,15 @@ export const AuthProvider: FC = ({ children }) => {
     })
   }
 
+  function invalidateUser() {
+    supabase.auth.signOut()
+  }
+
   return (
     <AuthContext.Provider
       value={{
         user,
+        invalidateUser,
       }}
     >
       {children}

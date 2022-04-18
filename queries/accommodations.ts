@@ -15,16 +15,6 @@ export const getAccommodations = async () => {
   return data
 }
 
-export const getAccommodationPaths = async () => {
-  const { data, error } = await supabase.from<{ id: string }>(TABLE).select('id')
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  return data
-}
-
 export const getAccommodation = async (id: number) => {
   const { data, error } = await supabase.from<Accommodation>(TABLE).select().eq('id', id).single()
 

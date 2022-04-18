@@ -63,6 +63,10 @@ const colors = {
     '400': '#89CF85',
     '500': '#64BC5F',
   },
+  error: {
+    '400': '#B85B5B',
+    '500': '#BB4040',
+  },
 }
 
 const styles = {
@@ -73,7 +77,7 @@ const styles = {
     },
     '*': {
       fontFamily: 'body',
-    }
+    },
   },
 }
 

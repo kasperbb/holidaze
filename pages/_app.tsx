@@ -5,7 +5,7 @@ import 'swiper/css'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import '@theme/globals.css'
 
-import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
+import { Hydrate, QueryCache, QueryClient, QueryClientProvider } from 'react-query'
 
 import type { AppProps } from 'next/app'
 import { AuthProvider } from '@context/AuthContext'
@@ -29,14 +29,25 @@ function MyApp({ Component, pageProps }: AppProps) {
             retry: 0,
           },
         },
+        queryCache: new QueryCache({
+          onError: error => handleError(error as Error),
+        }),
       })
   )
+
+  const [invalideUser, setInvaliateUser] = useState(false)
+
+  function handleError(error: Error) {
+    if (error.message === 'JWT expired') {
+      setInvaliateUser(true)
+    }
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         <ChakraProvider theme={theme}>
-          <AuthProvider>
+          <AuthProvider invalideUser={invalideUser}>
             <Layout>
               <Component {...pageProps} />
             </Layout>

@@ -42,6 +42,22 @@ export const Button: ComponentStyleConfig = {
         backgroundColor: 'orange.400',
       },
     },
+    success: {
+      ...sharedStyles,
+      backgroundColor: 'success.500',
+      color: 'white',
+      _hover: {
+        backgroundColor: 'success.400',
+      },
+    },
+    error: {
+      ...sharedStyles,
+      backgroundColor: 'error.500',
+      color: 'white',
+      _hover: {
+        backgroundColor: 'error.400',
+      },
+    },
     white: {
       ...sharedStyles,
       borderRadius: 'full',

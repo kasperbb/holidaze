@@ -5,30 +5,23 @@ import { AiFillStar } from 'react-icons/ai'
 import { useKeyPress } from '@hooks/useKeyPress'
 import { useState } from 'react'
 
-interface FormValues {
-  rating: string
-}
-
 const StarIcon = chakra(AiFillStar, {
   baseStyle: {
     color: '#E9EDFB',
   },
 })
 
-export function StarRatingInput(props: UseControllerProps<FormValues>) {
+export function StarRatingInput<T>(props: UseControllerProps<T>) {
   const {
-    field: { onChange, onBlur, name, value, ref },
-  } = useController(props)
+    field: { onChange, onBlur, name, ref },
+  } = useController<T>(props)
 
   const [ratingValue, setRatingValue] = useState(0)
-  const [isFocused, setIsFocused] = useState(false)
 
   useKeyPress('ArrowLeft', () => handleKeyPress('decrement'))
   useKeyPress('ArrowRight', () => handleKeyPress('increment'))
 
   function handleKeyPress(action: 'increment' | 'decrement') {
-    if (!isFocused) return
-
     if (action === 'increment') {
       setRatingValue(prev => (prev >= 5 ? prev : prev + 1))
     }
@@ -50,10 +43,10 @@ export function StarRatingInput(props: UseControllerProps<FormValues>) {
   return (
     <RadioGroup
       sx={{
-        '& > svg:hover path': {
+        '& > label > svg:hover path': {
           color: 'orange.500',
         },
-        '& > svg:hover ~ svg path': {
+        '& > label > svg:hover ~ svg path': {
           color: 'orange.500',
         },
       }}
@@ -61,19 +54,10 @@ export function StarRatingInput(props: UseControllerProps<FormValues>) {
       flexDirection="row-reverse"
       justifyContent="flex-end"
       onChange={onChange}
-      onBlur={() => {
-        setIsFocused(false)
-        onBlur()
-      }}
-      onFocus={() => {
-        setIsFocused(true)
-      }}
-      value={value}
+      onBlur={() => onBlur()}
+      value="checked"
       ref={ref}
       tabIndex={0}
-      _focus={{
-        border: '5px solid black',
-      }}
     >
       {Array.from({ length: 5 })
         .map((_, index) => (
@@ -85,7 +69,6 @@ export function StarRatingInput(props: UseControllerProps<FormValues>) {
             </VisuallyHidden>
 
             <chakra.label>
-              <VisuallyHidden>{index + 1} stars</VisuallyHidden>
               <StarIcon
                 key={index}
                 color={ratingValue >= index + 1 ? 'orange.500' : 'gray.200'}

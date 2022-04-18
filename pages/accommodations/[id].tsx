@@ -1,57 +1,29 @@
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  FormControl,
-  FormLabel,
-  Grid,
-  GridItem,
-  HStack,
-  Heading,
-  Link,
-  Select,
-  Text,
-  VisuallyHidden,
-  chakra,
-} from '@chakra-ui/react'
+import { Box, Button, Container, Flex, Grid, GridItem, Heading, Link, Spinner, Text, VisuallyHidden, chakra } from '@chakra-ui/react'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
-import { getAccommodation, getAccommodationPaths } from '@queries/accommodations'
 
+import { BookingForm } from '@components/Forms/BookingForm'
 import { Card } from '@components/Card'
-import { DatePicker } from '@components/DatePicker'
-import { GetStaticProps } from 'next/types'
+import { GetServerSideProps } from 'next/types'
 import { ImageGrid } from '@components/ImageGrid'
 import { Map } from '@components/Map'
 import NextLink from 'next/link'
 import { Reviews } from '@components/Accommodations/Reviews'
+import { getAccommodation } from '@queries/accommodations'
 import { qk } from '@constants/queryKeys'
 import { routes } from '@constants/routes'
 import { useAuth } from '@context/AuthContext'
 
-export const getStaticProps: GetStaticProps = async ctx => {
+export const getServerSideProps: GetServerSideProps = async ctx => {
   const queryClient = new QueryClient()
-  const accommodationId = Number(ctx.params?.id)
+  const id = Number(ctx.params?.id)
 
-  await queryClient.prefetchQuery([qk.accommodation, ctx.params?.id], () => getAccommodation(accommodationId))
+  await queryClient.prefetchQuery([qk.accommodation, id], () => getAccommodation(id))
 
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      id: accommodationId,
+      id,
     },
-    revalidate: 10,
-  }
-}
-
-export async function getStaticPaths() {
-  const paths = await getAccommodationPaths()
-
-  const constructedPaths = paths?.map(path => ({ params: { id: path.id.toString() } }))
-
-  return {
-    paths: constructedPaths,
-    fallback: true,
   }
 }
 
@@ -60,7 +32,7 @@ export default function AccommodationDetails({ id }: { id: number }) {
   const { user } = useAuth()
 
   if (!data) {
-    return null
+    return <Spinner />
   }
 
   const [latitude, longitude] = data.location
@@ -92,7 +64,7 @@ export default function AccommodationDetails({ id }: { id: number }) {
           <Heading as="h2" fontSize="2xl" mb={6}>
             Book
           </Heading>
-          <chakra.form position="sticky" top={28}>
+          <Box position="sticky" top={28}>
             <Card maxWidth={['full', 'full']} contentProps={{ display: 'grid', placeItems: 'center' }} borderRadius="full" mb={8}>
               <VisuallyHidden>
                 <Heading as="h2">Price</Heading>
@@ -105,39 +77,8 @@ export default function AccommodationDetails({ id }: { id: number }) {
               </Flex>
             </Card>
 
-            <Card maxWidth={['full', 'full']} overflow="visible">
-              <FormControl mb={4}>
-                <FormLabel htmlFor="from" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
-                  From
-                </FormLabel>
-                <DatePicker selected={new Date()} onChange={date => console.log(date)} isOutline />
-              </FormControl>
-
-              <FormControl mb={4}>
-                <FormLabel htmlFor="to" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
-                  To
-                </FormLabel>
-                <DatePicker selected={new Date()} onChange={date => console.log(date)} isOutline />
-              </FormControl>
-
-              <HStack align="end">
-                <FormControl width="40%" mr={4}>
-                  <FormLabel htmlFor="to" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
-                    Guests
-                  </FormLabel>
-                  <Select bg="white">
-                    <option value="option1">1</option>
-                    <option value="option2">2</option>
-                    <option value="option3">3</option>
-                    <option value="option3">4</option>
-                    <option value="option3">5</option>
-                  </Select>
-                </FormControl>
-
-                <Button width="full">Book</Button>
-              </HStack>
-            </Card>
-          </chakra.form>
+            <BookingForm accommodationId={id} />
+          </Box>
         </GridItem>
 
         <GridItem width="full" colSpan={3} order={{ base: 1, md: -1 }}>

@@ -4,17 +4,7 @@ import { supabase } from '@lib/supabase'
 const TABLE = 'messages'
 
 export const getMessages = async () => {
-  const { data, error } = await supabase.from<Message[]>(TABLE).select()
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  return data
-}
-
-export const getMessagePaths = async () => {
-  const { data, error } = await supabase.from<{ id: string }>(TABLE).select('id')
+  const { data, error } = await supabase.from<Message>(TABLE).select()
 
   if (error) {
     throw new Error(error.message)
