@@ -1,15 +1,15 @@
-import { Button, Collapse, Flex, FormControl, FormLabel, Heading, Textarea, useDisclosure, useToast } from '@chakra-ui/react'
+import { Button, Collapse, Flex, FormControl, FormLabel, Heading, Spinner, Text, Textarea, useDisclosure, useToast } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 
 import { Card } from '@components/Card'
 import { FiPlus } from 'react-icons/fi'
 import { Review } from '@components/Review'
+import { Review as ReviewType } from '@interfaces/reviews'
 import { StarRating } from '@components/StarRating'
+import { getReviews } from '@queries/reviews'
 import { useAuth } from '@context/AuthContext'
-import { useEffect, useState } from 'react'
 import { useCreateReview } from '@hooks/reviews/useCreateReview'
 import { useForm } from 'react-hook-form'
-import { Review as ReviewType } from '@interfaces/reviews'
-import { getReviews } from '@queries/reviews'
 import { useQuery } from 'react-query'
 
 interface ReviewsProps {
@@ -17,7 +17,7 @@ interface ReviewsProps {
 }
 
 export function Reviews({ accommodationId }: ReviewsProps) {
-  const { data: reviews } = useQuery(['reviews', accommodationId], () => getReviews(accommodationId))
+  const { data: reviews, isLoading, refetch } = useQuery(['reviews', accommodationId], () => getReviews(accommodationId))
 
   const { isOpen, onToggle } = useDisclosure()
   const { user } = useAuth()
@@ -31,6 +31,7 @@ export function Reviews({ accommodationId }: ReviewsProps) {
 
   const onSubmit = handleSubmit(() => {
     mutation.mutate()
+    refetch()
   })
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export function Reviews({ accommodationId }: ReviewsProps) {
         isClosable: true,
       })
     }
-  }, [mutation.data, mutation.error, mutation.isError, mutation.isSuccess, toast])
+  }, [mutation.error, mutation.isError, mutation.isSuccess, toast])
 
   return (
     <>
@@ -82,14 +83,20 @@ export function Reviews({ accommodationId }: ReviewsProps) {
             <Textarea id="description" {...register('message')} />
           </FormControl>
 
-          <Button type="submit" isLoading={mutation.isLoading}>Submit</Button>
+          <Button type="submit" isLoading={mutation.isLoading}>
+            Submit
+          </Button>
         </Card>
       </Collapse>
 
       <Flex direction="column" gap={6}>
-        {reviews?.map((review) => (
+        {reviews?.map(review => (
           <Review key={review.id} {...review} />
         ))}
+
+        {!reviews?.length && <Text>No reviews.</Text>}
+
+        {isLoading && <Spinner />}
       </Flex>
     </>
   )

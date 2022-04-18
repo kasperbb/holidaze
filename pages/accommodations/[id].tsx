@@ -1,28 +1,44 @@
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  FormControl,
+  FormLabel,
+  Grid,
+  GridItem,
+  HStack,
+  Heading,
+  Link,
+  Select,
+  Text,
+  VisuallyHidden,
+  chakra,
+} from '@chakra-ui/react'
+import { QueryClient, dehydrate, useQuery } from 'react-query'
 import { getAccommodation, getAccommodationPaths } from '@queries/accommodations'
-import { Box, Button, chakra, Container, Flex, FormControl, FormLabel, Grid, GridItem, Heading, Link, Select, HStack, Text, VisuallyHidden } from '@chakra-ui/react'
+
 import { Card } from '@components/Card'
 import { DatePicker } from '@components/DatePicker'
+import { GetStaticProps } from 'next/types'
 import { ImageGrid } from '@components/ImageGrid'
 import { Map } from '@components/Map'
-import { useAuth } from '@context/AuthContext'
-import { GetStaticProps } from 'next/types'
-import { dehydrate, QueryClient, useQuery } from 'react-query'
 import NextLink from 'next/link'
-import { qk } from '@constants/queryKeys'
 import { Reviews } from '@components/Accommodations/Reviews'
+import { qk } from '@constants/queryKeys'
 import { routes } from '@constants/routes'
-import { getReviews } from '@queries/reviews'
+import { useAuth } from '@context/AuthContext'
 
 export const getStaticProps: GetStaticProps = async ctx => {
   const queryClient = new QueryClient()
+  const accommodationId = Number(ctx.params?.id)
 
-  await queryClient.prefetchQuery([qk.accommodation, ctx.params?.id], () => getAccommodation(Number(ctx.params?.id)))
-  await queryClient.prefetchQuery(['reviews', ctx.params?.id], () => getReviews(Number(ctx.params?.id)))
+  await queryClient.prefetchQuery([qk.accommodation, ctx.params?.id], () => getAccommodation(accommodationId))
 
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      id: ctx.params?.id,
+      id: accommodationId,
     },
     revalidate: 10,
   }
@@ -40,7 +56,7 @@ export async function getStaticPaths() {
 }
 
 export default function AccommodationDetails({ id }: { id: number }) {
-  const { data } = useQuery([qk.accommodation, id], () => getAccommodation(Number(id)))
+  const { data } = useQuery([qk.accommodation, id], () => getAccommodation(id))
   const { user } = useAuth()
 
   if (!data) {
@@ -104,21 +120,21 @@ export default function AccommodationDetails({ id }: { id: number }) {
                 <DatePicker selected={new Date()} onChange={date => console.log(date)} isOutline />
               </FormControl>
 
-              <HStack>
-                <FormControl width="30%" mb={4}>
+              <HStack align="end">
+                <FormControl width="40%" mr={4}>
                   <FormLabel htmlFor="to" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
                     Guests
                   </FormLabel>
-                  <Select>
-                    <option value='option1'>1</option>
-                    <option value='option2'>2</option>
-                    <option value='option3'>3</option>
-                    <option value='option3'>4</option>
-                    <option value='option3'>5</option>
+                  <Select bg="white">
+                    <option value="option1">1</option>
+                    <option value="option2">2</option>
+                    <option value="option3">3</option>
+                    <option value="option3">4</option>
+                    <option value="option3">5</option>
                   </Select>
                 </FormControl>
 
-                <Button>Test</Button>
+                <Button width="full">Book</Button>
               </HStack>
             </Card>
           </chakra.form>

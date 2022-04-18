@@ -25,13 +25,13 @@ import { QueryClient, dehydrate, useQuery } from 'react-query'
 
 import { Card } from '@components/Card'
 import { DatePicker } from '@components/DatePicker'
+import { Filter } from '@interfaces/filter'
 import { GetStaticProps } from 'next'
 import { HorizontalAccommodationCard } from '@components/HorizontalAccommodationCard'
 import { StarRating } from '@components/StarRating'
 import { getAccommodations } from '@queries/accommodations'
 import { qk } from '@constants/queryKeys'
-import { useReducer, useState } from 'react'
-import { Filter } from '@interfaces/filter'
+import { useReducer } from 'react'
 
 export const getStaticProps: GetStaticProps = async ctx => {
   const queryClient = new QueryClient()
@@ -47,28 +47,28 @@ export const getStaticProps: GetStaticProps = async ctx => {
 }
 
 function reducer(state: Filter.State, action: Filter.Action) {
-  let newState = state;
+  let newState = state
 
   switch (action.type) {
     case 'SET_SEARCH':
       newState = { ...state, search: action.payload }
-      break;
+      break
     case 'SET_FROM':
       newState = { ...state, from: action.payload }
-      break;
+      break
     case 'SET_TO':
       newState = { ...state, to: action.payload }
-      break;
+      break
     case 'SET_PRICE_RANGE':
       newState = { ...state, priceRange: action.payload }
-      break;
+      break
     case 'SET_RATING':
       newState = { ...state, rating: action.payload }
-      break;
+      break
     default:
       throw new Error('Invalid action type')
   }
-  
+
   return newState
 }
 
@@ -83,7 +83,7 @@ const initialState: Filter.State = {
 export default function Accommodations() {
   const { data } = useQuery(qk.accommodations, () => getAccommodations())
 
-  const [filter, dispatch] = useReducer(reducer, initialState);
+  const [filter, dispatch] = useReducer(reducer, initialState)
 
   return (
     <Container py={40}>
@@ -147,7 +147,13 @@ export default function Accommodations() {
                 €{filter.priceRange[0]} - €{filter.priceRange[1]}
               </Badge>
 
-              <RangeSlider min={0} max={500} step={5} defaultValue={filter.priceRange} onChange={(range) => dispatch({ type: Filter.ActionType.SET_PRICE_RANGE, payload: range })}>
+              <RangeSlider
+                min={0}
+                max={500}
+                step={5}
+                defaultValue={filter.priceRange}
+                onChange={range => dispatch({ type: Filter.ActionType.SET_PRICE_RANGE, payload: range })}
+              >
                 <RangeSliderTrack>
                   <RangeSliderFilledTrack />
                 </RangeSliderTrack>
@@ -160,10 +166,12 @@ export default function Accommodations() {
               <FormLabel htmlFor="to" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
                 Filter by rating
               </FormLabel>
-              <StarRating rating={filter.rating} size={6} onClick={(num) => dispatch({ type: Filter.ActionType.SET_RATING, payload: num })} />
+              <StarRating rating={filter.rating} size={6} onClick={num => dispatch({ type: Filter.ActionType.SET_RATING, payload: num })} />
             </FormControl>
 
-            <Button type="submit" width="full">Apply</Button>
+            <Button type="submit" width="full">
+              Apply
+            </Button>
           </Card>
         </GridItem>
         <GridItem width="full" colSpan={4}>

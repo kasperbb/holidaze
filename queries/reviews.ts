@@ -1,4 +1,5 @@
 import { JoinedReview, Review } from '@interfaces/reviews'
+
 import { supabase } from '@lib/supabase'
 
 const TABLE = 'reviews'
@@ -24,13 +25,21 @@ export const getReviewPaths = async () => {
 }
 
 export const getReviews = async (accommodationId: number) => {
-  const { data, error } = await supabase.from<JoinedReview>(TABLE).select(`
-    id,
-    rating,
-    message,
-    created_at,
-    user_id
-  `).eq('accommodation_id', accommodationId)
+  const { data, error } = await supabase
+    .from<JoinedReview>(TABLE)
+    .select(
+      `
+      id,
+      rating,
+      message,
+      created_at,
+      user:user_id (
+        id,
+        email
+      )
+    `
+    )
+    .eq('accommodation_id', accommodationId)
 
   if (error) {
     throw new Error(error.message)

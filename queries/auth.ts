@@ -1,4 +1,5 @@
-import { Auth } from '@interfaces/auth'
+import { Auth, Public } from '@interfaces/auth'
+
 import { supabase } from '@lib/supabase'
 
 export const createUser = async ({ email, password }: Auth.User) => {
@@ -9,6 +10,12 @@ export const createUser = async ({ email, password }: Auth.User) => {
 
   if (error) {
     throw new Error(error.message)
+  }
+
+  const { error: insertError } = await supabase.from<Public.User>('users').insert({ id: user?.id, email: user?.email }).single()
+
+  if (insertError) {
+    throw new Error(insertError.message)
   }
 
   return user

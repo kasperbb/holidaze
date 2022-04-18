@@ -12,6 +12,9 @@ export interface JoinedReview {
   rating: number
   message: string
   created_at: string
-  user_id: string | undefined
+  user: {
+    id: string
+    email: string
+  }
   accommodation_id?: number
 }
