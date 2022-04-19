@@ -1,4 +1,4 @@
-import { Button, Collapse, Flex, FormControl, FormLabel, Heading, Spinner, Text, Textarea, useDisclosure, useToast } from '@chakra-ui/react'
+import { Button, Collapse, Flex, FormControl, FormLabel, Heading, Spinner, Text, Textarea, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 
 import { Card } from '@components/Card'
@@ -17,42 +17,28 @@ interface ReviewsProps {
 }
 
 export function Reviews({ accommodationId }: ReviewsProps) {
-  const { data: reviews, isLoading, refetch } = useQuery(['reviews', accommodationId], () => getReviews(accommodationId))
+  const { data: reviews, isLoading } = useQuery(['reviews', accommodationId], () => getReviews(accommodationId))
 
-  const { isOpen, onToggle } = useDisclosure()
+  const { isOpen, onToggle, onClose } = useDisclosure()
   const { user } = useAuth()
 
   const [rating, setRating] = useState(0)
 
-  const { register, watch, handleSubmit } = useForm<ReviewType>()
-  const toast = useToast()
+  const { register, watch, handleSubmit, reset } = useForm<ReviewType>()
 
   const mutation = useCreateReview({ ...watch(), rating, user_id: user?.id, accommodation_id: accommodationId })
 
   const onSubmit = handleSubmit(() => {
     mutation.mutate()
-    refetch()
   })
 
   useEffect(() => {
-    if (mutation.isError) {
-      toast({
-        title: 'Error!',
-        description: mutation.error.message,
-        status: 'error',
-        isClosable: true,
-      })
-    }
-
     if (mutation.isSuccess) {
-      toast({
-        title: 'Success!',
-        description: `Successfully placed the review.`,
-        status: 'success',
-        isClosable: true,
-      })
+      reset()
+      setRating(0)
+      onClose()
     }
-  }, [mutation.error, mutation.isError, mutation.isSuccess, toast])
+  }, [mutation.isSuccess, onClose, reset])
 
   return (
     <>

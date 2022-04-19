@@ -87,7 +87,7 @@ export default function AccommodationDetails({ id }: { id: number }) {
               Location
             </Heading>
 
-            <Map markerList={[{ latitude: latitude, longitude: longitude }]} />
+            <Map markerList={[{ latitude: latitude, longitude: longitude }]} lat={latitude} long={longitude} />
           </Box>
 
           <Box mt={14}>

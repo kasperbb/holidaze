@@ -40,6 +40,7 @@ export const getReviews = async (accommodationId: number) => {
     `
     )
     .eq('accommodation_id', accommodationId)
+    .order('created_at', { ascending: false })
 
   if (error) {
     throw new Error(error.message)

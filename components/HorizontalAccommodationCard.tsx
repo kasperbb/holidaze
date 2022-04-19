@@ -4,7 +4,8 @@ import { Accommodation } from '@interfaces/accommodation'
 import { Card } from './Card'
 import NextLink from 'next/link'
 
-export function HorizontalAccommodationCard({ id, name, images, price }: Accommodation) {
+export function HorizontalAccommodationCard({ id, name, images, price, rating }: Accommodation) {
+  const averageRating = rating && rating.toFixed(1) !== 'NaN' ? rating?.toFixed(1) : 0
   return (
     <Card
       key={id}
@@ -25,7 +26,7 @@ export function HorizontalAccommodationCard({ id, name, images, price }: Accommo
       <Flex align="center" justify="space-between" gap={10}>
         <Flex align="center" color="orange.800" fontWeight="bold" fontSize="sm" gap={2} aria-label="Average rating">
           <Badge display="flex" alignItems="center" fontSize="sm" borderRadius="md" colorScheme="orange" px={1}>
-            4/5
+            {averageRating}/5
           </Badge>
           Average
         </Flex>

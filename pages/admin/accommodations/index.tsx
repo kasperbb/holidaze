@@ -1,12 +1,12 @@
-import { Container, Flex, Grid, Heading, IconButton, Link, Select, Text } from '@chakra-ui/react'
+import { Container, Flex, Grid, Heading, IconButton, Select } from '@chakra-ui/react'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
 import { Card } from '@components/Card'
 import { FiPlus } from 'react-icons/fi'
+import { HorizontalAccommodationCard } from '@components/HorizontalAccommodationCard'
 import NextLink from 'next/link'
 import { enforceAuth } from '@utils/enforceAuth'
 import { getAccommodations } from '@queries/accommodations'
-import { maxLines } from '@utils/styleProps'
 import { qk } from '@constants/queryKeys'
 import { routes } from '@constants/routes'
 
@@ -48,18 +48,9 @@ export default function AdminHotels() {
         </Flex>
       </Card>
 
-      <Grid templateColumns="repeat(2, 1fr)" gap={4} width="full" my={10}>
-        {data?.map(({ id, images, name, description }) => (
-          <Card key={id} variant="horizontal" imageSrc={images ? images[0] : '/placeholder.png'}>
-            <NextLink href={`${routes.admin.accommodations.base}/${id}`} passHref>
-              <Link>
-                <Heading as="h3" fontSize="19px" fontWeight={600}>
-                  {name}
-                </Heading>
-              </Link>
-            </NextLink>
-            <Text sx={{ ...maxLines(3) }}>{description}</Text>
-          </Card>
+      <Grid templateColumns="repeat(1, 1fr)" gap={4} width="full" my={10}>
+        {data?.map(accommodation => (
+          <HorizontalAccommodationCard key={accommodation.id} {...accommodation} />
         ))}
       </Grid>
     </Container>

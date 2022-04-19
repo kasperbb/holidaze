@@ -1,28 +1,35 @@
 import { Accommodation, AddAccommodation } from '@interfaces/accommodation'
+import { addAverageRatingToAccommodation, addAverageRatingToAccommodations } from '@utils/accommodations'
 
 import { supabase } from '@lib/supabase'
 import { uploadImages } from './upload'
 
 const TABLE = 'accommodations'
+const QUERY = `
+  *,
+  reviews (
+    rating
+  )
+`
 
 export const getAccommodations = async () => {
-  const { data, error } = await supabase.from<Accommodation>(TABLE).select()
+  const { data, error } = await supabase.from<Accommodation>(TABLE).select(QUERY)
 
   if (error) {
     throw new Error(error.message)
   }
 
-  return data
+  return addAverageRatingToAccommodations(data)
 }
 
 export const getAccommodation = async (id: number) => {
-  const { data, error } = await supabase.from<Accommodation>(TABLE).select().eq('id', id).single()
+  const { data, error } = await supabase.from<Accommodation>(TABLE).select(QUERY).eq('id', id).single()
 
   if (error) {
     throw new Error(error.message)
   }
 
-  return data
+  return addAverageRatingToAccommodation(data)
 }
 
 export const createAccommodation = async (obj: AddAccommodation) => {
@@ -63,8 +70,23 @@ export const deleteAccommodation = async (id: number) => {
   return data
 }
 
+const searchQuery = `
+    id,
+    name,
+    images,
+    reviews (
+      rating
+    )
+`
+
+interface SearchResult extends Pick<Accommodation, 'id' | 'name' | 'images'> {
+  reviews: {
+    rating: number
+  }[]
+}
+
 export const searchAccommodations = async (query: string) => {
-  const { data, error } = await supabase.from(TABLE).select().textSearch('name', query, {
+  const { data, error } = await supabase.from<SearchResult>(TABLE).select(searchQuery).textSearch('name', query, {
     type: 'websearch',
   })
 
@@ -72,5 +94,12 @@ export const searchAccommodations = async (query: string) => {
     throw new Error(error.message)
   }
 
-  return data
+  return addAverageRatingToResults(data)
+}
+
+function addAverageRatingToResults(results: SearchResult[]) {
+  return results.map(result => ({
+    ...result,
+    rating: result.reviews.reduce((sum, review) => sum + review.rating, 0) / result.reviews.length,
+  }))
 }

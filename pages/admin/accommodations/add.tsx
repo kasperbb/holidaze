@@ -1,14 +1,15 @@
-import { Button, Container, Flex, FormControl, FormLabel, Grid, Heading, Image, Input, Textarea, chakra, useToast, FormHelperText } from '@chakra-ui/react'
+import { Button, Container, Flex, FormControl, FormLabel, Grid, Heading, Image, Input, Textarea, chakra, FormHelperText } from '@chakra-ui/react'
 import { FiEdit, FiUpload } from 'react-icons/fi'
 
 import { Card } from '@components/Card'
 import ImageUpload, { type ImageListType } from 'react-images-uploading'
 import { enforceAuth } from '@utils/enforceAuth'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { BackButton } from '@components/BackButton'
 import { useForm } from 'react-hook-form'
 import { AddAccommodation } from '@interfaces/accommodation'
 import { useCreateAccommodation } from '@hooks/accommodations/useCreateAccommodation'
+import { Map } from '@components/Map'
 
 export const getServerSideProps = enforceAuth()
 
@@ -16,13 +17,14 @@ const EditIcon = chakra(FiEdit)
 const UploadIcon = chakra(FiUpload)
 
 export default function AdminAddHotel() {
-  const toast = useToast()
   const { register, watch, handleSubmit } = useForm<AddAccommodation>()
 
   const [images, setImages] = useState<ImageListType>([])
   const [files, setFiles] = useState<File[]>([])
 
-  const mutation = useCreateAccommodation({ ...watch(), images: files })
+  const [location, setLocation] = useState<[latitude: number, longitude: number]>([60.3914191, 5.3248788])
+
+  const mutation = useCreateAccommodation({ ...watch(), location, images: files })
 
   function onChange(imageList: ImageListType) {
     const files = imageList.map(image => image.file) as File[]
@@ -33,26 +35,6 @@ export default function AdminAddHotel() {
   const onSubmit = handleSubmit(() => {
     mutation.mutate()
   })
-
-  useEffect(() => {
-    if (mutation.isError) {
-      toast({
-        title: 'Error!',
-        description: mutation.error.message,
-        status: 'error',
-        isClosable: true,
-      })
-    }
-
-    if (mutation.isSuccess) {
-      toast({
-        title: 'Success!',
-        description: `Successfully created hotel with the name: ${mutation.data.name}`,
-        status: 'success',
-        isClosable: true,
-      })
-    }
-  }, [mutation.data, mutation.error, mutation.isError, mutation.isSuccess, toast])
 
   return (
     <Container maxWidth="7xl">
@@ -82,13 +64,6 @@ export default function AdminAddHotel() {
           </FormControl>
 
           <FormControl>
-            <FormLabel htmlFor="location" color="text.primary">
-              Location
-            </FormLabel>
-            <Input id="location" type="text" {...register('location')} />
-          </FormControl>
-
-          <FormControl>
             <FormLabel htmlFor="rooms" color="text.primary">
               Total number of rooms & suites
             </FormLabel>
@@ -102,7 +77,7 @@ export default function AdminAddHotel() {
             <Input id="price" type="number" {...register('price')} />
           </FormControl>
 
-          <FormControl gridColumn="span 2 / span 2">
+          <FormControl>
             <FormLabel htmlFor="description" color="text.primary">
               Description
             </FormLabel>
@@ -110,10 +85,22 @@ export default function AdminAddHotel() {
           </FormControl>
 
           <FormControl gridColumn="span 2 / span 2">
+            <FormLabel htmlFor="location" color="text.primary">
+              Location
+            </FormLabel>
+            <Map
+              markerList={[{ latitude: location[0], longitude: location[1] }]}
+              onClick={({ lngLat }) => setLocation([lngLat.lat, lngLat.lng])}
+              style={{ height: 250 }}
+            />
+            <FormHelperText>Click on the map to set location.</FormHelperText>
+          </FormControl>
+
+          <FormControl gridColumn="span 2 / span 2">
             <FormLabel htmlFor="images" color="text.primary">
               Images
             </FormLabel>
-            <ImageUpload multiple value={images} onChange={onChange} maxNumber={5} inputProps={{ id: 'images', name: 'images' }} dataURLKey="data_url">
+            <ImageUpload multiple value={images} onChange={onChange} maxNumber={10} inputProps={{ id: 'images', name: 'images' }} dataURLKey="data_url">
               {({ imageList, onImageUpload, dragProps }) => (
                 <Flex
                   justify={imageList.length ? 'start' : 'center'}

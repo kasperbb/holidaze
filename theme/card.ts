@@ -52,7 +52,9 @@ export const Card: ComponentStyleConfig = {
         overflow: 'hidden',
       },
       image: {
-        width: '200px',
+        minWidth: '200px',
+        maxHeight: '125px',
+        width: 'unset',
         height: 'full',
         objectFit: 'cover',
         borderRadiusBottom: '5px',

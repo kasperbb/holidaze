@@ -6,10 +6,10 @@ import { FiBookmark } from 'react-icons/fi'
 import NextLink from 'next/link'
 import { StarRating } from './StarRating'
 
-export function AccommodationCard({ id, name, images, price }: Accommodation) {
+export function AccommodationCard({ id, name, images, price, rating }: Accommodation) {
   return (
     <Card imageSrc={images ? images[0] : '/placeholder.png'} imageAlt="Holidaze">
-      <StarRating rating={3.5} />
+      <StarRating rating={rating ?? 0} />
 
       <NextLink href={`/accommodations/${id}`} passHref>
         <Link display="block" flex="1 1 0%" _hover={{ textDecoration: 'none' }}>

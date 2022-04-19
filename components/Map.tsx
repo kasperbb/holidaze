@@ -11,9 +11,10 @@ interface MapProps {
   style?: CSSProperties | undefined
   popupList?: PopupProps[]
   markerList?: MarkerProps[]
+  onClick?: ((e: mapboxgl.MapLayerMouseEvent) => void) | undefined
 }
 
-export function Map({ lat = 60.3914191, long = 5.3248788, zoom = 13, style, popupList, markerList }: MapProps) {
+export function Map({ lat = 60.3914191, long = 5.3248788, zoom = 13, style, popupList, markerList, ...rest }: MapProps) {
   return (
     <ReactMapGL
       mapLib={maplibregl}
@@ -25,6 +26,7 @@ export function Map({ lat = 60.3914191, long = 5.3248788, zoom = 13, style, popu
         zoom: zoom,
       }}
       style={{ height: 330, borderRadius: useToken('radii', '2xl'), boxShadow: useToken('shadows', 'primary'), border: '10px solid white', ...style }}
+      {...rest}
     >
       {popupList &&
         popupList.map(popup => (

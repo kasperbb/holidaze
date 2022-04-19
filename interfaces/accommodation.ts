@@ -1,3 +1,5 @@
+import { Review } from './reviews'
+
 export interface Accommodation {
   id: number
   name: string
@@ -7,6 +9,8 @@ export interface Accommodation {
   rooms: number
   images: string[]
   created_at: string
+  reviews?: Review[]
+  rating?: number
 }
 
 export interface AddAccommodation {

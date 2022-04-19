@@ -1,7 +1,25 @@
-import { Box, Input, InputGroup, InputLeftElement, InputProps, Popover, PopoverBody, PopoverContent, PopoverTrigger, Spinner, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  Heading,
+  Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputProps,
+  Link,
+  Popover,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Spinner,
+  Text,
+} from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 
 import { FiSearch } from 'react-icons/fi'
+import NextLink from 'next/link'
+import { StarRating } from '@components/StarRating'
 import { useDebounce } from '@hooks/useDebouce'
 import { useOnOutsideClick } from '@hooks/useOnOutsideClick'
 import { useSearchAccommodations } from '@hooks/accommodations/useSearchAccommodations'
@@ -39,11 +57,26 @@ export function Searchbar({ ...rest }: InputProps) {
         </InputGroup>
       </PopoverTrigger>
       <PopoverContent width="464px">
-        <PopoverBody ref={popoverRef}>
+        <PopoverBody ref={popoverRef} p={4}>
           {(!data || !data.length) && <Text>No results</Text>}
-          {data?.map(hotel => (
-            <Box key={hotel.id}>{hotel.name}</Box>
-          ))}
+
+          <Flex direction="column" gap={4}>
+            {data?.map(({ id, name, images, rating }) => (
+              <NextLink key={id} href={`/accommodations/${id}`} passHref>
+                <Link display="flex" alignItems="center" gap={4}>
+                  <Box width={10} height={10} borderRadius="lg" overflow="hidden">
+                    <Image src={images ? images[0] : '/placeholder.png'} alt={name} width="100%" height="100%" objectFit="cover" />
+                  </Box>
+                  <Box>
+                    <Heading as="h4" fontSize="md" fontWeight="medium" mb={1}>
+                      {name}
+                    </Heading>
+                    <StarRating rating={rating} size={3} />
+                  </Box>
+                </Link>
+              </NextLink>
+            ))}
+          </Flex>
         </PopoverBody>
       </PopoverContent>
     </Popover>

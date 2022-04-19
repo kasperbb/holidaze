@@ -21,12 +21,14 @@ import { useState } from 'react'
 function MyApp({ Component, pageProps }: AppProps) {
   useRouteChangeProgress()
 
+  const [invalideUser, setInvaliateUser] = useState(false)
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
-            retry: 0,
+            retry: 3,
+            staleTime: 30000, // 30 seconds
           },
         },
         queryCache: new QueryCache({
@@ -35,11 +37,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       })
   )
 
-  const [invalideUser, setInvaliateUser] = useState(false)
-
   function handleError(error: Error) {
     if (error.message === 'JWT expired') {
       setInvaliateUser(true)
+      setInvaliateUser(false)
     }
   }
 

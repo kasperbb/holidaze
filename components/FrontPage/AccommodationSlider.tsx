@@ -30,9 +30,9 @@ export function AccommodationSlider({ accommodations }: { accommodations: Accomm
           Our Most Popular Locations
         </Heading>
       </chakra.span>
-      {accommodations.map(hotel => (
-        <SwiperSlide key={hotel.id}>
-          <AccommodationCard {...hotel} />
+      {accommodations.map(accommodation => (
+        <SwiperSlide key={accommodation.id}>
+          <AccommodationCard {...accommodation} />
         </SwiperSlide>
       ))}
       <SwiperControls activeSlide={activeSlide} allSlides={accommodations.length ?? 0} />

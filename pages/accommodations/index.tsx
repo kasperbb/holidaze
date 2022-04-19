@@ -76,7 +76,7 @@ const initialState: Filter.State = {
   search: '',
   from: new Date(),
   to: new Date(),
-  priceRange: [50, 300],
+  priceRange: [0, 300],
   rating: 0,
 }
 

@@ -1,8 +1,36 @@
 import { Accommodation, AddAccommodation } from '@interfaces/accommodation'
+import { useMutation, useQueryClient } from 'react-query'
 
 import { createAccommodation } from '@queries/accommodations'
-import { useMutation } from 'react-query'
+import { routes } from '@constants/routes'
+import { useRouter } from 'next/router'
+import { useToast } from '@chakra-ui/react'
 
-export function useCreateAccommodation(hotelObj: AddAccommodation) {
-  return useMutation<Accommodation, Error>(() => createAccommodation(hotelObj))
+export function useCreateAccommodation(accommodation: AddAccommodation) {
+  const queryClient = useQueryClient()
+  const toast = useToast()
+  const router = useRouter()
+
+  return useMutation<Accommodation, Error>(() => createAccommodation(accommodation), {
+    onSuccess: () => {
+      router.push(routes.admin.accommodations.base)
+      toast({
+        title: 'Success!',
+        description: `Successfully created hotel with the name: ${accommodation.name}`,
+        status: 'success',
+        isClosable: true,
+      })
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error!',
+        description: error.message,
+        status: 'error',
+        isClosable: true,
+      })
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['accommodations'])
+    },
+  })
 }

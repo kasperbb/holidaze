@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, HStack, Select, useDisclosure } from '@chakra-ui/react'
+import { Button, FormControl, FormLabel, HStack, Select, useDisclosure, useToast } from '@chakra-ui/react'
 
 import { Booking } from '@interfaces/bookings'
 import { Card } from '@components/Card'
@@ -14,6 +14,8 @@ interface BookingFormProps {
 
 export function BookingForm({ accommodationId }: BookingFormProps) {
   const modalProps = useDisclosure()
+  const toast = useToast()
+
   const { user } = useAuth()
 
   const [from, setFrom] = useState<Date | null>(new Date())
@@ -27,6 +29,19 @@ export function BookingForm({ accommodationId }: BookingFormProps) {
     guests: watch('guests'),
     accommodation_id: accommodationId,
     user_id: user?.id!,
+  }
+
+  function handleClick() {
+    if (user) {
+      return modalProps.onOpen()
+    }
+
+    toast({
+      title: 'Error!',
+      description: 'You must be logged in to book an accommodation',
+      status: 'error',
+      isClosable: true,
+    })
   }
 
   return (
@@ -62,7 +77,7 @@ export function BookingForm({ accommodationId }: BookingFormProps) {
             </Select>
           </FormControl>
 
-          <Button width="full" onClick={() => modalProps.onOpen()}>
+          <Button width="full" onClick={handleClick}>
             Book
           </Button>
         </HStack>
