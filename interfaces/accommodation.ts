@@ -7,8 +7,9 @@ export interface Accommodation {
   location: [latitude: number, longitude: number]
   price: number
   rooms: number
-  images: string[]
+  images: Image[]
   created_at: string
+  user_id: string
   reviews?: Review[]
   rating?: number
 }
@@ -20,4 +21,14 @@ export interface AddAccommodation {
   price: number
   rooms: number
   images: File[]
+  user_id?: string
+}
+
+export interface UpdateAccommodation extends Omit<AddAccommodation, 'images'> {
+  images?: Image[]
+}
+
+export interface Image {
+  url: string
+  path: string | null
 }

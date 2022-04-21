@@ -1,14 +1,14 @@
-import { Button, Grid, GridItem, Image, useBreakpointValue } from '@chakra-ui/react'
+import { Button, Grid, GridItem, Image } from '@chakra-ui/react'
 
+import { Accommodation } from '@interfaces/accommodation'
 import { Lightbox } from './Lightbox'
+import { useIsDesktop } from '@hooks/useIsDesktop'
 import { useState } from 'react'
 
-interface ImageGridProps {
-  images: string[]
-}
+type ImageGridProps = Pick<Accommodation, 'images'>
 
 export function ImageGrid({ images }: ImageGridProps) {
-  const isDesktop = useBreakpointValue({ base: false, md: true })
+  const isDesktop = useIsDesktop()
   const [lightboxIndex, setLightboxIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
 
@@ -32,12 +32,12 @@ export function ImageGrid({ images }: ImageGridProps) {
           cursor="pointer"
           onClick={() => isDesktop && handleImageClick(0)}
         >
-          <Image src={images[0]} fallbackSrc="/placeholder.png" alt="" width="full" height="full" objectFit="cover" />
+          <Image src={images[0].url} fallbackSrc="/placeholder.png" alt="" width="full" height="full" objectFit="cover" />
         </GridItem>
         {isDesktop &&
           images.slice(1, 5).map((image, index) => (
             <GridItem
-              key={image}
+              key={image.path}
               colSpan={1}
               borderRadius="2xl"
               opacity={0.6}
@@ -47,7 +47,7 @@ export function ImageGrid({ images }: ImageGridProps) {
               _hover={{ opacity: 1 }}
               onClick={() => handleImageClick(index + 1)}
             >
-              <Image src={image} fallbackSrc="/placeholder.png" alt="" width="full" height="full" objectFit="cover" />
+              <Image src={image.url} fallbackSrc="/placeholder.png" alt="" width="full" height="full" objectFit="cover" />
             </GridItem>
           ))}
       </Grid>

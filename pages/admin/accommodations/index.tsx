@@ -2,18 +2,18 @@ import { Container, Flex, Grid, Heading, IconButton, Select } from '@chakra-ui/r
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
 import { Card } from '@components/Card'
+import { EmptyResults } from '@components/EmptyResults'
 import { FiPlus } from 'react-icons/fi'
 import { HorizontalAccommodationCard } from '@components/HorizontalAccommodationCard'
 import NextLink from 'next/link'
 import { enforceAuth } from '@utils/enforceAuth'
 import { getAccommodations } from '@queries/accommodations'
-import { qk } from '@constants/queryKeys'
 import { routes } from '@constants/routes'
 
 export const getServerSideProps = enforceAuth(async ctx => {
   const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery(qk.accommodations, () => getAccommodations())
+  await queryClient.prefetchQuery('accommodations', () => getAccommodations())
 
   return {
     props: {
@@ -24,14 +24,14 @@ export const getServerSideProps = enforceAuth(async ctx => {
 })
 
 export default function AdminHotels() {
-  const { data } = useQuery(qk.accommodations, () => getAccommodations())
+  const { data } = useQuery('accommodations', () => getAccommodations())
 
   return (
     <Container maxWidth="7xl">
       <Card as="div" maxWidth="full" width="full">
         <Flex align="center" justify="space-between" gap={5}>
           <Heading as="h1" fontSize="24px" fontWeight={500}>
-            {data?.length} Hotels
+            {data?.length} Accommodations
           </Heading>
 
           <Flex gap={4}>
@@ -50,8 +50,10 @@ export default function AdminHotels() {
 
       <Grid templateColumns="repeat(1, 1fr)" gap={4} width="full" my={10}>
         {data?.map(accommodation => (
-          <HorizontalAccommodationCard key={accommodation.id} {...accommodation} />
+          <HorizontalAccommodationCard key={accommodation.id} {...accommodation} showEditButton />
         ))}
+
+        <EmptyResults data={data}>No accommodations found</EmptyResults>
       </Grid>
     </Container>
   )

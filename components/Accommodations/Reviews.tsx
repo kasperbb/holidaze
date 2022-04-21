@@ -1,4 +1,4 @@
-import { Button, Collapse, Flex, FormControl, FormLabel, Heading, Spinner, Text, Textarea, useDisclosure } from '@chakra-ui/react'
+import { Alert, AlertIcon, Button, Collapse, Flex, FormControl, FormLabel, Heading, Spinner, Textarea, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 
 import { Card } from '@components/Card'
@@ -80,7 +80,12 @@ export function Reviews({ accommodationId }: ReviewsProps) {
           <Review key={review.id} {...review} />
         ))}
 
-        {!reviews?.length && <Text>No reviews.</Text>}
+        {!reviews?.length && (
+          <Alert status="info" borderRadius="lg">
+            <AlertIcon />
+            No reviews found. Be the first to place a review!
+          </Alert>
+        )}
 
         {isLoading && <Spinner />}
       </Flex>

@@ -25,18 +25,18 @@ import { QueryClient, dehydrate, useQuery } from 'react-query'
 
 import { Card } from '@components/Card'
 import { DatePicker } from '@components/DatePicker'
+import { EmptyResults } from '@components/EmptyResults'
 import { Filter } from '@interfaces/filter'
 import { GetStaticProps } from 'next'
 import { HorizontalAccommodationCard } from '@components/HorizontalAccommodationCard'
 import { StarRating } from '@components/StarRating'
 import { getAccommodations } from '@queries/accommodations'
-import { qk } from '@constants/queryKeys'
 import { useReducer } from 'react'
 
 export const getStaticProps: GetStaticProps = async ctx => {
   const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery(qk.accommodations, () => getAccommodations())
+  await queryClient.prefetchQuery('accommodations', () => getAccommodations())
 
   return {
     props: {
@@ -81,7 +81,7 @@ const initialState: Filter.State = {
 }
 
 export default function Accommodations() {
-  const { data } = useQuery(qk.accommodations, () => getAccommodations())
+  const { data } = useQuery('accommodations', () => getAccommodations())
 
   const [filter, dispatch] = useReducer(reducer, initialState)
 
@@ -93,7 +93,7 @@ export default function Accommodations() {
         px={6}
       >
         <Heading as="h1" fontSize={['lg', 'xl', '2xl']} fontWeight="medium" textAlign="center">
-          219 Accommodations found
+          {data?.length} Accommodations found
         </Heading>
 
         <Menu>
@@ -178,6 +178,8 @@ export default function Accommodations() {
           {data?.map(item => (
             <HorizontalAccommodationCard key={item.id} {...item} />
           ))}
+
+          <EmptyResults data={data}>No accommodations found</EmptyResults>
         </GridItem>
       </Grid>
     </Container>

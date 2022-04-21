@@ -32,6 +32,16 @@ export const getAccommodation = async (id: number) => {
   return addAverageRatingToAccommodation(data)
 }
 
+export const getAccommodationCount = async () => {
+  const { error, count } = await supabase.from(TABLE).select('*', { count: 'exact' })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return count
+}
+
 export const createAccommodation = async (obj: AddAccommodation) => {
   const imageUrls = await uploadImages(obj.images, {
     bucketName: 'images',

@@ -4,6 +4,7 @@ import { Swiper as ReactSwiper, SwiperSlide, useSwiper } from 'swiper/react'
 
 import { Accommodation } from '@interfaces/accommodation'
 import { AccommodationCard } from '../AccommodationCard'
+import { EmptyResults } from '@components/EmptyResults'
 import { useState } from 'react'
 
 const Swiper = chakra(ReactSwiper)
@@ -35,6 +36,7 @@ export function AccommodationSlider({ accommodations }: { accommodations: Accomm
           <AccommodationCard {...accommodation} />
         </SwiperSlide>
       ))}
+      <EmptyResults data={accommodations}>No accommodations found</EmptyResults>
       <SwiperControls activeSlide={activeSlide} allSlides={accommodations.length ?? 0} />
     </Swiper>
   )

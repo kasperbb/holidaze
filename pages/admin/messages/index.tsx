@@ -1,7 +1,8 @@
-import { Container, Flex, Grid, Heading, Select, Text, chakra } from '@chakra-ui/react'
+import { Button, Container, Flex, Grid, HStack, Heading, Select, Text, VisuallyHidden, chakra } from '@chakra-ui/react'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
 import { Card } from '@components/Card'
+import { EmptyResults } from '@components/EmptyResults'
 import { enforceAuth } from '@utils/enforceAuth'
 import { getMessages } from '@queries/messages'
 import { maxLines } from '@utils/styleProps'
@@ -44,24 +45,40 @@ export default function AdminMessages() {
       <Grid templateColumns="repeat(2, 1fr)" gap={4} width="full" my={10}>
         {data?.map(({ id, name, email, message, created_at }) => (
           <Card key={id}>
-            <Heading as="h3" fontSize="19px" fontWeight={600}>
-              Message from {name}
-            </Heading>
+            <chakra.dl fontSize="sm" mb={4} aria-label="Contact information">
+              <VisuallyHidden>
+                <Heading as="h3">Contact information</Heading>
+              </VisuallyHidden>
 
-            <chakra.dl>
-              <chakra.dt>Name</chakra.dt>
-              <chakra.dd>{name}</chakra.dd>
+              <HStack>
+                <chakra.dt minWidth={10}>Name</chakra.dt>
+                <chakra.dd fontWeight="semibold">{name}</chakra.dd>
+              </HStack>
 
-              <chakra.dt>Email</chakra.dt>
-              <chakra.dd>{email}</chakra.dd>
+              <HStack>
+                <chakra.dt minWidth={10}>Email</chakra.dt>
+                <chakra.dd fontWeight="semibold">{email}</chakra.dd>
+              </HStack>
 
-              <chakra.dt>Date</chakra.dt>
-              <chakra.dd>{new Intl.DateTimeFormat('default', dateOptions).format(new Date(created_at!))}</chakra.dd>
+              <HStack>
+                <chakra.dt minWidth={10}>Date</chakra.dt>
+                <chakra.dd fontWeight="semibold">{new Intl.DateTimeFormat('default', dateOptions).format(new Date(created_at!))}</chakra.dd>
+              </HStack>
             </chakra.dl>
 
-            <Text sx={{ ...maxLines(3) }}>{message}</Text>
+            <Text sx={{ ...maxLines(3) }} mb={6}>
+              {message}
+            </Text>
+
+            <Flex justify="flex-end">
+              <Button as="a" href={`mailto:${email}`} variant="secondary">
+                Respond
+              </Button>
+            </Flex>
           </Card>
         ))}
+
+        <EmptyResults data={data}>No messages found</EmptyResults>
       </Grid>
     </Container>
   )

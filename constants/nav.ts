@@ -1,4 +1,4 @@
-import { FiBookOpen, FiCornerUpLeft, FiHome, FiMessageSquare, FiSettings } from 'react-icons/fi'
+import { FiBookOpen, FiCornerUpLeft, FiHome, FiMessageSquare } from 'react-icons/fi'
 
 import { MdBed } from 'react-icons/md'
 
@@ -22,6 +22,5 @@ export const ADMIN_NAV_ITEMS = [
   { name: 'Accommodations', icon: MdBed, href: '/admin/accommodations' },
   { name: 'Bookings', icon: FiBookOpen, href: '/admin/bookings' },
   { name: 'Messages', icon: FiMessageSquare, href: '/admin/messages' },
-  { name: 'Settings', icon: FiSettings, href: '/admin/settings' },
   { name: 'Go back', icon: FiCornerUpLeft, href: '/' },
 ]

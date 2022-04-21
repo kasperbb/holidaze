@@ -1,25 +1,10 @@
-import {
-  Button,
-  Checkbox,
-  Container,
-  FormControl,
-  FormLabel,
-  HStack,
-  Heading,
-  Input,
-  Stack,
-  Text,
-  chakra,
-  useBreakpointValue,
-  useColorModeValue,
-} from '@chakra-ui/react'
+import { Button, Container, FormControl, FormLabel, HStack, Heading, Input, Text } from '@chakra-ui/react'
 
-import { Logo } from '@components/Logo'
-import { PasswordField } from '@components/Forms/Fields/PasswordField'
+import { Card } from '@components/Card'
+import NextLink from 'next/link'
+import { PasswordInput } from '@components/Forms/Inputs/PasswordInput'
 import { routes } from '@constants/routes'
-import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/router'
 import { useSignIn } from '@hooks/auth/useSignIn'
 
 interface SignInFormData {
@@ -29,64 +14,44 @@ interface SignInFormData {
 
 export default function SignIn() {
   const { register, watch, handleSubmit } = useForm<SignInFormData>()
-  const router = useRouter()
 
-  const signInMutation = useSignIn({ ...watch() })
+  const { mutate, isLoading } = useSignIn({ ...watch() })
 
   const onSubmit = handleSubmit(() => {
-    if (signInMutation.isLoading) return
-    signInMutation.mutate()
+    if (isLoading) return
+    mutate()
   })
 
-  useEffect(() => {
-    if (signInMutation.isSuccess) {
-      router.push(routes.admin.base)
-    }
-  }, [router, signInMutation.isSuccess])
-
   return (
-    <Container maxW="lg" py={{ base: '12', md: '' }} px={{ base: '0', sm: '8' }}>
-      <Stack spacing="8">
-        <Stack spacing="6">
-          <Logo />
-          <Stack spacing={{ base: '2', md: '3' }} textAlign="center">
-            <Heading size={useBreakpointValue({ base: 'xs', md: 'sm' })}>Sign in to your account</Heading>
-            <HStack spacing="1" justify="center">
-              <Text color="muted">Don&apos;t have an account?</Text>
-              <Button variant="link" colorScheme="blue">
-                Sign in
-              </Button>
-            </HStack>
-          </Stack>
-        </Stack>
-        <chakra.form
-          onSubmit={onSubmit}
-          py={{ base: '0', sm: '8' }}
-          px={{ base: '4', sm: '10' }}
-          bg={useBreakpointValue({ base: 'transparent', sm: 'bg-surface' })}
-          boxShadow={{ base: 'none', sm: useColorModeValue('md', 'md-dark') }}
-          borderRadius={{ base: 'none', sm: 'xl' }}
-        >
-          <Stack spacing="6">
-            <Stack spacing="5">
-              <FormControl>
-                <FormLabel htmlFor="email">Email</FormLabel>
-                <Input id="email" type="email" {...register('email')} />
-              </FormControl>
-              <PasswordField {...register('password')} />
-            </Stack>
-            <HStack justify="space-between">
-              <Checkbox defaultIsChecked>Remember me</Checkbox>
-              <Button variant="link" colorScheme="blue" size="sm">
-                Forgot password?
-              </Button>
-            </HStack>
-            <Button variant="solid" colorScheme="blue" type="submit" isLoading={signInMutation.isLoading} disabled={signInMutation.isLoading}>
-              Sign In
-            </Button>
-          </Stack>
-        </chakra.form>
-      </Stack>
+    <Container maxWidth={['lg', 'lg', 'lg']} py={36}>
+      <Heading as="h1" fontSize={['4xl', '5xl', '6xl']} mb={6}>
+        Sign In
+      </Heading>
+
+      <HStack mb={4}>
+        <Text>Don&apos;t have an account?</Text>
+        <NextLink href={routes.auth.register} passHref>
+          <Button as="a" variant="link" color="blue.500" size="sm">
+            Register!
+          </Button>
+        </NextLink>
+      </HStack>
+
+      <Card as="form" maxWidth="2xl" onSubmit={onSubmit}>
+        <FormControl mb={4}>
+          <FormLabel htmlFor="email">Email</FormLabel>
+          <Input id="email" type="email" {...register('email')} />
+        </FormControl>
+
+        <FormControl mb={6}>
+          <FormLabel htmlFor="password">Password</FormLabel>
+          <PasswordInput {...register('password')} />
+        </FormControl>
+
+        <Button type="submit" width="full" isLoading={isLoading} disabled={isLoading}>
+          Sign In
+        </Button>
+      </Card>
     </Container>
   )
 }

@@ -1,4 +1,5 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
+
 import { FC } from 'react'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
@@ -13,11 +14,13 @@ export const Layout: FC = ({ children }) => {
       {router.pathname.includes('admin') ? (
         <Sidebar>{children}</Sidebar>
       ) : (
-        <>
+        <Flex direction="column" minHeight="100vh">
           <Navigation />
-          {children}
+          <Box as="main" flex="1 1 0%">
+            {children}
+          </Box>
           <Footer />
-        </>
+        </Flex>
       )}
     </Box>
   )

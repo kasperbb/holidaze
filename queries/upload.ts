@@ -1,4 +1,6 @@
-import { getRandomInt } from '@utils/common'
+import { getRandomInt, replaceSpacesStr } from '@utils/common'
+
+import { Image } from '@interfaces/accommodation'
 import { supabase } from '@lib/supabase'
 
 interface UploadImagesOptions {
@@ -8,7 +10,11 @@ interface UploadImagesOptions {
 
 export async function uploadImages(files: File[], options: UploadImagesOptions) {
   const promises = files.map(file => {
-    return supabase.storage.from(options.bucketName).upload(`${options.folderName}/${getRandomInt(0, 999999999999)}-${file.name}`, file)
+    return supabase.storage
+      .from(options.bucketName)
+      .upload(`${replaceSpacesStr(options.folderName)}/${getRandomInt(0, 999999999999)}-${replaceSpacesStr(file.name)}`, file, {
+        upsert: true,
+      })
   })
 
   const responses = await Promise.all(promises)
@@ -19,17 +25,17 @@ export async function uploadImages(files: File[], options: UploadImagesOptions) 
 
   const keys = getKeys(responses)
 
-  return getSignedUrls(keys, 60 * 60 * 24 * 7 * 52)
+  return getImageObject(keys, 60 * 60 * 24 * 7 * 52)
 }
 
-async function getSignedUrls(keys: string[], expires: number) {
+async function getImageObject(keys: string[], expires: number): Promise<Image[]> {
   const { data, error } = await supabase.storage.from('images').createSignedUrls(keys, expires)
 
   if (error) {
     throw new Error(error.message)
   }
 
-  return data?.map(item => item.signedURL) ?? []
+  return data?.map(item => ({ url: item.signedURL, path: item.path })) ?? []
 }
 
 interface UploadResponse {

@@ -7,22 +7,42 @@ import { enforceAuth } from '@utils/enforceAuth'
 import { useState } from 'react'
 import { BackButton } from '@components/BackButton'
 import { useForm } from 'react-hook-form'
-import { AddAccommodation } from '@interfaces/accommodation'
+import { UpdateAccommodation } from '@interfaces/accommodation'
 import { useCreateAccommodation } from '@hooks/accommodations/useCreateAccommodation'
 import { Map } from '@components/Map'
+import { dehydrate, QueryClient, useQuery } from 'react-query'
+import { getAccommodation } from '@queries/accommodations'
+import { PropsWithId } from '@interfaces/common'
 
-export const getServerSideProps = enforceAuth()
+export const getServerSideProps = enforceAuth(async ctx => {
+  const queryClient = new QueryClient()
+  const id = Number(ctx.params?.id)
+
+  await queryClient.prefetchQuery(['accommodation', id], () => getAccommodation(id))
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+      id,
+    },
+  }
+})
 
 const EditIcon = chakra(FiEdit)
 const UploadIcon = chakra(FiUpload)
 
-export default function AdminAddAccommodation() {
-  const { register, watch, handleSubmit } = useForm<AddAccommodation>()
+export default function AdminEditAccommodation({ id }: PropsWithId) {
+  const { data } = useQuery(['accommodation', id], () => getAccommodation(id))
+  const { register, watch, handleSubmit } = useForm<UpdateAccommodation>({
+    defaultValues: { ...data },
+  })
 
   const [images, setImages] = useState<ImageListType>([])
   const [files, setFiles] = useState<File[]>([])
 
-  const [location, setLocation] = useState<[latitude: number, longitude: number]>([60.3914191, 5.3248788])
+  const [latitude, longitude] = [data?.location[0] ?? 60.3914191, data?.location[1] ?? 5.3248788]
+
+  const [location, setLocation] = useState<[latitude: number, longitude: number]>([latitude, longitude])
 
   const mutation = useCreateAccommodation({ ...watch(), location, images: files })
 
@@ -42,7 +62,7 @@ export default function AdminAddAccommodation() {
         <Flex align="center" gap={5}>
           <BackButton variant="primary" aria-label="Go back" />
           <Heading as="h1" fontSize="24px" fontWeight={500}>
-            Add Accommodation
+            Edit {data?.name}
           </Heading>
         </Flex>
       </Card>
@@ -89,7 +109,9 @@ export default function AdminAddAccommodation() {
               Location
             </FormLabel>
             <Map
-              markerList={[{ latitude: location[0], longitude: location[1] }]}
+              markerList={[{ latitude, longitude }]}
+              lat={latitude}
+              long={longitude}
               onClick={({ lngLat }) => setLocation([lngLat.lat, lngLat.lng])}
               style={{ height: 250 }}
             />
@@ -135,7 +157,7 @@ export default function AdminAddAccommodation() {
           </FormControl>
 
           <Button type="submit" variant="primary" gridColumn="span 4 / span 4" isLoading={mutation.isLoading}>
-            Add Accommodation
+            Update Accommodation
           </Button>
         </Grid>
       </Card>

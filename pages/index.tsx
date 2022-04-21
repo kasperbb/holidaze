@@ -7,12 +7,11 @@ import { HeroSection } from '@components/FrontPage/Hero'
 import { Stats } from '@components/Stats'
 import { TrianglePattern } from '@components/Icons/TrianglePattern'
 import { getAccommodations } from '@queries/accommodations'
-import { qk } from '@constants/queryKeys'
 
 export const getStaticProps: GetStaticProps = async () => {
   const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery(qk.accommodations, () => getAccommodations())
+  await queryClient.prefetchQuery('accommodations', () => getAccommodations())
 
   return {
     props: {
@@ -23,7 +22,7 @@ export const getStaticProps: GetStaticProps = async () => {
 }
 
 export default function Home() {
-  const { data } = useQuery(qk.accommodations, () => getAccommodations())
+  const { data } = useQuery('accommodations', () => getAccommodations())
 
   return (
     <>

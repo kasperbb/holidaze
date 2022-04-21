@@ -53,7 +53,17 @@ export function Searchbar({ ...rest }: InputProps) {
       <PopoverTrigger>
         <InputGroup minWidth="449px">
           <InputLeftElement pointerEvents="none">{isFetching ? <Spinner width={3} height={3} /> : <FiSearch color="gray.300" />}</InputLeftElement>
-          <Input borderRadius="lg" placeholder="Search" fontSize="sm" onChange={e => setQuery(e.target.value)} ref={inputRef} {...rest} />
+          <Input
+            borderRadius="lg"
+            placeholder="Search"
+            fontSize="sm"
+            onChange={e => setQuery(e.target.value)}
+            onFocus={e => {
+              setQuery(e.target.value)
+            }}
+            ref={inputRef}
+            {...rest}
+          />
         </InputGroup>
       </PopoverTrigger>
       <PopoverContent width="464px">
@@ -65,7 +75,7 @@ export function Searchbar({ ...rest }: InputProps) {
               <NextLink key={id} href={`/accommodations/${id}`} passHref>
                 <Link display="flex" alignItems="center" gap={4}>
                   <Box width={10} height={10} borderRadius="lg" overflow="hidden">
-                    <Image src={images ? images[0] : '/placeholder.png'} alt={name} width="100%" height="100%" objectFit="cover" />
+                    <Image src={images ? images[0].url : '/placeholder.png'} alt={name} width="100%" height="100%" objectFit="cover" />
                   </Box>
                   <Box>
                     <Heading as="h4" fontSize="md" fontWeight="medium" mb={1}>

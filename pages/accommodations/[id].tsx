@@ -9,15 +9,15 @@ import { Map } from '@components/Map'
 import NextLink from 'next/link'
 import { Reviews } from '@components/Accommodations/Reviews'
 import { getAccommodation } from '@queries/accommodations'
-import { qk } from '@constants/queryKeys'
 import { routes } from '@constants/routes'
 import { useAuth } from '@context/AuthContext'
+import { useIsDesktop } from '@hooks/useIsDesktop'
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
   const queryClient = new QueryClient()
   const id = Number(ctx.params?.id)
 
-  await queryClient.prefetchQuery([qk.accommodation, id], () => getAccommodation(id))
+  await queryClient.prefetchQuery(['accommodation', id], () => getAccommodation(id))
 
   return {
     props: {
@@ -28,8 +28,9 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 }
 
 export default function AccommodationDetails({ id }: { id: number }) {
-  const { data } = useQuery([qk.accommodation, id], () => getAccommodation(id))
+  const { data } = useQuery(['accommodation', id], () => getAccommodation(id))
   const { user } = useAuth()
+  const isDesktop = useIsDesktop()
 
   if (!data) {
     return <Spinner />
@@ -47,7 +48,7 @@ export default function AccommodationDetails({ id }: { id: number }) {
             {data.name}
           </Heading>
 
-          {user && (
+          {user && isDesktop && (
             <NextLink href={`${routes.admin.accommodations.base}/${data.id}`} passHref>
               <Button as={Link} variant="outline">
                 Edit Accommodation

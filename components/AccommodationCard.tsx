@@ -1,14 +1,17 @@
-import { Button, Flex, Heading, Link, Text, chakra } from '@chakra-ui/react'
+import { Button, Flex, Heading, IconButton, Link, Text, chakra } from '@chakra-ui/react'
 
 import { Accommodation } from '@interfaces/accommodation'
 import { Card } from './Card'
 import { FiBookmark } from 'react-icons/fi'
 import NextLink from 'next/link'
 import { StarRating } from './StarRating'
+import { useIsDesktop } from '@hooks/useIsDesktop'
 
 export function AccommodationCard({ id, name, images, price, rating }: Accommodation) {
+  const isDesktop = useIsDesktop()
+
   return (
-    <Card imageSrc={images ? images[0] : '/placeholder.png'} imageAlt="Holidaze">
+    <Card imageSrc={images ? images[0].url : '/placeholder.png'} imageAlt="Holidaze">
       <StarRating rating={rating ?? 0} />
 
       <NextLink href={`/accommodations/${id}`} passHref>
@@ -27,9 +30,13 @@ export function AccommodationCard({ id, name, images, price, rating }: Accommoda
           </chakra.span>
         </Text>
 
-        <Button variant="primary" leftIcon={<FiBookmark />}>
-          Book
-        </Button>
+        {isDesktop ? (
+          <Button variant="primary" leftIcon={<FiBookmark />}>
+            Book
+          </Button>
+        ) : (
+          <IconButton variant="primary" icon={<FiBookmark />} p={3} aria-label="Book" />
+        )}
       </Flex>
     </Card>
   )
