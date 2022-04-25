@@ -1,3 +1,4 @@
+import { Booking } from './bookings'
 import { Review } from './reviews'
 
 export interface Accommodation {
@@ -11,6 +12,7 @@ export interface Accommodation {
   created_at: string
   user_id: string
   reviews?: Review[]
+  bookings?: Pick<Booking, 'from' | 'to'>[]
   rating?: number
 }
 
@@ -26,6 +28,15 @@ export interface AddAccommodation {
 
 export interface UpdateAccommodation extends Omit<AddAccommodation, 'images'> {
   images?: Image[]
+}
+
+export interface AccommodationFilter {
+  search: string
+  from: string | undefined
+  to: string | undefined
+  priceRange: [number, number]
+  rating: number
+  sortBy: string
 }
 
 export interface Image {

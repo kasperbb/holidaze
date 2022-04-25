@@ -80,7 +80,7 @@ export function Reviews({ accommodationId }: ReviewsProps) {
           <Review key={review.id} {...review} />
         ))}
 
-        {!reviews?.length && (
+        {!reviews?.length && !isLoading && (
           <Alert status="info" borderRadius="lg">
             <AlertIcon />
             No reviews found. Be the first to place a review!

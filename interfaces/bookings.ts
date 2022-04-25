@@ -1,6 +1,8 @@
 import { Accommodation } from './accommodation'
 import { Auth } from './auth'
 
+type DateRange = [start: Date | null, end: Date | null]
+
 export interface Booking {
   id?: number
   from: string
@@ -11,4 +13,9 @@ export interface Booking {
   accommodation_id: number
   user?: Auth.User
   accommodation?: Accommodation
+}
+
+export interface AddBooking {
+  dateRange: DateRange
+  guests: number
 }

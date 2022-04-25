@@ -93,7 +93,7 @@ export function PaymentModal({ isOpen, onClose, booking }: PaymentModalProps) {
           <Button variant="error" width="full" mr={3} onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="success" width="full" onClick={() => mutate()} isLoading={isLoading}>
+          <Button variant="success" width="full" onClick={() => mutate(onClose)} isLoading={isLoading}>
             Pay
           </Button>
         </ModalFooter>

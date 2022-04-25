@@ -1,5 +1,6 @@
-import { Accommodation, AddAccommodation } from '@interfaces/accommodation'
+import { Accommodation, AccommodationFilter, AddAccommodation } from '@interfaces/accommodation'
 import { addAverageRatingToAccommodation, addAverageRatingToAccommodations } from '@utils/accommodations'
+import { dateRange, includesSameDay } from '@utils/date'
 
 import { supabase } from '@lib/supabase'
 import { uploadImages } from './upload'
@@ -9,6 +10,10 @@ const QUERY = `
   *,
   reviews (
     rating
+  ),
+  bookings (
+    from,
+    to
   )
 `
 
@@ -104,12 +109,63 @@ export const searchAccommodations = async (query: string) => {
     throw new Error(error.message)
   }
 
-  return addAverageRatingToResults(data)
+  return data.map(accommodation => ({
+    ...accommodation,
+    rating: accommodation.reviews.reduce((sum, review) => sum + review.rating, 0) / accommodation.reviews.length,
+  }))
 }
 
-function addAverageRatingToResults(results: SearchResult[]) {
-  return results.map(result => ({
-    ...result,
-    rating: result.reviews.reduce((sum, review) => sum + review.rating, 0) / result.reviews.length,
-  }))
+export const filterAccommodations = async ({ search, from, to, priceRange, rating, sortBy }: AccommodationFilter) => {
+  let query = supabase.from<Accommodation>(TABLE).select(QUERY)
+
+  if (search) query = query.textSearch('name', search, { type: 'websearch' })
+  if (priceRange && priceRange.length) query = query.gte('price', priceRange[0]).lte('price', priceRange[1])
+  if (sortBy) {
+    const { name, ascending } = getSortObject(sortBy)
+    query = query.order(name, { ascending })
+  }
+
+  const { data, error } = await query
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  let accommodations = addAverageRatingToAccommodations(data)
+
+  if (rating) {
+    accommodations = filterByRating(accommodations, rating)
+  }
+
+  if (from && to) {
+    accommodations = filterByBookings(accommodations, new Date(from), new Date(to))
+  }
+
+  return accommodations
+}
+
+function getSortObject(sortBy: string) {
+  const [sortByKey, sortByDirection] = sortBy.split('-') as [keyof Accommodation, string]
+
+  switch (sortByDirection) {
+    case 'asc':
+      return { name: sortByKey, ascending: true }
+    case 'desc':
+      return { name: sortByKey, ascending: false }
+    default:
+      return { name: sortByKey, ascending: true }
+  }
+}
+
+function filterByBookings(accommodations: Accommodation[], from: Date, to: Date) {
+  return accommodations.filter(({ bookings }) => {
+    const disabledDates = bookings?.reduce<Date[]>((acc, dates) => [...acc, ...dateRange(dates.from, dates.to)], [])
+    return includesSameDay([from, to], disabledDates)
+  })
+}
+
+function filterByRating(accommodations: Accommodation[], rating: number) {
+  return accommodations.filter(accommodation => {
+    return accommodation.rating! >= rating
+  })
 }

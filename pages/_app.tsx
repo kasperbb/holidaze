@@ -5,50 +5,53 @@ import 'swiper/css'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import '@theme/globals.css'
 
-import { Hydrate, QueryCache, QueryClient, QueryClientProvider } from 'react-query'
+import { ChakraProvider, useToast } from '@chakra-ui/react'
+import { Hydrate, MutationCache, QueryCache, QueryClient, QueryClientProvider } from 'react-query'
 
 import type { AppProps } from 'next/app'
 import { AuthProvider } from '@context/AuthContext'
-import { ChakraProvider } from '@chakra-ui/react'
 import { Layout } from '@components/Layout/Layout'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { theme } from '@theme/theme'
 import { useRouteChangeProgress } from '@hooks/useRouteChangeProgress'
 import { useState } from 'react'
 
-// import '@fontsource/work-sans/variable.css'
-
 function MyApp({ Component, pageProps }: AppProps) {
+  const toast = useToast()
   useRouteChangeProgress()
 
-  const [invalideUser, setInvaliateUser] = useState(false)
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
             retry: 3,
-            staleTime: 30000, // 30 seconds
+            staleTime: 1000 * 30,
           },
         },
         queryCache: new QueryCache({
+          onError: error => handleError(error as Error),
+        }),
+        mutationCache: new MutationCache({
           onError: error => handleError(error as Error),
         }),
       })
   )
 
   function handleError(error: Error) {
-    if (error.message === 'JWT expired') {
-      setInvaliateUser(true)
-      setInvaliateUser(false)
-    }
+    toast({
+      title: 'Error!',
+      description: error.message,
+      status: 'error',
+      isClosable: true,
+    })
   }
 
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         <ChakraProvider theme={theme}>
-          <AuthProvider invalideUser={invalideUser}>
+          <AuthProvider>
             <Layout>
               <Component {...pageProps} />
             </Layout>

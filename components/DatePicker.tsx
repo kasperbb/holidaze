@@ -1,13 +1,17 @@
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
 import React, { forwardRef, LegacyRef, useState } from 'react'
 import ReactDatePicker, { type ReactDatePickerProps } from 'react-datepicker'
+import { useController, UseControllerProps } from 'react-hook-form'
 import { FiCalendar } from 'react-icons/fi'
 
-interface DatePickerProps extends ReactDatePickerProps {
+interface DatePickerProps<WithRange extends boolean | undefined = undefined> extends ReactDatePickerProps<never, WithRange> {
+  name: string
   isOutline?: boolean
 }
 
-export const DatePicker = ({ isOutline, selected, onChange, isClearable = false, showPopperArrow = false, ...props }: DatePickerProps) => {
+type DateRange = [start: Date | null | undefined, end: Date | null | undefined]
+
+export function DatePicker({ name, isOutline, selected, onChange, isClearable = false, showPopperArrow = false, ...rest }: DatePickerProps) {
   const [date, setDate] = useState<Date>(selected ?? new Date())
 
   const handleChange = (date: Date, event: React.SyntheticEvent<any, Event> | undefined) => {
@@ -21,19 +25,88 @@ export const DatePicker = ({ isOutline, selected, onChange, isClearable = false,
       onChange={handleChange}
       isClearable={isClearable}
       showPopperArrow={showPopperArrow}
-      customInput={<CustomDatePickerInput />}
+      customInput={<CustomDatePickerInput name={name} id={name} />}
+      calendarStartDay={1}
+      {...rest}
+    />
+  )
+}
+
+interface ControlledDatePickerProps extends Omit<DatePickerProps<true>, 'onChange'> {
+  defaultValue?: DateRange
+  excludedDates?: Date[]
+}
+
+export function ControlledDatePicker<T>(props: UseControllerProps<T> & ControlledDatePickerProps) {
+  const {
+    field: { onChange, onBlur, name, ref, value },
+  } = useController<T>(props)
+
+  const [dates, setDates] = useState<DateRange>(value as DateRange)
+
+  const handleChange = (dates: DateRange, event: React.SyntheticEvent<any, Event> | undefined) => {
+    setDates(dates)
+    onChange(dates, event)
+  }
+
+  const [start, end] = dates
+
+  return (
+    <ReactDatePicker
       {...props}
+      startDate={start}
+      endDate={end}
+      onChange={handleChange}
+      onBlur={onBlur}
+      name={name}
+      id={name}
+      ref={ref}
+      isClearable={true}
+      showPopperArrow={true}
+      customInput={<CustomDatePickerInput />}
+      calendarStartDay={1}
+      excludeDates={props.excludedDates}
+      selectsStart
+      selectsRange
+    />
+  )
+}
+
+export function RangeDatePicker({ name, id, isOutline, onChange, isClearable = false, showPopperArrow = false, ...rest }: DatePickerProps<true>) {
+  const [dates, setDates] = useState<DateRange>([new Date(), new Date()])
+
+  const handleChange = (dates: [Date | null, Date | null], event: React.SyntheticEvent<any, Event> | undefined) => {
+    setDates(dates)
+    onChange(dates, event)
+  }
+
+  const [start, end] = dates
+
+  return (
+    <ReactDatePicker
+      startDate={start}
+      endDate={end}
+      onChange={handleChange}
+      isClearable={isClearable}
+      showPopperArrow={showPopperArrow}
+      customInput={<CustomDatePickerInput name={name} id={id} />}
+      calendarStartDay={1}
+      selectsStart
+      selectsRange
+      {...rest}
     />
   )
 }
 
 interface CustomDatePickerInputProps {
+  name?: string
+  id?: string
   value?: string | undefined
   onClick?: () => void
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const CustomDatePickerInput = forwardRef(({ value, onClick, onChange }: CustomDatePickerInputProps, ref) => (
+const CustomDatePickerInput = forwardRef(({ name, id, value, onClick, onChange }: CustomDatePickerInputProps, ref) => (
   <InputGroup>
     <InputLeftElement pointerEvents="none">
       <FiCalendar color="gray.300" />
@@ -46,6 +119,8 @@ const CustomDatePickerInput = forwardRef(({ value, onClick, onChange }: CustomDa
       onChange={onChange}
       ref={ref as LegacyRef<HTMLInputElement> | undefined}
       value={value}
+      name={name}
+      id={id}
     />
   </InputGroup>
 ))

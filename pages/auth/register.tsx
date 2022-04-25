@@ -1,13 +1,14 @@
 import * as Yup from 'yup'
 
-import { Button, Container, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Heading, Input, Text } from '@chakra-ui/react'
-import { FieldError, useForm } from 'react-hook-form'
+import { Button, Container, FormControl, FormLabel, HStack, Heading, Input, Text } from '@chakra-ui/react'
 
 import { Card } from '@components/Card'
+import { FormHelperError } from '@components/Forms/FormHelperError'
 import NextLink from 'next/link'
 import { PasswordInput } from '@components/Forms/Inputs/PasswordInput'
 import { routes } from '@constants/routes'
 import { useCreateUser } from '@hooks/auth/useCreateUser'
+import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 interface RegisterFormData {
@@ -18,9 +19,7 @@ interface RegisterFormData {
 
 const formSchema = Yup.object().shape({
   email: Yup.string().required('Email is required.').email('Has to be a valid email.'),
-
   password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters long.'),
-
   confirmPassword: Yup.string()
     .required('Password is required')
     .oneOf([Yup.ref('password')], 'Passwords do not match.'),
@@ -81,13 +80,4 @@ export default function Register() {
       </Card>
     </Container>
   )
-}
-
-interface FormHelperErrorProps {
-  children: React.ReactNode
-  error: FieldError | undefined
-}
-
-export function FormHelperError({ children, error }: FormHelperErrorProps) {
-  return Boolean(error) ? <FormErrorMessage>{error?.message}</FormErrorMessage> : <FormHelperText>{children}</FormHelperText>
 }

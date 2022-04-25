@@ -1,11 +1,14 @@
 import { AuthChangeEvent, Session, User } from '@supabase/supabase-js'
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { supabase } from '@lib/supabase'
 
 interface AuthContextValues {
   user: User | null | undefined
-  invalidateUser: () => void
+}
+
+interface AuthProviderProps {
+  children: React.ReactNode
 }
 
 const AuthContext = React.createContext<AuthContextValues | null>(null)
@@ -14,7 +17,7 @@ export const useAuth = () => {
   return useContext(AuthContext) as AuthContextValues
 }
 
-export const AuthProvider: FC<{ invalideUser: boolean }> = ({ children, invalideUser }) => {
+export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null | undefined>(null)
 
   useEffect(() => {
@@ -22,6 +25,8 @@ export const AuthProvider: FC<{ invalideUser: boolean }> = ({ children, invalide
     setUser(authSession?.user)
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('event', event)
+      console.log('session', session)
       updateSupabaseCookie(event, session)
       setUser(session?.user)
     })
@@ -30,10 +35,6 @@ export const AuthProvider: FC<{ invalideUser: boolean }> = ({ children, invalide
       authListener?.unsubscribe()
     }
   }, [])
-
-  useEffect(() => {
-    if (invalideUser) invalidateUser()
-  }, [invalideUser])
 
   async function updateSupabaseCookie(event: AuthChangeEvent, session: Session | null) {
     await fetch('/api/auth', {
@@ -44,15 +45,10 @@ export const AuthProvider: FC<{ invalideUser: boolean }> = ({ children, invalide
     })
   }
 
-  function invalidateUser() {
-    supabase.auth.signOut()
-  }
-
   return (
     <AuthContext.Provider
       value={{
         user,
-        invalidateUser,
       }}
     >
       {children}

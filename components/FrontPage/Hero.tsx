@@ -14,7 +14,7 @@ export function HeroSection() {
       height="100vh"
     >
       <Container>
-        <Heading color="white" fontSize={['4xl', '5xl', '6xl', '7xl']} textAlign="center" fontWeight={500} mb={10}>
+        <Heading as="h1" color="white" fontSize={['4xl', '5xl', '6xl', '7xl']} textAlign="center" fontWeight={500} mb={10}>
           Reserve your Holidaze
         </Heading>
 

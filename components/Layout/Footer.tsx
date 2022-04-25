@@ -1,4 +1,4 @@
-import { Box, Button, Container, Link, Stack, Text, VisuallyHidden, useColorModeValue } from '@chakra-ui/react'
+import { Box, Button, Container, Link, Stack, Text, VisuallyHidden } from '@chakra-ui/react'
 import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa'
 
 import { FOOTER_NAV_ITEMS } from '@constants/nav'
@@ -11,7 +11,7 @@ const SocialButton = ({ children, label, href }: { children: ReactNode; label: s
   return (
     <Button
       variant="no-padding"
-      bg={useColorModeValue('blackAlpha.100', 'whiteAlpha.100')}
+      bg="blackAlpha.100"
       rounded={'full'}
       w={8}
       h={8}
@@ -23,7 +23,7 @@ const SocialButton = ({ children, label, href }: { children: ReactNode; label: s
       justifyContent={'center'}
       transition={'background 0.3s ease'}
       _hover={{
-        bg: useColorModeValue('blackAlpha.200', 'whiteAlpha.200'),
+        bg: 'blackAlpha.200',
       }}
     >
       <VisuallyHidden>{label}</VisuallyHidden>
@@ -38,7 +38,7 @@ export function Footer() {
   const navItems = user ? FOOTER_NAV_ITEMS : FOOTER_NAV_ITEMS.filter(item => !item.protected)
 
   return (
-    <Box bg={useColorModeValue('gray.50', 'gray.900')} color={useColorModeValue('gray.700', 'gray.200')}>
+    <Box as="footer" bg="gray.50" color="gray.700">
       <Container as={Stack} maxW={'6xl'} py={4} spacing={4} justify={'center'} align={'center'}>
         <Logo />
         <Stack direction={'row'} spacing={6}>
@@ -50,7 +50,7 @@ export function Footer() {
         </Stack>
       </Container>
 
-      <Box borderTopWidth={1} borderStyle={'solid'} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+      <Box borderTopWidth={1} borderStyle={'solid'} borderColor="gray.200">
         <Container
           as={Stack}
           maxW={'6xl'}

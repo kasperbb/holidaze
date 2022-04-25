@@ -1,3 +1,5 @@
+import { AccommodationFilter } from './accommodation'
+
 export namespace Filter {
   export enum ActionType {
     SET_SEARCH = 'SET_SEARCH',
@@ -7,16 +9,12 @@ export namespace Filter {
     SET_RATING = 'SET_RATING',
   }
 
-  export interface State {
-    search: string
-    from: Date
-    to: Date
-    priceRange: [from: number, to: number]
-    rating: number
+  export interface State extends Omit<AccommodationFilter, 'from' | 'to'> {
+    dateRange: [from: Date | undefined, to: Date | undefined]
   }
-  
+
   export interface Action {
-    type: ActionType;
-    payload: any;
+    type: ActionType
+    payload: any
   }
 }

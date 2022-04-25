@@ -12,14 +12,14 @@ export function Herobar() {
             <FormLabel htmlFor="checkIn" color="text.primary" whiteSpace="nowrap" margin={0} mr={2}>
               Check-in
             </FormLabel>
-            <DatePicker selected={new Date()} onChange={date => console.log(date)} />
+            <DatePicker name="checkIn" selected={new Date()} onChange={date => console.log(date)} />
           </FormControl>
 
           <FormControl display="flex" alignItems="center" flexDirection={['column', 'row']}>
             <FormLabel htmlFor="checkOut" color="text.primary" whiteSpace="nowrap" margin={0} mr={2}>
               Check-out
             </FormLabel>
-            <DatePicker selected={new Date()} onChange={date => console.log(date)} />
+            <DatePicker name="checkOut" selected={new Date()} onChange={date => console.log(date)} />
           </FormControl>
 
           <IconButton icon={<FiSearch />} variant="primary" p={3} aria-label="Search" />
