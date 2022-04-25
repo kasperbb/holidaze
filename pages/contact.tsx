@@ -10,9 +10,9 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 const formSchema = Yup.object().shape({
-  name: Yup.string().required('Name is required.').min(3, 'Password must be at least 3 characters long.'),
+  name: Yup.string().required('Name is required.').min(2, 'Name must minimum 2 characters long.'),
   email: Yup.string().required('Email is required').email('Has to be a valid email.'),
-  message: Yup.string().required('Message is required'),
+  message: Yup.string().required('Message is required').min(20, 'Message must be minimum 20 characters long.'),
 })
 
 export default function Contact() {
@@ -41,7 +41,7 @@ export default function Contact() {
             Name
           </FormLabel>
           <Input id="name" type="text" {...register('name')} />
-          <FormHelperError error={errors.name} />
+          <FormHelperError error={errors.name}>Minimum 2 characters.</FormHelperError>
         </FormControl>
 
         <FormControl mb={4} isInvalid={Boolean(errors.email)} isRequired>
@@ -49,7 +49,7 @@ export default function Contact() {
             Email
           </FormLabel>
           <Input id="email" type="email" {...register('email')} />
-          <FormHelperError error={errors.email} />
+          <FormHelperError error={errors.email}>Must be a valid email.</FormHelperError>
         </FormControl>
 
         <FormControl mb={6} isInvalid={Boolean(errors.message)} isRequired>
@@ -57,7 +57,7 @@ export default function Contact() {
             Message
           </FormLabel>
           <Textarea id="message" {...register('message')} />
-          <FormHelperError error={errors.message} />
+          <FormHelperError error={errors.message}>Minimum 20 characters.</FormHelperError>
         </FormControl>
 
         <Button type="submit" width="full" isLoading={isLoading} disabled={isLoading}>
