@@ -68,11 +68,11 @@ export function StarRatingInput<T>(props: UseControllerProps<T> & StarRatingProp
     >
       {Array.from({ length: 5 })
         .map((_, index) => (
-          <chakra.label key={name + index} htmlFor={name}>
+          <chakra.label key={name + index} htmlFor={name + index}>
             <StarIcon color={ratingValue >= index + 1 ? 'orange.500' : 'gray.200'} cursor="pointer" {...getSizeProps()} />
 
             <VisuallyHidden>
-              <Radio value={index + 1} name={name} id={name}>
+              <Radio value={index + 1} name={name + index} id={name + index}>
                 {index + 1} stars
               </Radio>
             </VisuallyHidden>

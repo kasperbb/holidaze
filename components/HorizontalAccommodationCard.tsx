@@ -1,21 +1,23 @@
-import { Badge, Button, Flex, Heading, Link, Text, chakra } from '@chakra-ui/react'
+import { Badge, Flex, Heading, IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Text, chakra } from '@chakra-ui/react'
+import { FiEdit, FiMoreHorizontal, FiToggleLeft, FiToggleRight, FiTrash2 } from 'react-icons/fi'
 
 import { Accommodation } from '@interfaces/accommodation'
 import { Card } from './Card'
-import { FiEdit } from 'react-icons/fi'
 import NextLink from 'next/link'
 import { routes } from '@constants/routes'
 import { useAuth } from '@context/AuthContext'
+import { useDeleteAccommodation } from '@hooks/accommodations/useDeleteAccommodation'
+import { useToggleFeatured } from '@hooks/accommodations/useToggleFeatured'
 
 interface HorizontalAccommodationCardProps extends Accommodation {
   showEditButton?: boolean
 }
 
-export function HorizontalAccommodationCard({ id, name, images, price, rating, user_id, showEditButton }: HorizontalAccommodationCardProps) {
+export function HorizontalAccommodationCard({ id, name, images, price, rating, user_id, featured, showEditButton }: HorizontalAccommodationCardProps) {
   const { user } = useAuth()
 
   const averageRating = rating && rating.toFixed(0) !== 'NaN' ? rating?.toFixed(0) : 0
-  const shouldShowEditButton = showEditButton && user?.id === user_id
+  const shouldShowActionsButton = showEditButton && user?.id === user_id
 
   return (
     <Card
@@ -34,13 +36,7 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
             </Heading>
           </Link>
         </NextLink>
-        {shouldShowEditButton && (
-          <NextLink href={`${routes.admin.accommodations.edit}/${id}`} passHref>
-            <Button as="a" leftIcon={<FiEdit />} variant="outline" size="sm">
-              Edit
-            </Button>
-          </NextLink>
-        )}
+        {shouldShowActionsButton && <ActionsButton id={id} featured={featured} name={name} />}
       </Flex>
 
       <Flex align="center" justify="space-between" gap={10}>
@@ -58,5 +54,29 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
         </Text>
       </Flex>
     </Card>
+  )
+}
+
+function ActionsButton({ id, featured, name }: Pick<Accommodation, 'id' | 'featured' | 'name'>) {
+  const { mutate: toggle, isLoading } = useToggleFeatured({ id, featured, name })
+  const { mutate: remove } = useDeleteAccommodation(id)
+
+  return (
+    <Menu>
+      <MenuButton as={IconButton} aria-label="Options" icon={<FiMoreHorizontal />} variant="outline" isLoading={isLoading} />
+      <MenuList>
+        <NextLink href={`${routes.admin.accommodations.edit}/${id}`} passHref>
+          <MenuItem as="a" icon={<FiEdit />}>
+            Edit
+          </MenuItem>
+        </NextLink>
+        <MenuItem icon={featured ? <FiToggleRight /> : <FiToggleLeft />} onClick={() => toggle()}>
+          {featured ? 'Unset featured' : 'Set featured'}
+        </MenuItem>
+        <MenuItem icon={<FiTrash2 />} onClick={() => remove()}>
+          Delete
+        </MenuItem>
+      </MenuList>
+    </Menu>
   )
 }

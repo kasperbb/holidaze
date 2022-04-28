@@ -1,18 +1,20 @@
-import { Button, Container, Flex, FormControl, FormLabel, Grid, Heading, Image, Input, Textarea, chakra, FormHelperText } from '@chakra-ui/react'
-import { FiEdit, FiUpload } from 'react-icons/fi'
+import { Button, Container, Flex, FormControl, FormLabel, Grid, Heading, Input, Textarea, chakra, FormHelperText } from '@chakra-ui/react'
+import { FiEdit } from 'react-icons/fi'
 
 import { Card } from '@components/Card'
-import ImageUpload, { type ImageListType } from 'react-images-uploading'
+import { type ImageListType } from 'react-images-uploading'
 import { enforceAuth } from '@utils/enforceAuth'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BackButton } from '@components/BackButton'
 import { useForm } from 'react-hook-form'
-import { UpdateAccommodation } from '@interfaces/accommodation'
-import { useCreateAccommodation } from '@hooks/accommodations/useCreateAccommodation'
+import { AddAccommodation } from '@interfaces/accommodation'
 import { Map } from '@components/Map'
 import { dehydrate, QueryClient, useQuery } from 'react-query'
 import { getAccommodation } from '@queries/accommodations'
 import { PropsWithId } from '@interfaces/common'
+import { useUpdateAccommodation } from '@hooks/accommodations/useUpdateAccommodation'
+import { ImageUploadInput } from '@components/Forms/Inputs/ImageUploadInput'
+import { downloadImages } from '@queries/upload'
 
 export const getServerSideProps = enforceAuth(async ctx => {
   const queryClient = new QueryClient()
@@ -29,22 +31,36 @@ export const getServerSideProps = enforceAuth(async ctx => {
 })
 
 const EditIcon = chakra(FiEdit)
-const UploadIcon = chakra(FiUpload)
 
 export default function AdminEditAccommodation({ id }: PropsWithId) {
   const { data } = useQuery(['accommodation', id], () => getAccommodation(id))
-  const { register, watch, handleSubmit } = useForm<UpdateAccommodation>({
-    defaultValues: { ...data },
-  })
 
   const [images, setImages] = useState<ImageListType>([])
   const [files, setFiles] = useState<File[]>([])
+
+  const { register, watch, handleSubmit } = useForm<AddAccommodation>({
+    defaultValues: {
+      name: data?.name,
+      description: data?.description,
+      location: data?.location,
+      price: data?.price,
+      rooms: data?.rooms,
+      images: files,
+    },
+  })
 
   const [latitude, longitude] = [data?.location[0] ?? 60.3914191, data?.location[1] ?? 5.3248788]
 
   const [location, setLocation] = useState<[latitude: number, longitude: number]>([latitude, longitude])
 
-  const mutation = useCreateAccommodation({ ...watch(), location, images: files })
+  const mutation = useUpdateAccommodation(data?.id, { ...watch(), location, images: files }, true)
+
+  useEffect(() => {
+    ;(async () => {
+      const downloadedFiles = await downloadImages(data?.images)
+      if (downloadedFiles) setImages(downloadedFiles)
+    })()
+  }, [data?.images])
 
   function onChange(imageList: ImageListType) {
     const files = imageList.map(image => image.file) as File[]
@@ -122,37 +138,7 @@ export default function AdminEditAccommodation({ id }: PropsWithId) {
             <FormLabel htmlFor="images" color="text.primary">
               Images
             </FormLabel>
-            <ImageUpload multiple value={images} onChange={onChange} maxNumber={10} inputProps={{ id: 'images', name: 'images' }} dataURLKey="data_url">
-              {({ imageList, onImageUpload, dragProps }) => (
-                <Flex
-                  justify={imageList.length ? 'start' : 'center'}
-                  align="center"
-                  border="2px dashed"
-                  borderColor="gray.300"
-                  borderRadius="md"
-                  p={8}
-                  cursor="pointer"
-                  onClick={onImageUpload}
-                  tabIndex={-1}
-                  {...dragProps}
-                >
-                  {!imageList.length && (
-                    <Flex align="center" gap={4}>
-                      <UploadIcon width={7} height={7} />
-                      Click or drag images here to upload
-                    </Flex>
-                  )}
-
-                  {Boolean(imageList.length) && (
-                    <Flex gap={4}>
-                      {imageList.map((image, index) => (
-                        <Image key={image.file?.name} src={image.data_url} alt={`${index + 1}. uploaded image`} maxHeight={24} />
-                      ))}
-                    </Flex>
-                  )}
-                </Flex>
-              )}
-            </ImageUpload>
+            <ImageUploadInput multiple value={images} onChange={onChange} maxNumber={10} inputProps={{ id: 'images', name: 'images' }} dataURLKey="dataURL" />
             <FormHelperText>Recommended minimum width: 750px.</FormHelperText>
           </FormControl>
 

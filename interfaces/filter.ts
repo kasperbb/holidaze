@@ -10,7 +10,7 @@ export namespace Filter {
   }
 
   export interface State extends Omit<AccommodationFilter, 'from' | 'to'> {
-    dateRange: [from: Date | undefined, to: Date | undefined]
+    dateRange: [from: Date | undefined, to: Date | undefined] | undefined[]
   }
 
   export interface Action {

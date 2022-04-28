@@ -1,24 +1,24 @@
-import { Accommodation, AddAccommodation } from '@interfaces/accommodation'
 import { useMutation, useQueryClient } from 'react-query'
 
-import { createAccommodation } from '@queries/accommodations'
+import { Accommodation } from '@interfaces/accommodation'
 import { routes } from '@constants/routes'
-import { useAuth } from '@context/AuthContext'
+import { toggleFeatured } from '@queries/accommodations'
 import { useRouter } from 'next/router'
 import { useToast } from '@chakra-ui/react'
 
-export function useCreateAccommodation(accommodation: AddAccommodation) {
+export function useToggleFeatured({ id, featured, name }: Pick<Accommodation, 'id' | 'featured' | 'name'>) {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
   const toast = useToast()
   const router = useRouter()
 
-  return useMutation<Accommodation, Error>(() => createAccommodation({ ...accommodation, user_id: user?.id }), {
-    onSuccess: data => {
+  const newFeaturedValue = !featured
+
+  return useMutation<Accommodation, Error>(() => toggleFeatured(id, newFeaturedValue), {
+    onSuccess: () => {
       router.push(routes.admin.accommodations.base)
       toast({
         title: 'Success!',
-        description: `Successfully created ${data.name}`,
+        description: newFeaturedValue ? `Successfully set ${name} as featured.` : `Successfully unset ${name} as featured.`,
         status: 'success',
         isClosable: true,
       })

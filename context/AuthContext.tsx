@@ -25,8 +25,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(authSession?.user)
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('event', event)
-      console.log('session', session)
       updateSupabaseCookie(event, session)
       setUser(session?.user)
     })

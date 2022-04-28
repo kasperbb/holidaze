@@ -9,6 +9,7 @@ export interface Accommodation {
   price: number
   rooms: number
   images: Image[]
+  featured: boolean
   created_at: string
   user_id: string
   reviews?: Review[]
@@ -24,10 +25,6 @@ export interface AddAccommodation {
   rooms: number
   images: File[]
   user_id?: string
-}
-
-export interface UpdateAccommodation extends Omit<AddAccommodation, 'images'> {
-  images?: Image[]
 }
 
 export interface AccommodationFilter {

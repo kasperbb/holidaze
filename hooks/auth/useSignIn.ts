@@ -11,7 +11,7 @@ export function useSignIn({ email, password }: Auth.User) {
 
   return useMutation('signIn', () => signIn({ email, password }), {
     onSuccess: () => {
-      push(routes.admin.base)
+      setTimeout(() => push(routes.admin.base), 500)
     },
     onError: (error: Error) => {
       toast({

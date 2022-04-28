@@ -39,7 +39,7 @@ export function SortByInput<T>(props: UseControllerProps<T> & SortByInputProps) 
         aria-label="Sort"
         variant="outline"
         fontWeight="normal"
-        px={4}
+        px={2}
         sx={{ '& > span::first-letter': { textTransform: 'uppercase' } }}
       >
         {getTitle(sortBy)}

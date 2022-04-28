@@ -8,13 +8,22 @@ interface UploadImagesOptions {
   folderName: string
 }
 
-export async function uploadImages(files: File[], options: UploadImagesOptions) {
+export async function uploadImages(files: File[], options: UploadImagesOptions, shouldDelete?: boolean) {
+  const folderName = replaceSpacesStr(options.folderName)
+
+  if (shouldDelete) {
+    const { data: list } = await supabase.storage.from(options.bucketName).list(folderName)
+    const filesToRemove = list?.map(x => `${folderName}/${x.name}`)
+
+    if (filesToRemove) {
+      await supabase.storage.from(options.bucketName).remove(filesToRemove)
+    }
+  }
+
   const promises = files.map(file => {
-    return supabase.storage
-      .from(options.bucketName)
-      .upload(`${replaceSpacesStr(options.folderName)}/${getRandomInt(0, 999999999999)}-${replaceSpacesStr(file.name)}`, file, {
-        upsert: true,
-      })
+    return supabase.storage.from(options.bucketName).upload(`${folderName}/${getRandomInt(0, 999999999999)}-${replaceSpacesStr(file.name)}`, file, {
+      upsert: true,
+    })
   })
 
   const responses = await Promise.all(promises)
@@ -53,4 +62,24 @@ function getKeys(responses: UploadResponse[]) {
 
     return acc
   }, [])
+}
+
+export async function downloadImages(images: Image[] | undefined) {
+  if (!images) return
+
+  const promises = images.map(({ path }) => {
+    return path && supabase.storage.from('images').download(path)
+  })
+
+  if (!promises) throw new Error('Failed to download images')
+
+  const res = await Promise.all(promises)
+
+  return res.map((file, index) => {
+    if (typeof file === 'string' || !file?.data) throw new Error('Failed to download images')
+    return {
+      file: new File([file.data], images[index].path?.split('/')[1] ?? `name-${index}.jpg`),
+      dataURL: images[index].url,
+    }
+  })
 }

@@ -1,8 +1,8 @@
-import { Button, Container, Flex, FormControl, FormLabel, Grid, Heading, Image, Input, Textarea, chakra, FormHelperText } from '@chakra-ui/react'
-import { FiEdit, FiUpload } from 'react-icons/fi'
+import { Button, Container, Flex, FormControl, FormLabel, Grid, Heading, Input, Textarea, chakra, FormHelperText } from '@chakra-ui/react'
+import { FiEdit } from 'react-icons/fi'
 
 import { Card } from '@components/Card'
-import ImageUpload, { type ImageListType } from 'react-images-uploading'
+import { type ImageListType } from 'react-images-uploading'
 import { enforceAuth } from '@utils/enforceAuth'
 import { useState } from 'react'
 import { BackButton } from '@components/BackButton'
@@ -10,11 +10,11 @@ import { useForm } from 'react-hook-form'
 import { AddAccommodation } from '@interfaces/accommodation'
 import { useCreateAccommodation } from '@hooks/accommodations/useCreateAccommodation'
 import { Map } from '@components/Map'
+import { ImageUploadInput } from '@components/Forms/Inputs/ImageUploadInput'
 
 export const getServerSideProps = enforceAuth()
 
 const EditIcon = chakra(FiEdit)
-const UploadIcon = chakra(FiUpload)
 
 export default function AdminAddAccommodation() {
   const { register, watch, handleSubmit } = useForm<AddAccommodation>()
@@ -100,37 +100,15 @@ export default function AdminAddAccommodation() {
             <FormLabel htmlFor="images" color="text.primary">
               Images
             </FormLabel>
-            <ImageUpload multiple value={images} onChange={onChange} maxNumber={10} inputProps={{ id: 'images', name: 'images' }} dataURLKey="data_url">
-              {({ imageList, onImageUpload, dragProps }) => (
-                <Flex
-                  justify={imageList.length ? 'start' : 'center'}
-                  align="center"
-                  border="2px dashed"
-                  borderColor="gray.300"
-                  borderRadius="md"
-                  p={8}
-                  cursor="pointer"
-                  onClick={onImageUpload}
-                  tabIndex={-1}
-                  {...dragProps}
-                >
-                  {!imageList.length && (
-                    <Flex align="center" gap={4}>
-                      <UploadIcon width={7} height={7} />
-                      Click or drag images here to upload
-                    </Flex>
-                  )}
-
-                  {Boolean(imageList.length) && (
-                    <Flex gap={4}>
-                      {imageList.map((image, index) => (
-                        <Image key={image.file?.name} src={image.data_url} alt={`${index + 1}. uploaded image`} maxHeight={24} />
-                      ))}
-                    </Flex>
-                  )}
-                </Flex>
-              )}
-            </ImageUpload>
+            <ImageUploadInput
+              multiple
+              value={images}
+              onChange={onChange}
+              maxNumber={10}
+              initialMode="edit"
+              inputProps={{ id: 'images', name: 'images' }}
+              dataURLKey="dataURL"
+            />
             <FormHelperText>Recommended minimum width: 750px.</FormHelperText>
           </FormControl>
 

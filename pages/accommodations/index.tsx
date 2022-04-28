@@ -1,4 +1,4 @@
-import { Button, Container, FormControl, FormLabel, Grid, GridItem, HStack, Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
+import { Button, Container, FormControl, FormLabel, Grid, GridItem, HStack, Heading, Input, InputGroup, InputLeftElement, Skeleton } from '@chakra-ui/react'
 import { QueryClient, dehydrate } from 'react-query'
 
 import { Card } from '@components/Card'
@@ -6,8 +6,9 @@ import { ControlledDatePicker } from '@components/DatePicker'
 import { EmptyResults } from '@components/EmptyResults'
 import { FiSearch } from 'react-icons/fi'
 import { Filter } from '@interfaces/filter'
-import { GetStaticProps } from 'next'
+import { GetServerSideProps } from 'next'
 import { HorizontalAccommodationCard } from '@components/HorizontalAccommodationCard'
+import { ParsedUrlQuery } from 'querystring'
 import { PriceRangeInput } from '@components/Forms/Inputs/PriceRangeInput'
 import { SortByInput } from '@components/Forms/Inputs/SortByInput'
 import { StarRatingInput } from '@components/Forms/Inputs/StarRatingInput'
@@ -16,7 +17,7 @@ import { useFilterAccommodations } from '@hooks/accommodations/useFilterAccommod
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 
-export const getStaticProps: GetStaticProps = async ctx => {
+export const getServerSideProps: GetServerSideProps = async ({ params, query }) => {
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery('accommodations', () => getAccommodations())
@@ -24,7 +25,8 @@ export const getStaticProps: GetStaticProps = async ctx => {
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      id: Number(ctx.params?.id),
+      id: Number(params?.id),
+      query,
     },
   }
 }
@@ -41,9 +43,19 @@ function getDateValue(dateRange: (Date | undefined)[], index: number) {
   return dateRange[index] ? dateRange[index]?.toISOString() : undefined
 }
 
-export default function Accommodations() {
-  const [filter, setFilter] = useState(initialState)
-  const { data } = useFilterAccommodations({
+function getInitialDateRange(query: ParsedUrlQuery): [from: Date | undefined, to: Date | undefined] | undefined[] {
+  if (query.from && query.to && typeof query.from === 'string' && typeof query.to === 'string') {
+    return [new Date(query.from), new Date(query.to)]
+  }
+  return [undefined, undefined]
+}
+
+export default function Accommodations({ query }: { query: ParsedUrlQuery }) {
+  const [filter, setFilter] = useState({
+    ...initialState,
+    dateRange: getInitialDateRange(query),
+  })
+  const { data, isLoading } = useFilterAccommodations({
     ...filter,
     from: getDateValue(filter.dateRange, 0),
     to: getDateValue(filter.dateRange, 1),
@@ -130,6 +142,8 @@ export default function Accommodations() {
           </Card>
         </GridItem>
         <GridItem width="full" colSpan={4}>
+          {isLoading && <Skeleton variant="rect" width="100%" height="125px" borderRadius="2xl" />}
+
           {data?.map(item => (
             <HorizontalAccommodationCard key={item.id} {...item} />
           ))}

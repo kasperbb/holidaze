@@ -17,8 +17,21 @@ const QUERY = `
   )
 `
 
-export const getAccommodations = async () => {
-  const { data, error } = await supabase.from<Accommodation>(TABLE).select(QUERY)
+export const getAccommodations = async (options?: Record<string, unknown>) => {
+  const { data, error } = await supabase
+    .from<Accommodation>(TABLE)
+    .select(QUERY)
+    .match({ ...options })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return addAverageRatingToAccommodations(data)
+}
+
+export const getFeaturedAccommodations = async () => {
+  const { data, error } = await supabase.from<Accommodation>(TABLE).select(QUERY).eq('featured', true)
 
   if (error) {
     throw new Error(error.message)
@@ -65,8 +78,33 @@ export const createAccommodation = async (obj: AddAccommodation) => {
   return data
 }
 
-export const updateAccommodation = async (id: number, obj: Accommodation) => {
-  const { data, error } = await supabase.from<Accommodation>(TABLE).update(obj).eq('id', id)
+export const updateAccommodation = async (id: number | undefined, obj: AddAccommodation, shouldDelete?: boolean) => {
+  if (!obj.images) throw new Error('Images are required')
+
+  const imageUrls = await uploadImages(
+    obj.images,
+    {
+      bucketName: 'images',
+      folderName: obj.name,
+    },
+    shouldDelete
+  )
+
+  const { data, error } = await supabase
+    .from<Accommodation>(TABLE)
+    .update({ ...obj, images: imageUrls })
+    .eq('id', id)
+    .single()
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return data
+}
+
+export const toggleFeatured = async (id: number, featuredValue: boolean) => {
+  const { data, error } = await supabase.from<Accommodation>(TABLE).update({ featured: featuredValue }).eq('id', id).single()
 
   if (error) {
     throw new Error(error.message)
@@ -76,7 +114,7 @@ export const updateAccommodation = async (id: number, obj: Accommodation) => {
 }
 
 export const deleteAccommodation = async (id: number) => {
-  const { data, error } = await supabase.from<Accommodation>(TABLE).delete().eq('id', id)
+  const { data, error } = await supabase.from<Accommodation>(TABLE).delete().eq('id', id).single()
 
   if (error) {
     throw new Error(error.message)
