@@ -5,7 +5,7 @@ import { AiFillStar } from 'react-icons/ai'
 type ThresholdTuple = [firstStar: number, secondStar: number, thirdStar: number, fourthStar: number, fifthStar: number]
 
 interface StarRatingProps {
-  rating: number
+  rating: number | undefined
   ratingThresholds?: ThresholdTuple
   size?: number
   onClick?: (rating: number) => void
@@ -19,7 +19,7 @@ const StarIcon = chakra(AiFillStar, {
 
 const defaultRatingThresholds: ThresholdTuple = [0.5, 1.5, 2.5, 3.5, 4.5]
 
-export function StarRating({ rating, ratingThresholds = defaultRatingThresholds, size = 4, onClick, ...rest }: StarRatingProps) {
+export function StarRating({ rating = 0, ratingThresholds = defaultRatingThresholds, size = 4, onClick, ...rest }: StarRatingProps) {
   function getSizeProps() {
     return { width: size ?? 4, height: size ?? 4 }
   }
@@ -54,7 +54,13 @@ export function StarRating({ rating, ratingThresholds = defaultRatingThresholds,
   return (
     <Flex direction="row-reverse" justify="start">
       {ratingThresholds
-        .map(threshold => (rating >= threshold ? <StarIcon key={threshold} color="orange.500" {...getSizeProps()} {...rest} /> : <StarIcon key={threshold} {...getSizeProps()} {...rest} />))
+        .map(threshold =>
+          rating >= threshold ? (
+            <StarIcon key={threshold} color="orange.500" {...getSizeProps()} {...rest} />
+          ) : (
+            <StarIcon key={threshold} {...getSizeProps()} {...rest} />
+          )
+        )
         .reverse()}
     </Flex>
   )

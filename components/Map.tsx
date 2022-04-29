@@ -1,6 +1,6 @@
-import ReactMapGL, { FullscreenControl, Marker, MarkerProps, NavigationControl, Popup, PopupProps } from 'react-map-gl'
+import { CSSProperties, forwardRef } from 'react'
+import ReactMapGL, { FullscreenControl, MapRef, Marker, MarkerProps, NavigationControl, Popup, PopupProps } from 'react-map-gl'
 
-import { CSSProperties } from 'react'
 import maplibregl from 'maplibre-gl'
 import { useToken } from '@chakra-ui/react'
 
@@ -12,9 +12,13 @@ interface MapProps {
   popupList?: PopupProps[]
   markerList?: MarkerProps[]
   onClick?: ((e: mapboxgl.MapLayerMouseEvent) => void) | undefined
+  hasBorder?: boolean
 }
 
-export function Map({ lat = 60.3914191, long = 5.3248788, zoom = 13, style, popupList, markerList, ...rest }: MapProps) {
+export const Map = forwardRef<MapRef, MapProps>(({ lat = 60.3914191, long = 5.3248788, zoom = 13, style, popupList, markerList, hasBorder, ...rest }, ref) => {
+  const xlBroderRadius = useToken('radii', '2xl')
+  const mdBorderRadius = useToken('radii', 'md')
+
   return (
     <ReactMapGL
       mapLib={maplibregl}
@@ -25,7 +29,14 @@ export function Map({ lat = 60.3914191, long = 5.3248788, zoom = 13, style, popu
         longitude: long,
         zoom: zoom,
       }}
-      style={{ height: 330, borderRadius: useToken('radii', '2xl'), boxShadow: useToken('shadows', 'primary'), border: '10px solid white', ...style }}
+      style={{
+        height: 330,
+        borderRadius: hasBorder ? xlBroderRadius : mdBorderRadius,
+        boxShadow: useToken('shadows', 'primary'),
+        border: hasBorder ? '10px solid white' : 'none',
+        ...style,
+      }}
+      ref={ref}
       {...rest}
     >
       {popupList &&
@@ -46,4 +57,6 @@ export function Map({ lat = 60.3914191, long = 5.3248788, zoom = 13, style, popu
       <FullscreenControl />
     </ReactMapGL>
   )
-}
+})
+
+Map.displayName = 'Map'

@@ -2,7 +2,7 @@ import * as Yup from 'yup'
 
 import { Button, Container, FormControl, FormLabel, Heading, Input, Textarea } from '@chakra-ui/react'
 
-import { Card } from '@components/Card'
+import { Card } from '@components/Cards/Card'
 import { FormHelperError } from '@components/Forms/FormHelperError'
 import { Message } from '@interfaces/messages'
 import { useCreateMessage } from '@hooks/messages/useCreateMessage'

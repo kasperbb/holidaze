@@ -1,7 +1,7 @@
 import { Box, Container, Flex, Grid, Heading, Image, Link, Select, Text } from '@chakra-ui/react'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
-import { Card } from '@components/Card'
+import { Card } from '@components/Cards/Card'
 import { EmptyResults } from '@components/EmptyResults'
 import NextLink from 'next/link'
 import { enforceAuth } from '@utils/enforceAuth'

@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, Image, Text } from '@chakra-ui/react'
 
-import { Card } from './Card'
+import { Card } from './Cards/Card'
 import { JoinedReview } from '@interfaces/reviews'
 import { StarRating } from './StarRating'
 

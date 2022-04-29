@@ -3,7 +3,7 @@ import { FiArrowLeft, FiArrowRight } from 'react-icons/fi'
 import { Swiper as ReactSwiper, SwiperSlide, useSwiper } from 'swiper/react'
 
 import { Accommodation } from '@interfaces/accommodation'
-import { AccommodationCard } from '../AccommodationCard'
+import { AccommodationCard } from '../Cards/AccommodationCard'
 import { EmptyResults } from '@components/EmptyResults'
 import { useState } from 'react'
 
@@ -31,13 +31,18 @@ export function AccommodationSlider({ accommodations }: { accommodations: Accomm
           Our Most Popular Locations
         </Heading>
       </chakra.span>
+
       {accommodations.map(accommodation => (
         <SwiperSlide key={accommodation.id}>
           <AccommodationCard {...accommodation} />
         </SwiperSlide>
       ))}
-      <EmptyResults data={accommodations}>No accommodations found</EmptyResults>
-      <SwiperControls activeSlide={activeSlide} allSlides={accommodations.length ?? 0} />
+
+      <EmptyResults width="700px" data={accommodations}>
+        No accommodations found
+      </EmptyResults>
+
+      {Boolean(accommodations.length) && <SwiperControls activeSlide={activeSlide} allSlides={accommodations.length ?? 0} />}
     </Swiper>
   )
 }

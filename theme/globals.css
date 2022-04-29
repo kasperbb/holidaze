@@ -35,6 +35,10 @@
   z-index: 100;
 }
 
+.react-datepicker__triangle::after {
+  border-bottom-color: white !important;
+}
+
 .react-datepicker__navigation--next--with-time:not(.react-datepicker__navigation--next--with-today-button) {
   right: 90px;
 }

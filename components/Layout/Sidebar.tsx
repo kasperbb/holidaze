@@ -4,6 +4,7 @@ import React, { ReactNode } from 'react'
 import { ADMIN_NAV_ITEMS } from '@constants/nav'
 import { FiMenu } from 'react-icons/fi'
 import { IconType } from 'react-icons'
+import { Logo } from '@components/Logo'
 import NextLink from 'next/link'
 import { isActiveLink } from '@utils/nav'
 import { useRouter } from 'next/router'
@@ -38,9 +39,7 @@ const SidebarContent = ({ isOpen, onClose, ...rest }: SidebarProps) => {
   return (
     <Box borderEndRadius="lg" boxShadow="rgba(0, 0, 0, 0.04) 0px 2px 48px 0px" w={{ base: 'full', md: 60 }} pos="fixed" h="full" {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent={isOpen ? 'space-between' : 'center'}>
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
-        </Text>
+        <Logo />
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {ADMIN_NAV_ITEMS.map(item => (

@@ -3,7 +3,7 @@ import { QueryClient, dehydrate, useQuery } from 'react-query'
 
 import { AccommodationSlider } from '@components/FrontPage/AccommodationSlider'
 import { ExploreCard } from '@components/Cards/ExploreCard'
-import { FeaturedLocations } from '@components/FrontPage/FeaturedLocations'
+import { FeaturedLocations } from '@components/FeaturedLocation/FeaturedLocations'
 import { GetStaticProps } from 'next'
 import { HeroSection } from '@components/FrontPage/Hero'
 import { Stats } from '@components/Stats'
@@ -48,7 +48,7 @@ export default function Home() {
               Featured Locations
             </Heading>
 
-            <Text maxW="2xl" textAlign="center">
+            <Text maxW="2xl" textAlign="center" mb={10}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
               veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             </Text>

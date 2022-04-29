@@ -2,12 +2,12 @@ import { Box, Button, Container, Flex, Grid, GridItem, Heading, Link, Spinner, T
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
 import { BookingForm } from '@components/Forms/BookingForm'
-import { Card } from '@components/Card'
+import { Card } from '@components/Cards/Card'
 import { GetServerSideProps } from 'next/types'
 import { ImageGrid } from '@components/ImageGrid'
 import { Map } from '@components/Map'
 import NextLink from 'next/link'
-import { Reviews } from '@components/Accommodations/Reviews'
+import { Reviews } from '@components/Reviews'
 import { getAccommodation } from '@queries/accommodations'
 import { routes } from '@constants/routes'
 import { useAuth } from '@context/AuthContext'
@@ -42,7 +42,7 @@ export default function AccommodationDetails({ id }: { id: number }) {
     <Container py="88px">
       <ImageGrid images={data.images} />
 
-      <Box mb={{ base: 0, md: 14 }} mt={8}>
+      <Box mb={{ base: 0, md: 14 }} mt={8} width="full">
         <Flex align="center" justify="space-between">
           <Heading as="h1" fontSize={['4xl', '5xl', '6xl']}>
             {data.name}
@@ -88,7 +88,7 @@ export default function AccommodationDetails({ id }: { id: number }) {
               Location
             </Heading>
 
-            <Map markerList={[{ latitude: latitude, longitude: longitude }]} lat={latitude} long={longitude} />
+            <Map markerList={[{ latitude: latitude, longitude: longitude }]} lat={latitude} long={longitude} hasBorder />
           </Box>
 
           <Box mt={14}>

@@ -1,10 +1,10 @@
 import { Container, Flex, Grid, Heading, IconButton, Select } from '@chakra-ui/react'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
-import { Card } from '@components/Card'
+import { Card } from '@components/Cards/Card'
 import { EmptyResults } from '@components/EmptyResults'
 import { FiPlus } from 'react-icons/fi'
-import { HorizontalAccommodationCard } from '@components/HorizontalAccommodationCard'
+import { HorizontalAccommodationCard } from '@components/Cards/HorizontalAccommodationCard'
 import NextLink from 'next/link'
 import { enforceAuth } from '@utils/enforceAuth'
 import { getAccommodations } from '@queries/accommodations'

@@ -1,6 +1,6 @@
 import { Button, Container, FormControl, FormLabel, HStack, Heading, Input, Text } from '@chakra-ui/react'
 
-import { Card } from '@components/Card'
+import { Card } from '@components/Cards/Card'
 import NextLink from 'next/link'
 import { PasswordInput } from '@components/Forms/Inputs/PasswordInput'
 import { routes } from '@constants/routes'

@@ -1,7 +1,22 @@
-import { Button, Container, Flex, FormControl, FormLabel, Grid, Heading, Input, Textarea, chakra, FormHelperText } from '@chakra-ui/react'
+import {
+  Button,
+  Container,
+  Flex,
+  FormControl,
+  FormLabel,
+  Grid,
+  Heading,
+  Input,
+  Textarea,
+  chakra,
+  FormHelperText,
+  InputGroup,
+  InputLeftElement,
+  Spinner,
+} from '@chakra-ui/react'
 import { FiEdit } from 'react-icons/fi'
 
-import { Card } from '@components/Card'
+import { Card } from '@components/Cards/Card'
 import { type ImageListType } from 'react-images-uploading'
 import { enforceAuth } from '@utils/enforceAuth'
 import { useState } from 'react'
@@ -11,6 +26,8 @@ import { AddAccommodation } from '@interfaces/accommodation'
 import { useCreateAccommodation } from '@hooks/accommodations/useCreateAccommodation'
 import { Map } from '@components/Map'
 import { ImageUploadInput } from '@components/Forms/Inputs/ImageUploadInput'
+import { FiSearch } from 'react-icons/fi'
+import { useLocationState } from '@hooks/useLocationState'
 
 export const getServerSideProps = enforceAuth()
 
@@ -22,7 +39,8 @@ export default function AdminAddAccommodation() {
   const [images, setImages] = useState<ImageListType>([])
   const [files, setFiles] = useState<File[]>([])
 
-  const [location, setLocation] = useState<[latitude: number, longitude: number]>([60.3914191, 5.3248788])
+  const [locationQuery, setLocationQuery] = useState('')
+  const { location, setLocation, isFetching, ref: mapRef } = useLocationState(locationQuery)
 
   const mutation = useCreateAccommodation({ ...watch(), location, images: files })
 
@@ -88,12 +106,19 @@ export default function AdminAddAccommodation() {
             <FormLabel htmlFor="location" color="text.primary">
               Location
             </FormLabel>
+
+            <InputGroup mb={2}>
+              <InputLeftElement pointerEvents="none">{isFetching ? <Spinner width={3} height={3} /> : <FiSearch color="gray.300" />}</InputLeftElement>
+              <Input type="search" placeholder="Search location" onChange={e => setLocationQuery(e.target.value)} />
+            </InputGroup>
+
             <Map
               markerList={[{ latitude: location[0], longitude: location[1] }]}
               onClick={({ lngLat }) => setLocation([lngLat.lat, lngLat.lng])}
               style={{ height: 250 }}
+              ref={mapRef}
             />
-            <FormHelperText>Click on the map to set location.</FormHelperText>
+            <FormHelperText>Search or click on the map to set location.</FormHelperText>
           </FormControl>
 
           <FormControl gridColumn="span 4 / span 4">

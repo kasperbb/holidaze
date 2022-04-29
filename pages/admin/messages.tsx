@@ -1,7 +1,7 @@
-import { Button, Container, Flex, Grid, HStack, Heading, Select, Text, VisuallyHidden, chakra } from '@chakra-ui/react'
+import { Button, Container, Flex, Grid, GridItem, HStack, Heading, Select, Text, VisuallyHidden, chakra } from '@chakra-ui/react'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
-import { Card } from '@components/Card'
+import { Card } from '@components/Cards/Card'
 import { EmptyResults } from '@components/EmptyResults'
 import { enforceAuth } from '@utils/enforceAuth'
 import { getMessages } from '@queries/messages'
@@ -78,7 +78,9 @@ export default function AdminMessages() {
           </Card>
         ))}
 
-        <EmptyResults data={data}>No messages found</EmptyResults>
+        <GridItem colSpan={2}>
+          <EmptyResults data={data}>No messages found</EmptyResults>
+        </GridItem>
       </Grid>
     </Container>
   )

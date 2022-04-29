@@ -1,7 +1,7 @@
 import { Alert, AlertIcon, Button, Collapse, Flex, FormControl, FormLabel, Heading, Spinner, Textarea, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 
-import { Card } from '@components/Card'
+import { Card } from '@components/Cards/Card'
 import { FiPlus } from 'react-icons/fi'
 import { Review } from '@components/Review'
 import { Review as ReviewType } from '@interfaces/reviews'

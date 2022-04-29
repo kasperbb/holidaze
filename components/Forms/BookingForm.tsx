@@ -4,7 +4,7 @@ import { AddBooking, Booking } from '@interfaces/bookings'
 import { Button, FormControl, FormLabel, HStack, Select, useDisclosure, useToast } from '@chakra-ui/react'
 import { dateRange, includesSameDay } from '@utils/date'
 
-import { Card } from '@components/Card'
+import { Card } from '@components/Cards/Card'
 import { ControlledDatePicker } from '@components/DatePicker'
 import { FormHelperError } from './FormHelperError'
 import { PaymentModal } from '@components/Modals/PaymentModal'

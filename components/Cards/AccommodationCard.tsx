@@ -4,7 +4,7 @@ import { Accommodation } from '@interfaces/accommodation'
 import { Card } from './Card'
 import { FiBookmark } from 'react-icons/fi'
 import NextLink from 'next/link'
-import { StarRating } from './StarRating'
+import { StarRating } from '../StarRating'
 import { useIsDesktop } from '@hooks/useIsDesktop'
 
 export function AccommodationCard({ id, name, images, price, rating }: Accommodation) {

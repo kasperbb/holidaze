@@ -1,6 +1,6 @@
 import { Container, Spinner, Stat, StatLabel, StatNumber } from '@chakra-ui/react'
 
-import { Card } from '@components/Card'
+import { Card } from '@components/Cards/Card'
 import { getAccommodationCount } from '@queries/accommodations'
 import { useQuery } from 'react-query'
 

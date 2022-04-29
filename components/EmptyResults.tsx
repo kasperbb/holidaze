@@ -1,15 +1,15 @@
-import { Alert, AlertIcon } from '@chakra-ui/react'
+import { Alert, AlertIcon, AlertProps } from '@chakra-ui/react'
 
-interface EmptyResultsProps {
+interface EmptyResultsProps extends AlertProps {
   data: unknown[] | undefined
   errorMessage?: string
   children: React.ReactNode
 }
 
-export function EmptyResults({ data, errorMessage, children }: EmptyResultsProps) {
+export function EmptyResults({ data, errorMessage, children, ...rest }: EmptyResultsProps) {
   if (!data) {
     return errorMessage ? (
-      <Alert status="error">
+      <Alert status="error" {...rest}>
         <AlertIcon />
         {errorMessage}
       </Alert>
@@ -21,7 +21,7 @@ export function EmptyResults({ data, errorMessage, children }: EmptyResultsProps
   }
 
   return (
-    <Alert status="warning" borderRadius="lg">
+    <Alert status="warning" borderRadius="lg" {...rest}>
       <AlertIcon />
       {children}
     </Alert>
