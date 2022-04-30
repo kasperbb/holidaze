@@ -16,7 +16,7 @@ export function AccommodationCard({ id, name, images, price, rating }: Accommoda
 
       <NextLink href={`/accommodations/${id}`} passHref>
         <Link display="block" flex="1 1 0%" _hover={{ textDecoration: 'none' }}>
-          <Heading as="h3" fontSize="25px" fontWeight="semibold" my={2}>
+          <Heading as="h3" fontSize={['16px', '25px']} fontWeight="semibold" my={2}>
             {name}
           </Heading>
         </Link>

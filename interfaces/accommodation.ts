@@ -29,8 +29,7 @@ export interface AddAccommodation {
 
 export interface AccommodationFilter {
   search: string
-  from: string | undefined
-  to: string | undefined
+  dateRange: [from: Date | undefined, to: Date | undefined] | undefined[]
   priceRange: [number, number]
   rating: number
   sortBy: string

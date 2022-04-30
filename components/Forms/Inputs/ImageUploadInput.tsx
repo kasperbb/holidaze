@@ -23,7 +23,7 @@ export function ImageUploadInput({ value, onChange, initialMode }: ImageUploadIn
     <ImageUpload multiple value={value} onChange={onChange} maxNumber={10} inputProps={{ id: 'images', name: 'images' }} dataURLKey="dataURL">
       {({ imageList, dragProps, onImageUpload, onImageUpdate, onImageRemove, onImageRemoveAll }) => (
         <Grid
-          gridTemplateColumns={Boolean(imageList.length) ? 'repeat(2, 1fr)' : 'repeat(1, 1fr)'}
+          gridTemplateColumns={Boolean(imageList.length) ? ['repeat(1, 1fr)', 'repeat(2, 1fr)'] : 'repeat(1, 1fr)'}
           border="2px dashed"
           borderColor="gray.300"
           borderRadius="md"
@@ -31,7 +31,7 @@ export function ImageUploadInput({ value, onChange, initialMode }: ImageUploadIn
         >
           {Boolean(imageList.length) && (
             <GridItem width="full" p={8}>
-              <SimpleGrid justifyContent="start" columns={3} spacing={4}>
+              <SimpleGrid justifyContent="start" columns={[1, 3]} spacing={4}>
                 {imageList.map((image, index) => (
                   <Box key={image.file?.name} position="relative">
                     <Flex gap={1} position="absolute" top={-1} right={-2}>
@@ -71,13 +71,13 @@ export function ImageUploadInput({ value, onChange, initialMode }: ImageUploadIn
 
           {isEditMode ? (
             <GridItem width="full" height="full" cursor="pointer" p={8} onClick={onImageUpload} {...dragProps}>
-              <Flex align="center" justify="center" height="full" gap={4}>
+              <Flex direction={['column', 'row']} align="center" justify="center" height="full" gap={4}>
                 <UploadIcon width={6} height={6} color="text.secondary" />
                 <Text>Click or drag images here to upload</Text>
               </Flex>
             </GridItem>
           ) : (
-            <GridItem width="full" height="full" p={8}>
+            <GridItem width="full" height="full" p={[4, 8]}>
               <Flex align="center" justify="center" height="full" gap={4}>
                 <Button variant="outline" width="full" height="full" onClick={() => handleReplaceImages(onImageRemoveAll, onImageUpload)}>
                   Replace images

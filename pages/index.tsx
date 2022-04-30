@@ -27,8 +27,7 @@ export const getStaticProps: GetStaticProps = async () => {
 export default function Home() {
   const { data } = useQuery('accommodations', () => getAccommodations())
   const { data: featured } = useQuery(['accommodations', 'featured'], () => getAccommodations({ featured: true }))
-  console.log('data', data)
-  console.log('featured', featured)
+
   return (
     <>
       <HeroSection />

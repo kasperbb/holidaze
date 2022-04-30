@@ -5,11 +5,12 @@ import { StarRating } from '@components/StarRating'
 import { maxLines } from '@utils/styleProps'
 import { useState } from 'react'
 
-interface FeaturedLocationProps extends Omit<Accommodation, 'id'>, Omit<GridItemProps, 'id'> {
+interface FeaturedLocationProps extends Omit<GridItemProps, 'id'> {
+  location: Accommodation
   size?: 'sm' | 'md'
 }
 
-export function FeaturedLocation({ name, rating, description, images, size = 'sm', ...rest }: FeaturedLocationProps) {
+export function FeaturedLocation({ location: { name, rating, description, images }, size = 'sm', ...rest }: FeaturedLocationProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (

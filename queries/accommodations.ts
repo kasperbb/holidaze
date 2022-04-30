@@ -153,7 +153,7 @@ export const searchAccommodations = async (query: string) => {
   }))
 }
 
-export const filterAccommodations = async ({ search, from, to, priceRange, rating, sortBy }: AccommodationFilter) => {
+export const filterAccommodations = async ({ search, dateRange, priceRange, rating, sortBy }: AccommodationFilter) => {
   let query = supabase.from<Accommodation>(TABLE).select(QUERY)
 
   if (search) query = query.textSearch('name', search, { type: 'websearch' })
@@ -175,8 +175,8 @@ export const filterAccommodations = async ({ search, from, to, priceRange, ratin
     accommodations = filterByRating(accommodations, rating)
   }
 
-  if (from && to) {
-    accommodations = filterByBookings(accommodations, new Date(from), new Date(to))
+  if (dateRange[0] && dateRange[1]) {
+    accommodations = filterByBookings(accommodations, dateRange[0], dateRange[1])
   }
 
   return accommodations
@@ -197,6 +197,7 @@ function getSortObject(sortBy: string) {
 
 function filterByBookings(accommodations: Accommodation[], from: Date, to: Date) {
   return accommodations.filter(({ bookings }) => {
+    if (!bookings?.length) return true
     const disabledDates = bookings?.reduce<Date[]>((acc, dates) => [...acc, ...dateRange(dates.from, dates.to)], [])
     return includesSameDay([from, to], disabledDates)
   })

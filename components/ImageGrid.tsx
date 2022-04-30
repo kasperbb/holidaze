@@ -21,7 +21,7 @@ export function ImageGrid({ images }: ImageGridProps) {
     <>
       <Grid h="392px" templateRows="repeat(2, 1fr)" templateColumns="repeat(5, 1fr)" position="relative" gap={4}>
         <Button display={isDesktop ? 'none' : 'block'} size="sm" position="absolute" bottom={2} right={2} onClick={() => handleImageClick(0)}>
-          View Images
+          All Images
         </Button>
 
         <GridItem

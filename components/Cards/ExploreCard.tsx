@@ -1,11 +1,13 @@
 import { Button, Heading, Text } from '@chakra-ui/react'
 
 import { Card } from '@components/Cards/Card'
+import { useIsDesktop } from '@hooks/useIsDesktop'
 
 export function ExploreCard() {
+  const isDesktop = useIsDesktop()
   return (
     <Card
-      variant="horizontal"
+      variant={isDesktop ? 'horizontal' : undefined}
       imageSrc="/explore.jpg"
       imageAlt="Holidaze"
       mb={4}

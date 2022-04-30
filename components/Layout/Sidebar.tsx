@@ -43,7 +43,7 @@ const SidebarContent = ({ isOpen, onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {ADMIN_NAV_ITEMS.map(item => (
-        <NavItem key={item.name} href={item.href} icon={item.icon}>
+        <NavItem key={item.name} href={item.href} icon={item.icon} onClick={onClose}>
           {item.name}
         </NavItem>
       ))}
@@ -96,7 +96,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       <IconButton variant="outline" onClick={onOpen} aria-label="open menu" icon={<FiMenu />} />
 
       <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-        Logo
+        <Logo />
       </Text>
     </Flex>
   )

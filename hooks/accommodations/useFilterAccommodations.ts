@@ -3,5 +3,14 @@ import { filterAccommodations } from '@queries/accommodations'
 import { useQuery } from 'react-query'
 
 export function useFilterAccommodations(filter: AccommodationFilter) {
-  return useQuery(['accommodationsFilter', filter], () => filterAccommodations(filter))
+  const key = {
+    ...filter,
+    dateRange: [getDateKey(filter.dateRange[0]), getDateKey(filter.dateRange[1])],
+  }
+
+  return useQuery(['accommodationsFilter', key], () => filterAccommodations(filter))
+}
+
+function getDateKey(date: Date | undefined) {
+  return `${date?.getUTCFullYear()}-${date?.getUTCMonth()}-${date?.getUTCDate()}`
 }

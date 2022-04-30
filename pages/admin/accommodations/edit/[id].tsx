@@ -108,21 +108,21 @@ export default function AdminEditAccommodation({ id }: PropsWithId) {
         </Flex>
 
         <Grid as="form" onSubmit={onSubmit} templateColumns="repeat(4, 1fr)" gap={6} p={8}>
-          <FormControl gridColumn="span 2 / span 2">
+          <FormControl gridColumn={['span 4 / span 4', 'span 2 / span 2']}>
             <FormLabel htmlFor="name" color="text.primary">
               Business name
             </FormLabel>
             <Input id="name" type="text" {...register('name')} />
           </FormControl>
 
-          <FormControl>
+          <FormControl gridColumn={['span 4 / span 4', 'span 1 / span 1']}>
             <FormLabel htmlFor="rooms" color="text.primary">
               Total number of rooms & suites
             </FormLabel>
             <Input id="rooms" type="text" {...register('rooms')} />
           </FormControl>
 
-          <FormControl>
+          <FormControl gridColumn={['span 4 / span 4', 'span 1 / span 1']}>
             <FormLabel htmlFor="price" color="text.primary">
               Price per night
             </FormLabel>

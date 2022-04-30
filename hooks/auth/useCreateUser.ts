@@ -10,7 +10,7 @@ export function useCreateUser(user: Auth.User) {
     onSuccess: () => {
       toast({
         title: 'Success!',
-        description: `Successfully registered account. Please check your email to confirm.`,
+        description: `Please check your email to confirm your account.`,
         status: 'success',
         isClosable: true,
       })

@@ -74,21 +74,21 @@ export default function AdminAddAccommodation() {
         </Flex>
 
         <Grid as="form" onSubmit={onSubmit} templateColumns="repeat(4, 1fr)" gap={6} p={8}>
-          <FormControl gridColumn="span 2 / span 2">
+          <FormControl gridColumn={['span 4 / span 4', 'span 2 / span 2']}>
             <FormLabel htmlFor="name" color="text.primary">
               Business name
             </FormLabel>
             <Input id="name" type="text" {...register('name')} />
           </FormControl>
 
-          <FormControl>
+          <FormControl gridColumn={['span 4 / span 4', 'span 1 / span 1']}>
             <FormLabel htmlFor="rooms" color="text.primary">
               Total number of rooms & suites
             </FormLabel>
             <Input id="rooms" type="text" {...register('rooms')} />
           </FormControl>
 
-          <FormControl>
+          <FormControl gridColumn={['span 4 / span 4', 'span 1 / span 1']}>
             <FormLabel htmlFor="price" color="text.primary">
               Price per night
             </FormLabel>
@@ -111,13 +111,13 @@ export default function AdminAddAccommodation() {
               <InputLeftElement pointerEvents="none">{isFetching ? <Spinner width={3} height={3} /> : <FiSearch color="gray.300" />}</InputLeftElement>
               <Input type="search" placeholder="Search location" onChange={e => setLocationQuery(e.target.value)} />
             </InputGroup>
-
             <Map
               markerList={[{ latitude: location[0], longitude: location[1] }]}
               onClick={({ lngLat }) => setLocation([lngLat.lat, lngLat.lng])}
               style={{ height: 250 }}
               ref={mapRef}
             />
+
             <FormHelperText>Search or click on the map to set location.</FormHelperText>
           </FormControl>
 

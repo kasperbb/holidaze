@@ -29,7 +29,7 @@ export default function AdminHotels() {
   return (
     <Container maxWidth="7xl">
       <Card as="div" maxWidth="full" width="full">
-        <Flex align="center" justify="space-between" gap={5}>
+        <Flex direction={['column', 'row']} align="center" justify="space-between" gap={5}>
           <Heading as="h1" fontSize="24px" fontWeight={500}>
             {data?.length} Accommodations
           </Heading>
