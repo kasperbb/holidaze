@@ -37,6 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 
   useEffect(() => {
+    console.log('hotjar', process.env.NEXT_PUBLIC_HOTJAR_ID)
     hotjar.initialize(Number(process.env.NEXT_PUBLIC_HOTJAR_ID), 6)
   }, [])
 
