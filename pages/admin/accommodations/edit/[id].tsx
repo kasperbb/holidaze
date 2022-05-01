@@ -117,7 +117,7 @@ export default function AdminEditAccommodation({ id }: PropsWithId) {
 
           <FormControl gridColumn={['span 4 / span 4', 'span 1 / span 1']}>
             <FormLabel htmlFor="rooms" color="text.primary">
-              Total number of rooms & suites
+              Rooms
             </FormLabel>
             <Input id="rooms" type="text" {...register('rooms')} />
           </FormControl>
