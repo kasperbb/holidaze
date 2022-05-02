@@ -18,7 +18,7 @@ export function FeaturedLocation({ location: { id, name, rating, description, im
 
   return (
     <NextLink href={`${routes.accommodations.base}/${id}`} passHref>
-      <GridItem as="a" borderRadius="2xl" overflow="hidden" cursor="pointer" position="relative" {...rest}>
+      <GridItem as="a" borderRadius="2xl" overflow="hidden" cursor="pointer" position="relative" maxHeight={size === 'sm' ? '180px' : '392px'} {...rest}>
         <Flex
           direction="column"
           justify="end"
@@ -45,7 +45,7 @@ export function FeaturedLocation({ location: { id, name, rating, description, im
           onMouseLeave={() => setIsOpen(false)}
         >
           <Box position="absolute" top={5} right={5} opacity={0.8}>
-            <MdAdsClick color="white" size={30} />
+            <MdAdsClick color="white" size={size === 'sm' ? 20 : 30} />
           </Box>
           <Heading as="h3" color="white" mb={1} fontSize={size === 'sm' ? 'lg' : '4xl'}>
             {name}

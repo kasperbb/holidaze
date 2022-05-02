@@ -4,6 +4,7 @@ import { Button, Container, FormControl, FormLabel, HStack, Heading, Input, Text
 
 import { Card } from '@components/Cards/Card'
 import { FormHelperError } from '@components/Forms/FormHelperError'
+import Head from 'next/head'
 import NextLink from 'next/link'
 import { PasswordInput } from '@components/Forms/Inputs/PasswordInput'
 import { routes } from '@constants/routes'
@@ -41,43 +42,49 @@ export default function Register() {
   })
 
   return (
-    <Container maxWidth={['lg', 'lg', 'lg']} py={36}>
-      <Heading as="h1" fontSize={['4xl', '5xl', '6xl']} mb={6}>
-        Register
-      </Heading>
+    <>
+      <Head>
+        <title>Register — Holidaze</title>
+      </Head>
 
-      <HStack mb={4}>
-        <Text>Already have an account?</Text>
-        <NextLink href={routes.auth.signIn} passHref>
-          <Button as="a" variant="link" color="blue.500" size="sm">
-            Sign in!
-          </Button>
-        </NextLink>
-      </HStack>
-
-      <Card as="form" maxWidth="2xl" onSubmit={onSubmit}>
-        <FormControl mb={4} isInvalid={Boolean(errors.email)} isRequired>
-          <FormLabel htmlFor="email">Email</FormLabel>
-          <Input id="email" type="email" required {...register('email')} />
-          <FormHelperError error={errors.email}>Must be a valid email.</FormHelperError>
-        </FormControl>
-
-        <FormControl mb={4} isInvalid={Boolean(errors.password)} isRequired>
-          <FormLabel htmlFor="password">Password</FormLabel>
-          <PasswordInput id="password" {...register('password')} />
-          <FormHelperError error={errors.password}>Must be min. 6 characters long.</FormHelperError>
-        </FormControl>
-
-        <FormControl mb={6} isInvalid={Boolean(errors.confirmPassword)} isRequired>
-          <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
-          <PasswordInput id="confirmPassword" {...register('confirmPassword')} />
-          <FormHelperError error={errors.confirmPassword}>Must match password.</FormHelperError>
-        </FormControl>
-
-        <Button type="submit" width="full" isLoading={isLoading} disabled={isLoading}>
+      <Container maxWidth={['lg', 'lg', 'lg']} py={36}>
+        <Heading as="h1" fontSize={['4xl', '5xl', '6xl']} mb={4}>
           Register
-        </Button>
-      </Card>
-    </Container>
+        </Heading>
+
+        <HStack mb={6}>
+          <Text>Already have an account?</Text>
+          <NextLink href={routes.auth.signIn} passHref>
+            <Button as="a" variant="link" color="blue.500" size="sm">
+              Sign in!
+            </Button>
+          </NextLink>
+        </HStack>
+
+        <Card as="form" maxWidth="2xl" onSubmit={onSubmit}>
+          <FormControl mb={4} isInvalid={Boolean(errors.email)} isRequired>
+            <FormLabel htmlFor="email">Email</FormLabel>
+            <Input id="email" type="email" required {...register('email')} />
+            <FormHelperError error={errors.email}>Must be a valid email.</FormHelperError>
+          </FormControl>
+
+          <FormControl mb={4} isInvalid={Boolean(errors.password)} isRequired>
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <PasswordInput id="password" {...register('password')} />
+            <FormHelperError error={errors.password}>Must be min. 6 characters long.</FormHelperError>
+          </FormControl>
+
+          <FormControl mb={6} isInvalid={Boolean(errors.confirmPassword)} isRequired>
+            <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+            <PasswordInput id="confirmPassword" {...register('confirmPassword')} />
+            <FormHelperError error={errors.confirmPassword}>Must match password.</FormHelperError>
+          </FormControl>
+
+          <Button type="submit" width="full" isLoading={isLoading} disabled={isLoading}>
+            Register
+          </Button>
+        </Card>
+      </Container>
+    </>
   )
 }

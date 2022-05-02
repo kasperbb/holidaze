@@ -1,10 +1,11 @@
-import { Box, Flex, Heading, Image, Text } from '@chakra-ui/react'
+import { Box, Button, Collapse, Flex, Heading, Image, Text, useDisclosure } from '@chakra-ui/react'
 
 import { Card } from './Cards/Card'
 import { JoinedReview } from '@interfaces/reviews'
 import { StarRating } from './StarRating'
 
 export function Review({ rating, message, user, created_at }: JoinedReview) {
+  const { isOpen, onToggle } = useDisclosure()
   const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' } as const
 
   return (
@@ -23,7 +24,14 @@ export function Review({ rating, message, user, created_at }: JoinedReview) {
 
           <StarRating rating={rating} />
         </Flex>
-        <Text>{message}</Text>
+        <Text>
+          <Collapse startingHeight={45} in={isOpen}>
+            {message}
+          </Collapse>
+        </Text>
+        <Button variant="outline" size="sm" onClick={onToggle} mt={4}>
+          Show {isOpen ? 'Less' : 'More'}
+        </Button>
       </Box>
     </Card>
   )

@@ -1,6 +1,7 @@
 import { Button, Container, FormControl, FormLabel, HStack, Heading, Input, Text } from '@chakra-ui/react'
 
 import { Card } from '@components/Cards/Card'
+import Head from 'next/head'
 import NextLink from 'next/link'
 import { PasswordInput } from '@components/Forms/Inputs/PasswordInput'
 import { routes } from '@constants/routes'
@@ -23,35 +24,41 @@ export default function SignIn() {
   })
 
   return (
-    <Container maxWidth={['lg', 'lg', 'lg']} py={36}>
-      <Heading as="h1" fontSize={['4xl', '5xl', '6xl']} mb={6}>
-        Sign In
-      </Heading>
+    <>
+      <Head>
+        <title>Sign In — Holidaze</title>
+      </Head>
 
-      <HStack mb={4}>
-        <Text>Don&apos;t have an account?</Text>
-        <NextLink href={routes.auth.register} passHref>
-          <Button as="a" variant="link" color="blue.500" size="sm">
-            Register!
-          </Button>
-        </NextLink>
-      </HStack>
-
-      <Card as="form" maxWidth="2xl" onSubmit={onSubmit}>
-        <FormControl mb={4}>
-          <FormLabel htmlFor="email">Email</FormLabel>
-          <Input id="email" type="email" {...register('email')} />
-        </FormControl>
-
-        <FormControl mb={6}>
-          <FormLabel htmlFor="password">Password</FormLabel>
-          <PasswordInput {...register('password')} />
-        </FormControl>
-
-        <Button type="submit" width="full" isLoading={isLoading} disabled={isLoading}>
+      <Container maxWidth={['lg', 'lg', 'lg']} py={36}>
+        <Heading as="h1" fontSize={['4xl', '5xl', '6xl']} mb={6}>
           Sign In
-        </Button>
-      </Card>
-    </Container>
+        </Heading>
+
+        <HStack mb={4}>
+          <Text>Don&apos;t have an account?</Text>
+          <NextLink href={routes.auth.register} passHref>
+            <Button as="a" variant="link" color="blue.500" size="sm">
+              Register!
+            </Button>
+          </NextLink>
+        </HStack>
+
+        <Card as="form" maxWidth="2xl" onSubmit={onSubmit}>
+          <FormControl mb={4}>
+            <FormLabel htmlFor="email">Email</FormLabel>
+            <Input id="email" type="email" {...register('email')} />
+          </FormControl>
+
+          <FormControl mb={6}>
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <PasswordInput {...register('password')} />
+          </FormControl>
+
+          <Button type="submit" width="full" isLoading={isLoading} disabled={isLoading}>
+            Sign In
+          </Button>
+        </Card>
+      </Container>
+    </>
   )
 }

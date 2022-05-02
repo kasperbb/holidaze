@@ -32,3 +32,13 @@ export const createMessage = async (obj: Message) => {
 
   return data
 }
+
+export const getMessagesCount = async () => {
+  const { error, count } = await supabase.from(TABLE).select('*', { count: 'exact' })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return count
+}

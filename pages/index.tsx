@@ -5,6 +5,7 @@ import { AccommodationSlider } from '@components/FrontPage/AccommodationSlider'
 import { ExploreCard } from '@components/Cards/ExploreCard'
 import { FeaturedLocations } from '@components/FeaturedLocation/FeaturedLocations'
 import { GetStaticProps } from 'next'
+import Head from 'next/head'
 import { HeroSection } from '@components/FrontPage/Hero'
 import { Stats } from '@components/Stats'
 import { TrianglePattern } from '@components/Icons/TrianglePattern'
@@ -30,6 +31,10 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>Home — Holidaze</title>
+      </Head>
+
       <HeroSection />
 
       <Container>

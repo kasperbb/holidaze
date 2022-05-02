@@ -27,3 +27,13 @@ export const createBooking = async (obj: Booking) => {
 
   return data
 }
+
+export const getBookingsCount = async () => {
+  const { error, count } = await supabase.from(TABLE).select('*', { count: 'exact' })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return count
+}

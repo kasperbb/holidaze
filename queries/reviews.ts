@@ -58,3 +58,13 @@ export const createReview = async (obj: Review) => {
 
   return data
 }
+
+export const getReviewsCount = async () => {
+  const { error, count } = await supabase.from(TABLE).select('*', { count: 'exact' })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return count
+}

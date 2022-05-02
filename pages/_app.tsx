@@ -37,15 +37,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 
   useEffect(() => {
-    console.log('hotjar', process.env.NEXT_PUBLIC_HOTJAR_ID)
     hotjar.initialize(Number(process.env.NEXT_PUBLIC_HOTJAR_ID), 6)
   }, [])
 
   async function handleError(error: Error) {
     if (error.message.includes('JWT expired')) {
-      // await supabase.auth.signOut()
-      console.log('REFRESHED')
-      supabase.auth.refreshSession()
+      // TODO: WTF?!
+      const test = await supabase.auth.signOut()
+      console.log('REFRESHED', test)
     }
   }
 

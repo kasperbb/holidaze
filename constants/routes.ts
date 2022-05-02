@@ -5,14 +5,23 @@ export const routes = {
     register: '/auth/register',
   },
   admin: {
+    base: '/admin',
     accommodations: {
       base: '/admin/accommodations',
       add: '/admin/accommodations/add',
       edit: '/admin/accommodations/edit',
     },
-    base: '/admin/accommodations',
+    bookings: {
+      base: '/admin/bookings',
+    },
+    messages: {
+      base: '/admin/messages',
+    },
   },
   accommodations: {
     base: '/accommodations',
+  },
+  contact: {
+    base: '/contact',
   },
 }

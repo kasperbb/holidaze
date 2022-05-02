@@ -7,7 +7,13 @@ import NextLink from 'next/link'
 import { ReactNode } from 'react'
 import { useAuth } from '@context/AuthContext'
 
-const SocialButton = ({ children, label, href }: { children: ReactNode; label: string; href: string }) => {
+interface SocialButtonProps {
+  children: ReactNode
+  label: string
+  href: string
+}
+
+const SocialButton = ({ children, label, href }: SocialButtonProps) => {
   return (
     <Button
       variant="no-padding"

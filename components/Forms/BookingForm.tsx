@@ -90,7 +90,7 @@ export function BookingForm({ accommodationId, bookings }: BookingFormProps) {
           <FormLabel htmlFor="from" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
             When will you stay?
           </FormLabel>
-          <ControlledDatePicker name="dateRange" control={control} excludedDates={excludedDates} />
+          <ControlledDatePicker name="dateRange" control={control} excludedDates={excludedDates} minDate={new Date()} />
           <FormHelperError error={errors.dateRange} />
         </FormControl>
 

@@ -50,7 +50,7 @@ export const getAccommodation = async (id: number) => {
   return addAverageRatingToAccommodation(data)
 }
 
-export const getAccommodationCount = async () => {
+export const getAccommodationsCount = async () => {
   const { error, count } = await supabase.from(TABLE).select('*', { count: 'exact' })
 
   if (error) {
