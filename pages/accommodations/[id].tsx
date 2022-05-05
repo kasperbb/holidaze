@@ -67,7 +67,7 @@ export default function AccommodationDetails({ id }: { id: number }) {
             </Heading>
 
             {user && isDesktop && (
-              <NextLink href={`${routes.admin.accommodations.base}/${data.id}`} passHref>
+              <NextLink href={`${routes.admin.accommodations.edit}/${data.id}`} passHref>
                 <Button as={Link} variant="outline">
                   Edit Accommodation
                 </Button>
