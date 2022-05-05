@@ -23,7 +23,7 @@ import { useCreateBooking } from '@hooks/bookings/useCreateBooking'
 import { useState } from 'react'
 
 interface PaymentModalProps extends UseDisclosureProps {
-  booking: Omit<Booking, 'message'>
+  booking: Omit<Booking, 'message' | 'created_at'>
 }
 
 export function PaymentModal({ isOpen, onClose, booking }: PaymentModalProps) {

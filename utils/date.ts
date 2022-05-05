@@ -6,14 +6,14 @@ export function dateRange(startDate: Date | string | null, endDate: Date | strin
 
   while (currentDate <= new Date(endDate)) {
     dateArray.push(new Date(currentDate))
-    currentDate.setUTCDate(currentDate.getUTCDate() + steps)
+    currentDate.setDate(currentDate.getDate() + steps)
   }
 
   return dateArray
 }
 
 export function isSameDay(a: Date | undefined, b: Date | undefined) {
-  return a?.getUTCFullYear() === b?.getUTCFullYear() && a?.getUTCMonth() === b?.getUTCMonth() && a?.getUTCDate() === b?.getUTCDate()
+  return a?.getFullYear() === b?.getFullYear() && a?.getMonth() === b?.getMonth() && a?.getDate() === b?.getDate()
 }
 
 export function includesSameDay(a: Date[] | undefined, b: Date[] | undefined) {

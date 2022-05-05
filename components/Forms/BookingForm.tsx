@@ -43,7 +43,7 @@ export function BookingForm({ accommodationId, bookings }: BookingFormProps) {
   } = useForm<AddBooking>({
     resolver: yupResolver(formSchema),
     defaultValues: {
-      dateRange: [new Date(), new Date()],
+      dateRange: [undefined, undefined],
       guests: 1,
     },
   })

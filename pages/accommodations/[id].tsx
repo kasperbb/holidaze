@@ -29,12 +29,24 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 }
 
 export default function AccommodationDetails({ id }: { id: number }) {
-  const { data } = useQuery(['accommodation', id], () => getAccommodation(id))
+  const { data, isLoading } = useQuery(['accommodation', id], () => getAccommodation(id))
   const { user } = useAuth()
   const isDesktop = useIsDesktop()
 
+  if (isLoading) {
+    return (
+      <Container py="88px">
+        <Spinner />
+      </Container>
+    )
+  }
+
   if (!data) {
-    return <Spinner />
+    return (
+      <Container py="88px">
+        <Card>Could not find accommodation</Card>
+      </Container>
+    )
   }
 
   const [latitude, longitude] = data.location

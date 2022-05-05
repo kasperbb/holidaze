@@ -49,11 +49,11 @@ export default function AdminBookings() {
         </Card>
 
         <Grid templateColumns="repeat(1, 1fr)" gap={4} width="full" my={10}>
-          {data?.map(({ id, from, to, user, accommodation }) => (
+          {data?.map(({ id, from, to, user, accommodation, message }) => (
             <Card key={id} maxWidth={['full', 'full']} contentProps={{ display: 'flex', gap: 4 }}>
               <Image src="/user_placeholder.jpg" alt="" width={10} height={10} borderRadius="full" shadow="primary" border="3px solid white" />
               <Box width="full">
-                <Box mb={4}>
+                <Box mb={message ? 4 : 0}>
                   <Heading as="h3" fontSize="md" lineHeight={1.5}>
                     {user?.email}
                   </Heading>
@@ -64,7 +64,7 @@ export default function AdminBookings() {
                     </NextLink>
                   </Text>
                 </Box>
-                <Text>Remember to add message</Text>
+                {message && <Text>{message}</Text>}
               </Box>
             </Card>
           ))}
