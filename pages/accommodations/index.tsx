@@ -15,36 +15,68 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { FiChevronDown, FiChevronUp, FiSearch } from 'react-icons/fi'
+import { QueryClient, dehydrate } from 'react-query'
 import { useEffect, useState } from 'react'
 
 import { Card } from '@components/Cards/Card'
 import { ControlledDatePicker } from '@components/DatePicker'
 import { EmptyResults } from '@components/EmptyResults'
 import { Filter } from '@interfaces/filter'
+import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { HorizontalAccommodationCard } from '@components/Cards/HorizontalAccommodationCard'
 import { ParsedUrlQuery } from 'querystring'
 import { PriceRangeInput } from '@components/Forms/Inputs/PriceRangeInput'
 import { SortByInput } from '@components/Forms/Inputs/SortByInput'
 import { StarRatingInput } from '@components/Forms/Inputs/StarRatingInput'
+import { filterAccommodations } from '@queries/accommodations'
 import { useFilterAccommodations } from '@hooks/accommodations/useFilterAccommodations'
 import { useForm } from 'react-hook-form'
 import { useIsDesktop } from '@hooks/useIsDesktop'
 import { useRouter } from 'next/router'
+
+const initialFilter: Filter.State = {
+  search: '',
+  dateRange: [undefined, undefined],
+  priceRange: [0, 300],
+  rating: 0,
+  sortBy: 'created_at-asc',
+}
+
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const queryClient = new QueryClient()
+
+  const initialDateRange = getInitialDateRange(ctx.query)
+
+  const filter = {
+    ...initialFilter,
+    dateRange: initialDateRange,
+    search: typeof ctx.query.search === 'string' ? ctx.query.search : '',
+  }
+
+  const key = {
+    ...filter,
+    dateRange: [getDateKey(initialDateRange[0]), getDateKey(initialDateRange[1])],
+  }
+
+  await queryClient.prefetchQuery(['accommodationsFilter', key], () => filterAccommodations(filter))
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  }
+}
+
+function getDateKey(date: Date | undefined) {
+  return `${date?.getUTCFullYear()}-${date?.getUTCMonth()}-${date?.getUTCDate()}`
+}
 
 function getInitialDateRange(query: ParsedUrlQuery): [from: Date | undefined, to: Date | undefined] {
   if (query.from && query.to && typeof query.from === 'string' && typeof query.to === 'string') {
     return [new Date(query.from), new Date(query.to)]
   }
   return [undefined, undefined]
-}
-
-const initialState: Filter.State = {
-  search: '',
-  dateRange: [undefined, undefined],
-  priceRange: [0, 300],
-  rating: 0,
-  sortBy: 'created_at-asc',
 }
 
 export default function Accommodations() {
@@ -55,7 +87,7 @@ export default function Accommodations() {
   })
 
   const [filter, setFilter] = useState<Filter.State>({
-    ...initialState,
+    ...initialFilter,
     dateRange: getInitialDateRange(query),
     search: typeof query.search === 'string' ? query.search : '',
   })
@@ -147,7 +179,7 @@ export default function Accommodations() {
                     variant="error"
                     width="full"
                     onClick={() => {
-                      setFilter(initialState)
+                      setFilter(initialFilter)
                       reset()
                     }}
                   >
