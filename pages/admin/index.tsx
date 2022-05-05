@@ -54,7 +54,7 @@ export default function AdminHome() {
   return (
     <>
       <Head>
-        <title>Admin — Holidaze</title>
+        <title>Dashboard — Holidaze</title>
       </Head>
 
       <Container maxWidth="7xl" alignItems="flex-start">

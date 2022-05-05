@@ -4,6 +4,7 @@ import { QueryClient, dehydrate, useQuery } from 'react-query'
 import { Card } from '@components/Cards/Card'
 import { EmptyResults } from '@components/EmptyResults'
 import { FiPlus } from 'react-icons/fi'
+import Head from 'next/head'
 import { HorizontalAccommodationCard } from '@components/Cards/HorizontalAccommodationCard'
 import NextLink from 'next/link'
 import { enforceAuth } from '@utils/enforceAuth'
@@ -27,34 +28,40 @@ export default function AdminHotels() {
   const { data } = useQuery(['accommodations'], () => getAccommodations())
 
   return (
-    <Container maxWidth="7xl">
-      <Card as="div" maxWidth="full" width="full">
-        <Flex direction={['column', 'row']} align="center" justify="space-between" gap={5}>
-          <Heading as="h1" fontSize="24px" fontWeight={500}>
-            {data?.length} Accommodations
-          </Heading>
+    <>
+      <Head>
+        <title>Accommodations — Holidaze</title>
+      </Head>
 
-          <Flex gap={4}>
-            <Select bgColor="white">
-              <option value="option1">Sort by default</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
-            </Select>
+      <Container maxWidth="7xl">
+        <Card as="div" maxWidth="full" width="full">
+          <Flex direction={['column', 'row']} align="center" justify="space-between" gap={5}>
+            <Heading as="h1" fontSize="24px" fontWeight={500}>
+              {data?.length} Accommodations
+            </Heading>
 
-            <NextLink href={routes.admin.accommodations.add} passHref>
-              <IconButton as="a" icon={<FiPlus />} variant="primary" p={3} aria-label="Add accommodation" />
-            </NextLink>
+            <Flex gap={4}>
+              <Select bgColor="white">
+                <option value="option1">Sort by default</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+              </Select>
+
+              <NextLink href={routes.admin.accommodations.add} passHref>
+                <IconButton as="a" icon={<FiPlus />} variant="primary" p={3} aria-label="Add accommodation" />
+              </NextLink>
+            </Flex>
           </Flex>
-        </Flex>
-      </Card>
+        </Card>
 
-      <Grid templateColumns="repeat(1, 1fr)" gap={4} width="full" my={10}>
-        {data?.map(accommodation => (
-          <HorizontalAccommodationCard key={accommodation.id} {...accommodation} showEditButton />
-        ))}
+        <Grid templateColumns="repeat(1, 1fr)" gap={4} width="full" my={10}>
+          {data?.map(accommodation => (
+            <HorizontalAccommodationCard key={accommodation.id} {...accommodation} showEditButton />
+          ))}
 
-        <EmptyResults data={data}>No accommodations found</EmptyResults>
-      </Grid>
-    </Container>
+          <EmptyResults data={data}>No accommodations found</EmptyResults>
+        </Grid>
+      </Container>
+    </>
   )
 }

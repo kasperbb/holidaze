@@ -28,6 +28,7 @@ import { Map } from '@components/Map'
 import { ImageUploadInput } from '@components/Forms/Inputs/ImageUploadInput'
 import { FiSearch } from 'react-icons/fi'
 import { useLocationState } from '@hooks/useLocationState'
+import Head from 'next/head'
 
 export const getServerSideProps = enforceAuth()
 
@@ -55,93 +56,99 @@ export default function AdminAddAccommodation() {
   })
 
   return (
-    <Container maxWidth="7xl">
-      <Card as="div" maxWidth="full" width="full">
-        <Flex align="center" gap={5}>
-          <BackButton variant="primary" aria-label="Go back" />
-          <Heading as="h1" fontSize="24px" fontWeight={500}>
-            Add Accommodation
-          </Heading>
-        </Flex>
-      </Card>
+    <>
+      <Head>
+        <title>Add Accommodation — Holidaze</title>
+      </Head>
 
-      <Card variant="no-padding" maxWidth="full" width="full" my={10}>
-        <Flex align="center" borderBottom="1px solid" borderColor="muted" py={6} px={8} gap={4}>
-          <EditIcon width="20px" height="20px" />
-          <Heading as="h2" fontSize="24px" fontWeight={500}>
-            Listing Information
-          </Heading>
-        </Flex>
+      <Container maxWidth="7xl">
+        <Card as="div" maxWidth="full" width="full">
+          <Flex align="center" gap={5}>
+            <BackButton variant="primary" aria-label="Go back" />
+            <Heading as="h1" fontSize="24px" fontWeight={500}>
+              Add Accommodation
+            </Heading>
+          </Flex>
+        </Card>
 
-        <Grid as="form" onSubmit={onSubmit} templateColumns="repeat(4, 1fr)" gap={6} p={8}>
-          <FormControl gridColumn={['span 4 / span 4', 'span 2 / span 2']}>
-            <FormLabel htmlFor="name" color="text.primary">
-              Business name
-            </FormLabel>
-            <Input id="name" type="text" {...register('name')} />
-          </FormControl>
+        <Card variant="no-padding" maxWidth="full" width="full" my={10}>
+          <Flex align="center" borderBottom="1px solid" borderColor="muted" py={6} px={8} gap={4}>
+            <EditIcon width="20px" height="20px" />
+            <Heading as="h2" fontSize="24px" fontWeight={500}>
+              Listing Information
+            </Heading>
+          </Flex>
 
-          <FormControl gridColumn={['span 4 / span 4', 'span 1 / span 1']}>
-            <FormLabel htmlFor="rooms" color="text.primary">
-              Rooms
-            </FormLabel>
-            <Input id="rooms" type="text" {...register('rooms')} />
-          </FormControl>
+          <Grid as="form" onSubmit={onSubmit} templateColumns="repeat(4, 1fr)" gap={6} p={8}>
+            <FormControl gridColumn={['span 4 / span 4', 'span 2 / span 2']}>
+              <FormLabel htmlFor="name" color="text.primary">
+                Business name
+              </FormLabel>
+              <Input id="name" type="text" {...register('name')} />
+            </FormControl>
 
-          <FormControl gridColumn={['span 4 / span 4', 'span 1 / span 1']}>
-            <FormLabel htmlFor="price" color="text.primary">
-              Price per night
-            </FormLabel>
-            <Input id="price" type="number" {...register('price')} />
-          </FormControl>
+            <FormControl gridColumn={['span 4 / span 4', 'span 1 / span 1']}>
+              <FormLabel htmlFor="rooms" color="text.primary">
+                Rooms
+              </FormLabel>
+              <Input id="rooms" type="text" {...register('rooms')} />
+            </FormControl>
 
-          <FormControl gridColumn="span 4 / span 4">
-            <FormLabel htmlFor="description" color="text.primary">
-              Description
-            </FormLabel>
-            <Textarea id="description" rows={5} {...register('description')} />
-          </FormControl>
+            <FormControl gridColumn={['span 4 / span 4', 'span 1 / span 1']}>
+              <FormLabel htmlFor="price" color="text.primary">
+                Price per night
+              </FormLabel>
+              <Input id="price" type="number" {...register('price')} />
+            </FormControl>
 
-          <FormControl gridColumn="span 4 / span 4">
-            <FormLabel htmlFor="location" color="text.primary">
-              Location
-            </FormLabel>
+            <FormControl gridColumn="span 4 / span 4">
+              <FormLabel htmlFor="description" color="text.primary">
+                Description
+              </FormLabel>
+              <Textarea id="description" rows={5} {...register('description')} />
+            </FormControl>
 
-            <InputGroup mb={2}>
-              <InputLeftElement pointerEvents="none">{isFetching ? <Spinner width={3} height={3} /> : <FiSearch color="gray.300" />}</InputLeftElement>
-              <Input type="search" placeholder="Search location" onChange={e => setLocationQuery(e.target.value)} />
-            </InputGroup>
-            <Map
-              markerList={[{ latitude: location[0], longitude: location[1] }]}
-              onClick={({ lngLat }) => setLocation([lngLat.lat, lngLat.lng])}
-              style={{ height: 250 }}
-              ref={mapRef}
-            />
+            <FormControl gridColumn="span 4 / span 4">
+              <FormLabel htmlFor="location" color="text.primary">
+                Location
+              </FormLabel>
 
-            <FormHelperText>Search or click on the map to set location.</FormHelperText>
-          </FormControl>
+              <InputGroup mb={2}>
+                <InputLeftElement pointerEvents="none">{isFetching ? <Spinner width={3} height={3} /> : <FiSearch color="gray.300" />}</InputLeftElement>
+                <Input type="search" placeholder="Search location" onChange={e => setLocationQuery(e.target.value)} />
+              </InputGroup>
+              <Map
+                markerList={[{ latitude: location[0], longitude: location[1] }]}
+                onClick={({ lngLat }) => setLocation([lngLat.lat, lngLat.lng])}
+                style={{ height: 250 }}
+                ref={mapRef}
+              />
 
-          <FormControl gridColumn="span 4 / span 4">
-            <FormLabel htmlFor="images" color="text.primary">
-              Images
-            </FormLabel>
-            <ImageUploadInput
-              multiple
-              value={images}
-              onChange={onChange}
-              maxNumber={10}
-              initialMode="edit"
-              inputProps={{ id: 'images', name: 'images' }}
-              dataURLKey="dataURL"
-            />
-            <FormHelperText>Recommended minimum width: 750px.</FormHelperText>
-          </FormControl>
+              <FormHelperText>Search or click on the map to set location.</FormHelperText>
+            </FormControl>
 
-          <Button type="submit" variant="primary" gridColumn="span 4 / span 4" isLoading={mutation.isLoading}>
-            Add Accommodation
-          </Button>
-        </Grid>
-      </Card>
-    </Container>
+            <FormControl gridColumn="span 4 / span 4">
+              <FormLabel htmlFor="images" color="text.primary">
+                Images
+              </FormLabel>
+              <ImageUploadInput
+                multiple
+                value={images}
+                onChange={onChange}
+                maxNumber={10}
+                initialMode="edit"
+                inputProps={{ id: 'images', name: 'images' }}
+                dataURLKey="dataURL"
+              />
+              <FormHelperText>Recommended minimum width: 750px.</FormHelperText>
+            </FormControl>
+
+            <Button type="submit" variant="primary" gridColumn="span 4 / span 4" isLoading={mutation.isLoading}>
+              Add Accommodation
+            </Button>
+          </Grid>
+        </Card>
+      </Container>
+    </>
   )
 }

@@ -4,10 +4,10 @@ import { AddBooking, Booking } from '@interfaces/bookings'
 import { Button, FormControl, FormLabel, HStack, Select, useDisclosure, useToast } from '@chakra-ui/react'
 import { dateRange, includesSameDay } from '@utils/date'
 
+import { BookingModal } from '@components/Modals/BookingModal'
 import { Card } from '@components/Cards/Card'
 import { ControlledDatePicker } from '@components/DatePicker'
 import { FormHelperError } from './FormHelperError'
-import { PaymentModal } from '@components/Modals/PaymentModal'
 import { useAuth } from '@context/AuthContext'
 import { useForm } from 'react-hook-form'
 import { useMemo } from 'react'
@@ -15,10 +15,11 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 interface BookingFormProps {
   accommodationId: number
+  accommodationName: string
   bookings: Pick<Booking, 'from' | 'to'>[] | undefined
 }
 
-export function BookingForm({ accommodationId, bookings }: BookingFormProps) {
+export function BookingForm({ accommodationId, accommodationName, bookings }: BookingFormProps) {
   const modalProps = useDisclosure()
   const toast = useToast()
 
@@ -48,16 +49,6 @@ export function BookingForm({ accommodationId, bookings }: BookingFormProps) {
     },
   })
 
-  const [from, to] = [...watch('dateRange')]
-
-  const booking = {
-    from: from?.toISOString()!,
-    to: to?.toISOString()!,
-    guests: watch('guests'),
-    accommodation_id: accommodationId,
-    user_id: user?.id!,
-  }
-
   function validateDates(dates: Date[] | undefined) {
     if (!dates) return false
     const range = dateRange(dates[0], dates[1])
@@ -83,7 +74,13 @@ export function BookingForm({ accommodationId, bookings }: BookingFormProps) {
 
   return (
     <>
-      <PaymentModal {...modalProps} booking={booking} />
+      <BookingModal
+        initialValues={{ ...watch() }}
+        accommodationId={accommodationId}
+        accommodationName={accommodationName}
+        bookings={bookings}
+        {...modalProps}
+      />
 
       <Card as="form" maxWidth={['full', 'full']} overflow="visible" onSubmit={handleSubmit(onSubmit)}>
         <FormControl mb={4} isInvalid={Boolean(errors.dateRange)}>

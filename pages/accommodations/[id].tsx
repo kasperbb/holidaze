@@ -96,7 +96,7 @@ export default function AccommodationDetails({ id }: { id: number }) {
                 </Flex>
               </Card>
 
-              <BookingForm accommodationId={id} bookings={data.bookings} />
+              <BookingForm accommodationId={data.id} accommodationName={data.name} bookings={data.bookings} />
             </Box>
           </GridItem>
 

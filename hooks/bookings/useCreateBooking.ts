@@ -1,6 +1,5 @@
 import { Booking } from '@interfaces/bookings'
 import { createBooking } from '@queries/bookings'
-import { formatDate } from '@utils/formatDate'
 import { useMutation } from 'react-query'
 import { useToast } from '@chakra-ui/react'
 
@@ -16,7 +15,7 @@ export function useCreateBooking(booking: Booking) {
     onSuccess: (_, callback: CallbackType) => {
       toast({
         title: 'Success!',
-        description: `Successfully booked a room from ${formatDate(booking.from)} to ${formatDate(booking.to)}`,
+        description: `Successfully booked a room.`,
         status: 'success',
         isClosable: true,
       })

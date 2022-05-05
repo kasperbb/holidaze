@@ -8,7 +8,7 @@ export interface Booking {
   from: string
   to: string
   guests: number
-  message: string
+  message?: string
   created_at?: string
   user_id: string
   accommodation_id: number
@@ -19,4 +19,5 @@ export interface Booking {
 export interface AddBooking {
   dateRange: DateRange
   guests: number
+  message?: string
 }
