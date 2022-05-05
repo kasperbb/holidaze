@@ -84,19 +84,19 @@ export function BookingForm({ accommodationId, accommodationName, bookings }: Bo
 
       <Card as="form" maxWidth={['full', 'full']} overflow="visible" onSubmit={handleSubmit(onSubmit)}>
         <FormControl mb={4} isInvalid={Boolean(errors.dateRange)}>
-          <FormLabel htmlFor="from" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
+          <FormLabel htmlFor="dateRange" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
             When will you stay?
           </FormLabel>
-          <ControlledDatePicker name="dateRange" control={control} excludedDates={excludedDates} minDate={new Date()} />
+          <ControlledDatePicker name="dateRange" id="dateRange" control={control} excludedDates={excludedDates} minDate={new Date()} />
           <FormHelperError error={errors.dateRange} />
         </FormControl>
 
         <HStack align="end">
           <FormControl width="40%" mr={4}>
-            <FormLabel htmlFor="to" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
+            <FormLabel htmlFor="guests" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
               Guests
             </FormLabel>
-            <Select bg="white" {...register('guests')}>
+            <Select bg="white" id="guests" {...register('guests')}>
               {Array.from({ length: 5 }).map((_, i) => (
                 <option key={i + 1} value={i + 1}>
                   {i + 1}
