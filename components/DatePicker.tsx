@@ -27,6 +27,7 @@ export function DatePicker({ name, isOutline, selected, onChange, isClearable = 
       showPopperArrow={showPopperArrow}
       customInput={<CustomDatePickerInput name={name} id={name} />}
       calendarStartDay={1}
+      dateFormat="yyyy/MM/dd"
       {...rest}
     />
   )
@@ -68,6 +69,7 @@ export function ControlledDatePicker<T>(props: UseControllerProps<T> & Controlle
       excludeDates={props.excludedDates}
       selectsStart
       selectsRange
+      dateFormat="yyyy/MM/dd"
     />
   )
 }
@@ -93,6 +95,7 @@ export function RangeDatePicker({ name, id, isOutline, onChange, isClearable = f
       calendarStartDay={1}
       selectsStart
       selectsRange
+      dateFormat="yyyy/MM/dd"
       {...rest}
     />
   )

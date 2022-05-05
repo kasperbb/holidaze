@@ -9,7 +9,7 @@ export function addAverageRatingToAccommodation(accommodation: Accommodation) {
 
   return {
     ...accommodation,
-    rating,
+    rating: isNaN(rating) ? 0 : rating,
   }
 }
 
@@ -19,9 +19,11 @@ export function addAverageRatingToAccommodations(accommodations: Accommodation[]
       return accommodation
     }
 
+    const rating = accommodation.reviews.reduce((sum, review) => sum + review.rating, 0) / accommodation.reviews.length
+
     return {
       ...accommodation,
-      rating: accommodation.reviews.reduce((sum, review) => sum + review.rating, 0) / accommodation.reviews.length,
+      rating: isNaN(rating) ? 0 : rating,
     }
   })
 }

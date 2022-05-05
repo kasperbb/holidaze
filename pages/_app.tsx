@@ -5,16 +5,16 @@ import 'swiper/css'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import '@theme/globals.css'
 
-import { Hydrate, QueryCache, QueryClient, QueryClientProvider } from 'react-query'
+import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
 import { useEffect, useState } from 'react'
 
 import type { AppProps } from 'next/app'
 import { AuthProvider } from '@context/AuthContext'
 import { ChakraProvider } from '@chakra-ui/react'
+import ErrorBoundary from '@components/ErrorBoundary'
 import { Layout } from '@components/Layout/Layout'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { hotjar } from 'react-hotjar'
-import { supabase } from '@lib/supabase'
 import { theme } from '@theme/theme'
 import { useRouteChangeProgress } from '@hooks/useRouteChangeProgress'
 
@@ -30,9 +30,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             staleTime: 1000 * 30,
           },
         },
-        queryCache: new QueryCache({
-          onError: error => handleError(error as Error),
-        }),
       })
   )
 
@@ -40,27 +37,21 @@ function MyApp({ Component, pageProps }: AppProps) {
     hotjar.initialize(Number(process.env.NEXT_PUBLIC_HOTJAR_ID), 6)
   }, [])
 
-  async function handleError(error: Error) {
-    if (error.message.includes('JWT expired')) {
-      // TODO: WTF?!
-      const test = await supabase.auth.signOut()
-      console.log('REFRESHED', test)
-    }
-  }
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <ChakraProvider theme={theme}>
-          <AuthProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </AuthProvider>
-        </ChakraProvider>
-      </Hydrate>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <ChakraProvider theme={theme}>
+            <AuthProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </AuthProvider>
+          </ChakraProvider>
+        </Hydrate>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </ErrorBoundary>
   )
 }
 

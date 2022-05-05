@@ -9,7 +9,7 @@ export interface Booking {
   to: string
   guests: number
   message: string
-  created_at?: string
+  created_at: string
   user_id: string
   accommodation_id: number
   user?: Auth.User

@@ -5,7 +5,10 @@ import Head from 'next/head'
 import NextLink from 'next/link'
 import { PasswordInput } from '@components/Forms/Inputs/PasswordInput'
 import { routes } from '@constants/routes'
+import { supabase } from '@lib/supabase'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/router'
 import { useSignIn } from '@hooks/auth/useSignIn'
 
 interface SignInFormData {
@@ -15,8 +18,14 @@ interface SignInFormData {
 
 export default function SignIn() {
   const { register, watch, handleSubmit } = useForm<SignInFormData>()
-
   const { mutate, isLoading } = useSignIn({ ...watch() })
+  const { query } = useRouter()
+
+  useEffect(() => {
+    if (query?.force_logout === 'true' && typeof window !== 'undefined') {
+      supabase.auth.signOut()
+    }
+  }, [query?.force_logout])
 
   const onSubmit = handleSubmit(() => {
     if (isLoading) return

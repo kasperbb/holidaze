@@ -51,7 +51,7 @@ export function Searchbar({ ...rest }: InputProps) {
   return (
     <Popover isOpen={isOpen} isLazy lazyBehavior="keepMounted" placement="bottom-start" initialFocusRef={inputRef}>
       <PopoverTrigger>
-        <InputGroup minWidth="449px">
+        <InputGroup minWidth={{ base: '200px', xl: '449px' }}>
           <InputLeftElement pointerEvents="none">{isFetching ? <Spinner width={3} height={3} /> : <FiSearch color="gray.300" />}</InputLeftElement>
           <Input
             borderRadius="lg"

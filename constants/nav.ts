@@ -1,4 +1,4 @@
-import { FiBookOpen, FiCornerUpLeft, FiHome, FiMessageSquare } from 'react-icons/fi'
+import { FiBookOpen, FiCornerUpLeft, FiMessageSquare, FiTrendingUp } from 'react-icons/fi'
 
 import { MdBed } from 'react-icons/md'
 import { routes } from './routes'
@@ -17,7 +17,7 @@ export const FOOTER_NAV_ITEMS = [
 ]
 
 export const ADMIN_NAV_ITEMS = [
-  { name: 'Home', icon: FiHome, href: routes.admin.base },
+  { name: 'Dashboard', icon: FiTrendingUp, href: routes.admin.base },
   { name: 'Accommodations', icon: MdBed, href: routes.admin.accommodations.base },
   { name: 'Bookings', icon: FiBookOpen, href: routes.admin.bookings.base },
   { name: 'Messages', icon: FiMessageSquare, href: routes.admin.messages.base },

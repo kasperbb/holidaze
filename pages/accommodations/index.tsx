@@ -15,6 +15,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { FiChevronDown, FiChevronUp, FiSearch } from 'react-icons/fi'
+import { useEffect, useState } from 'react'
 
 import { Card } from '@components/Cards/Card'
 import { ControlledDatePicker } from '@components/DatePicker'
@@ -30,21 +31,17 @@ import { useFilterAccommodations } from '@hooks/accommodations/useFilterAccommod
 import { useForm } from 'react-hook-form'
 import { useIsDesktop } from '@hooks/useIsDesktop'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
-
-const today = new Date()
-const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate())
 
 function getInitialDateRange(query: ParsedUrlQuery): [from: Date | undefined, to: Date | undefined] {
   if (query.from && query.to && typeof query.from === 'string' && typeof query.to === 'string') {
     return [new Date(query.from), new Date(query.to)]
   }
-  return [today, nextMonth]
+  return [undefined, undefined]
 }
 
 const initialState: Filter.State = {
   search: '',
-  dateRange: [today, nextMonth],
+  dateRange: [undefined, undefined],
   priceRange: [0, 300],
   rating: 0,
   sortBy: 'created_at-asc',
@@ -63,11 +60,17 @@ export default function Accommodations() {
     search: typeof query.search === 'string' ? query.search : '',
   })
 
-  const { data, isLoading } = useFilterAccommodations(filter)
-
-  const { register, handleSubmit, reset, control } = useForm<Filter.State>({
+  const { register, handleSubmit, reset, setValue, control } = useForm<Filter.State>({
     defaultValues: filter,
   })
+
+  useEffect(() => {
+    if (query.search) {
+      setValue('search', typeof query.search === 'string' ? query.search : '')
+    }
+  }, [query.search, setValue])
+
+  const { data, isLoading } = useFilterAccommodations(filter)
 
   const onSubmit = (data: Filter.State) => {
     setFilter(data)

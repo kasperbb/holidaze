@@ -6,7 +6,10 @@ export const enforceAuth: (inner?: GetServerSideProps) => GetServerSideProps = i
     const { user } = await supabase.auth.api.getUserByCookie(ctx.req)
 
     if (!user) {
-      return { props: {}, redirect: { destination: '/auth/sign-in' } }
+      console.log('ctx.req.cookies', ctx.req.cookies['sb-refresh-token'])
+      const { data, error } = await supabase.auth.api.refreshAccessToken(ctx.req.cookies['sb-refresh-token'])
+      console.log(data, error)
+      return { props: {}, redirect: { destination: '/auth/sign-in?force_logout=true', permanent: false } }
     }
 
     if (inner) {

@@ -3,5 +3,5 @@ export interface Message {
   name: string
   email: string
   message: string
-  created_at?: string
+  created_at: string
 }

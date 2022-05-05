@@ -13,7 +13,7 @@ import { routes } from '@constants/routes'
 export const getServerSideProps = enforceAuth(async () => {
   const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery('bookings', () => getBookings())
+  await queryClient.prefetchQuery(['bookings'], () => getBookings())
 
   return {
     props: {
@@ -23,7 +23,7 @@ export const getServerSideProps = enforceAuth(async () => {
 })
 
 export default function AdminBookings() {
-  const { data } = useQuery('bookings', () => getBookings())
+  const { data } = useQuery(['bookings'], () => getBookings())
 
   return (
     <>

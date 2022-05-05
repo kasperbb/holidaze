@@ -24,14 +24,18 @@ export function Review({ rating, message, user, created_at }: JoinedReview) {
 
           <StarRating rating={rating} />
         </Flex>
-        <Text>
+        {message.length > 160 ? (
           <Collapse startingHeight={45} in={isOpen}>
-            {message}
+            <Text>{message}</Text>
           </Collapse>
-        </Text>
-        <Button variant="outline" size="sm" onClick={onToggle} mt={4}>
-          Show {isOpen ? 'Less' : 'More'}
-        </Button>
+        ) : (
+          <Text>{message}</Text>
+        )}
+        {message.length > 160 && (
+          <Button variant="outline" size="sm" onClick={onToggle} mt={4}>
+            Show {isOpen ? 'Less' : 'More'}
+          </Button>
+        )}
       </Box>
     </Card>
   )

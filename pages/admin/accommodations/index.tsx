@@ -13,7 +13,7 @@ import { routes } from '@constants/routes'
 export const getServerSideProps = enforceAuth(async ctx => {
   const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery('accommodations', () => getAccommodations())
+  await queryClient.prefetchQuery(['accommodations'], () => getAccommodations())
 
   return {
     props: {
@@ -24,7 +24,7 @@ export const getServerSideProps = enforceAuth(async ctx => {
 })
 
 export default function AdminHotels() {
-  const { data } = useQuery('accommodations', () => getAccommodations())
+  const { data } = useQuery(['accommodations'], () => getAccommodations())
 
   return (
     <Container maxWidth="7xl">

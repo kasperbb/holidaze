@@ -5,7 +5,7 @@ import { supabase } from '@lib/supabase'
 const TABLE = 'reviews'
 
 export const getAllReviews = async () => {
-  const { data, error } = await supabase.from<Review[]>(TABLE).select()
+  const { data, error } = await supabase.from<Review>(TABLE).select()
 
   if (error) {
     throw new Error(error.message)

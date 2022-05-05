@@ -19,3 +19,12 @@ export function isSameDay(a: Date | undefined, b: Date | undefined) {
 export function includesSameDay(a: Date[] | undefined, b: Date[] | undefined) {
   return a?.some(dateOne => b?.some(dateTwo => isSameDay(dateOne, dateTwo))) ?? false
 }
+
+export function getWeekArray() {
+  const today = new Date()
+  return Array.from({ length: 7 })
+    .map((_, index) => {
+      return new Date(today.getFullYear(), today.getMonth(), today.getDate() - index)
+    })
+    .reverse()
+}
