@@ -185,14 +185,7 @@ export const filterAccommodations = async ({ search, dateRange, priceRange, rati
 function getSortObject(sortBy: string) {
   const [sortByKey, sortByDirection] = sortBy.split('-') as [keyof Accommodation, string]
 
-  switch (sortByDirection) {
-    case 'asc':
-      return { name: sortByKey, ascending: true }
-    case 'desc':
-      return { name: sortByKey, ascending: false }
-    default:
-      return { name: sortByKey, ascending: true }
-  }
+  return { name: sortByKey, ascending: sortByDirection !== 'desc' }
 }
 
 function filterByBookings(accommodations: Accommodation[], from: Date, to: Date) {

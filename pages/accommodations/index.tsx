@@ -103,13 +103,12 @@ export default function Accommodations() {
     }
   }, [query.search, setValue])
 
-  const { data, isLoading, isFetching, refetch } = useFilterAccommodations(filter)
+  const { data, isLoading, isFetching } = useFilterAccommodations(filter)
 
   const sortValue = watch('sortBy')
 
   useEffect(() => {
-    refetch()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setFilter(prev => ({ ...prev, sortBy: sortValue }))
   }, [sortValue])
 
   const onSubmit = (data: Filter.State) => {
@@ -132,7 +131,12 @@ export default function Accommodations() {
             {data?.length} Accommodations found
           </Heading>
 
-          <SortByInput name="sortBy" control={control} />
+          <FormControl display="flex" alignItems="center" width="unset" gap={4}>
+            <FormLabel htmlFor="sortBy" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" m={0}>
+              Sort by
+            </FormLabel>
+            <SortByInput name="sortBy" control={control} />
+          </FormControl>
         </Card>
 
         <Grid width="full" templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(6, 1fr)' }} gap={8} mt={8}>
