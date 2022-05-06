@@ -1,4 +1,4 @@
-import { Badge, Flex, Heading, IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Text, chakra } from '@chakra-ui/react'
+import { Badge, Flex, Heading, IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Skeleton, Text, chakra } from '@chakra-ui/react'
 import { FiEdit, FiMoreHorizontal, FiToggleLeft, FiToggleRight, FiTrash2 } from 'react-icons/fi'
 
 import { Accommodation } from '@interfaces/accommodation'
@@ -54,6 +54,21 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
         </Text>
       </Flex>
     </Card>
+  )
+}
+
+export function HorizontalAccommodationCardSkeleton() {
+  return (
+    <Flex width="full" height="125px" borderRadius="2xl" overflow="hidden" bg="white" boxShadow="rgba(0, 0, 0, 0.04) 0px 2px 48px 0px" mb={4}>
+      <Skeleton variant="rect" width="200px" height="full" />
+      <Flex direction="column" width="full" p={6}>
+        <Skeleton variant="rect" width="200px" height="30px" mb={4} />
+        <Flex justify="space-between" align="flex-end" width="full">
+          <Skeleton variant="rect" width="100px" height="21px" />
+          <Skeleton variant="rect" width="110px" height="30px" />
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }
 

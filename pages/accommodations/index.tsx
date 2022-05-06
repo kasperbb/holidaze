@@ -11,11 +11,10 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  Skeleton,
-  Spinner,
   useDisclosure,
 } from '@chakra-ui/react'
 import { FiChevronDown, FiChevronUp, FiSearch } from 'react-icons/fi'
+import { HorizontalAccommodationCard, HorizontalAccommodationCardSkeleton } from '@components/Cards/HorizontalAccommodationCard'
 import { QueryClient, dehydrate } from 'react-query'
 import { useEffect, useState } from 'react'
 
@@ -25,7 +24,6 @@ import { EmptyResults } from '@components/EmptyResults'
 import { Filter } from '@interfaces/filter'
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
-import { HorizontalAccommodationCard } from '@components/Cards/HorizontalAccommodationCard'
 import { ParsedUrlQuery } from 'querystring'
 import { PriceRangeInput } from '@components/Forms/Inputs/PriceRangeInput'
 import { SortByInput } from '@components/Forms/Inputs/SortByInput'
@@ -205,7 +203,9 @@ export default function Accommodations() {
             </Collapse>
           </GridItem>
           <GridItem width="full" display="flex" flexDirection="column" alignItems="center" colSpan={4}>
-            {isLoading || isFetching ? <Spinner size="xl" mt={5} /> : data?.map(item => <HorizontalAccommodationCard key={item.id} {...item} />)}
+            {isLoading || isFetching
+              ? Array.from({ length: 5 }).map((_, i) => <HorizontalAccommodationCardSkeleton key={i} />)
+              : data?.map(item => <HorizontalAccommodationCard key={item.id} {...item} />)}
 
             <EmptyResults data={data}>No accommodations found</EmptyResults>
           </GridItem>
