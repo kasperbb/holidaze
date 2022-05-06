@@ -12,6 +12,7 @@ import {
   InputGroup,
   InputLeftElement,
   Skeleton,
+  Spinner,
   useDisclosure,
 } from '@chakra-ui/react'
 import { FiChevronDown, FiChevronUp, FiSearch } from 'react-icons/fi'
@@ -92,7 +93,7 @@ export default function Accommodations() {
     search: typeof query.search === 'string' ? query.search : '',
   })
 
-  const { register, handleSubmit, reset, setValue, control } = useForm<Filter.State>({
+  const { register, handleSubmit, reset, setValue, watch, control } = useForm<Filter.State>({
     defaultValues: filter,
   })
 
@@ -102,7 +103,14 @@ export default function Accommodations() {
     }
   }, [query.search, setValue])
 
-  const { data, isLoading } = useFilterAccommodations(filter)
+  const { data, isLoading, isFetching, refetch } = useFilterAccommodations(filter)
+
+  const sortValue = watch('sortBy')
+
+  useEffect(() => {
+    refetch()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortValue])
 
   const onSubmit = (data: Filter.State) => {
     setFilter(data)
@@ -192,12 +200,8 @@ export default function Accommodations() {
               </Card>
             </Collapse>
           </GridItem>
-          <GridItem width="full" colSpan={4}>
-            {isLoading && Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} variant="rect" width="100%" height="125px" borderRadius="2xl" mb={4} />)}
-
-            {data?.map(item => (
-              <HorizontalAccommodationCard key={item.id} {...item} />
-            ))}
+          <GridItem width="full" display="flex" flexDirection="column" alignItems="center" colSpan={4}>
+            {isLoading || isFetching ? <Spinner size="xl" mt={5} /> : data?.map(item => <HorizontalAccommodationCard key={item.id} {...item} />)}
 
             <EmptyResults data={data}>No accommodations found</EmptyResults>
           </GridItem>

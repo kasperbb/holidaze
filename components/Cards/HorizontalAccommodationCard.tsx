@@ -7,7 +7,6 @@ import NextLink from 'next/link'
 import { routes } from '@constants/routes'
 import { useAuth } from '@context/AuthContext'
 import { useDeleteAccommodation } from '@hooks/accommodations/useDeleteAccommodation'
-import { useIsDesktop } from '@hooks/useIsDesktop'
 import { useToggleFeatured } from '@hooks/accommodations/useToggleFeatured'
 
 interface HorizontalAccommodationCardProps extends Accommodation {
@@ -16,7 +15,6 @@ interface HorizontalAccommodationCardProps extends Accommodation {
 
 export function HorizontalAccommodationCard({ id, name, images, price, rating, user_id, featured, showEditButton }: HorizontalAccommodationCardProps) {
   const { user } = useAuth()
-  const isDesktop = useIsDesktop()
 
   const averageRating = rating && rating.toFixed(0) !== 'NaN' ? rating?.toFixed(0) : 0
   const shouldShowActionsButton = showEditButton && user?.id === user_id
@@ -24,7 +22,7 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
   return (
     <Card
       key={id}
-      variant={isDesktop ? 'horizontal' : undefined}
+      variant="horizontal"
       imageSrc={images ? images[0].url : '/placeholder.png'}
       imageAlt="Holidaze"
       mb={4}

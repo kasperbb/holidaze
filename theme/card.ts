@@ -44,7 +44,7 @@ export const Card: ComponentStyleConfig = {
     horizontal: {
       card: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: ['column', 'row'],
         background: 'white',
         maxWidth: 'full',
         borderRadius: '2xl',
@@ -53,7 +53,7 @@ export const Card: ComponentStyleConfig = {
       },
       image: {
         minWidth: '200px',
-        maxHeight: '125px',
+        maxHeight: ['150px', '125px'],
         width: 'unset',
         height: 'full',
         objectFit: 'cover',
