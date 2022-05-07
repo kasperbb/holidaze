@@ -60,7 +60,6 @@ export function ControlledDatePicker<T>(props: UseControllerProps<T> & Controlle
       onChange={handleChange}
       onBlur={onBlur}
       name={name}
-      id={name}
       ref={ref}
       isClearable={true}
       showPopperArrow={true}

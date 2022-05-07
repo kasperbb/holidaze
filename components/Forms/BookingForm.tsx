@@ -84,10 +84,10 @@ export function BookingForm({ accommodationId, accommodationName, bookings }: Bo
 
       <Card as="form" maxWidth={['full', 'full']} overflow="visible" onSubmit={handleSubmit(onSubmit)}>
         <FormControl mb={4} isInvalid={Boolean(errors.dateRange)}>
-          <FormLabel htmlFor="dateRange" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
+          <FormLabel htmlFor="dates" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
             When will you stay?
           </FormLabel>
-          <ControlledDatePicker name="dateRange" id="dateRange" control={control} excludedDates={excludedDates} minDate={new Date()} />
+          <ControlledDatePicker name="dateRange" id="dates" control={control} excludedDates={excludedDates} minDate={new Date()} />
           <FormHelperError error={errors.dateRange} />
         </FormControl>
 
