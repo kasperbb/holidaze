@@ -42,8 +42,14 @@ export const signOut = async () => {
   }
 }
 
-export const getUser = async () => {
-  const user = await supabase.auth.user()
+export const getUser = async (id: string | undefined) => {
+  if (!id) return
 
-  return user
+  const { data, error } = await supabase.from<Public.User>('users').select().eq('id', id).single()
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return data
 }

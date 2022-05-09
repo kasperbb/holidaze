@@ -82,6 +82,7 @@ export default function AdminHome() {
             <Heading as="h2" fontSize="3xl" mb={4}>
               Bookings
             </Heading>
+
             <Table variant="simple" size="sm">
               <Thead>
                 <Tr>
@@ -91,7 +92,6 @@ export default function AdminHome() {
                 </Tr>
               </Thead>
               <Tbody>
-                {bookingsLoading && <Spinner />}
                 {bookings?.slice(0, 10).map(({ id, from, to, accommodation, user }) => (
                   <Tr key={id}>
                     <Td display="flex" alignItems="center" gap={2}>
@@ -109,12 +109,19 @@ export default function AdminHome() {
                 ))}
               </Tbody>
             </Table>
+
+            {bookingsLoading && (
+              <Flex width="full" justify="center" mt={8}>
+                <Spinner />
+              </Flex>
+            )}
           </Card>
 
           <Card width="full">
             <Heading as="h2" fontSize="3xl" mb={4}>
               Top Accommodations
             </Heading>
+
             <Table variant="simple" size="sm">
               <Thead>
                 <Tr>
@@ -123,7 +130,6 @@ export default function AdminHome() {
                 </Tr>
               </Thead>
               <Tbody>
-                {accommodationsLoading && <Spinner />}
                 {accommodations
                   ?.sort((a, b) => Number(b.rating) - Number(a.rating))
                   .slice(0, 10)
@@ -146,6 +152,12 @@ export default function AdminHome() {
                   ))}
               </Tbody>
             </Table>
+
+            {accommodationsLoading && (
+              <Flex width="full" justify="center" mt={8}>
+                <Spinner />
+              </Flex>
+            )}
           </Card>
         </Grid>
       </Container>

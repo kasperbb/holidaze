@@ -9,5 +9,6 @@ export namespace Public {
   export interface User {
     id: string
     email: string
+    role: 'admin' | 'authenticated'
   }
 }
