@@ -35,6 +35,7 @@ export function useCreateReview(review: Review) {
         title: 'Success!',
         description: `Successfully placed the review.`,
         status: 'success',
+        duration: 20000,
         isClosable: true,
       })
     },
@@ -45,6 +46,7 @@ export function useCreateReview(review: Review) {
         title: 'Error!',
         description: error.message,
         status: 'error',
+        duration: 20000,
         isClosable: true,
       })
     },

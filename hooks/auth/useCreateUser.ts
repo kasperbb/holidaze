@@ -12,6 +12,7 @@ export function useCreateUser(user: Auth.User) {
         title: 'Success!',
         description: `Please check your email to confirm your account.`,
         status: 'success',
+        duration: 20000,
         isClosable: true,
       })
     },
@@ -20,6 +21,7 @@ export function useCreateUser(user: Auth.User) {
         title: 'Error!',
         description: error.message,
         status: 'error',
+        duration: 20000,
         isClosable: true,
       })
     },

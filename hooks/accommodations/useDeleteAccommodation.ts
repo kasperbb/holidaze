@@ -18,6 +18,7 @@ export function useDeleteAccommodation(id: number) {
         title: 'Success!',
         description: `Successfully deleted ${data.name}`,
         status: 'success',
+        duration: 20000,
         isClosable: true,
       })
     },
@@ -26,6 +27,7 @@ export function useDeleteAccommodation(id: number) {
         title: 'Error!',
         description: error.message,
         status: 'error',
+        duration: 20000,
         isClosable: true,
       })
     },

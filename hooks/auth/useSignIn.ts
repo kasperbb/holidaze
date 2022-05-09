@@ -18,6 +18,7 @@ export function useSignIn({ email, password }: Auth.User) {
         title: 'Error!',
         description: error.message,
         status: 'error',
+        duration: 20000,
         isClosable: true,
       })
     },

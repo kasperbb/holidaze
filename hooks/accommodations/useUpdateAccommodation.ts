@@ -14,6 +14,7 @@ export function useUpdateAccommodation(id: number | undefined, accommodation: Ad
         title: 'Success!',
         description: `Successfully updated ${data.name}`,
         status: 'success',
+        duration: 20000,
         isClosable: true,
       })
     },
@@ -22,6 +23,7 @@ export function useUpdateAccommodation(id: number | undefined, accommodation: Ad
         title: 'Error!',
         description: error.message,
         status: 'error',
+        duration: 20000,
         isClosable: true,
       })
     },

@@ -12,6 +12,7 @@ export function useCreateMessage(message: Message) {
         title: 'Success!',
         description: `Successfully sent message`,
         status: 'success',
+        duration: 20000,
         isClosable: true,
       })
     },
@@ -20,6 +21,7 @@ export function useCreateMessage(message: Message) {
         title: 'Error!',
         description: error.message,
         status: 'error',
+        duration: 20000,
         isClosable: true,
       })
     },

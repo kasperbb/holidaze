@@ -20,6 +20,7 @@ export function useToggleFeatured({ id, featured, name }: Pick<Accommodation, 'i
         title: 'Success!',
         description: newFeaturedValue ? `Successfully set ${name} as featured.` : `Successfully unset ${name} as featured.`,
         status: 'success',
+        duration: 20000,
         isClosable: true,
       })
     },
@@ -28,6 +29,7 @@ export function useToggleFeatured({ id, featured, name }: Pick<Accommodation, 'i
         title: 'Error!',
         description: error.message,
         status: 'error',
+        duration: 20000,
         isClosable: true,
       })
     },

@@ -17,6 +17,7 @@ export function useCreateBooking(booking: Booking) {
         title: 'Success!',
         description: `Successfully booked a room.`,
         status: 'success',
+        duration: 20000,
         isClosable: true,
       })
 
@@ -28,6 +29,7 @@ export function useCreateBooking(booking: Booking) {
         title: 'Error!',
         description: error.message,
         status: 'error',
+        duration: 20000,
         isClosable: true,
       })
     },

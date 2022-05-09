@@ -64,12 +64,16 @@ export function BookingForm({ accommodationId, accommodationName, bookings }: Bo
 
     if (user) return modalProps.onOpen()
 
-    toast({
-      title: 'Error!',
-      description: 'You must be logged in to book an accommodation',
-      status: 'error',
-      isClosable: true,
-    })
+    if (!toast.isActive('booking-form-toast')) {
+      toast({
+        id: 'booking-form-toast',
+        title: 'Error!',
+        description: 'You must be logged in to book an accommodation',
+        status: 'error',
+        duration: 20000,
+        isClosable: true,
+      })
+    }
   }
 
   return (

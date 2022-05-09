@@ -20,6 +20,7 @@ export function useCreateAccommodation(accommodation: AddAccommodation) {
         title: 'Success!',
         description: `Successfully created ${data.name}`,
         status: 'success',
+        duration: 20000,
         isClosable: true,
       })
     },
@@ -28,6 +29,7 @@ export function useCreateAccommodation(accommodation: AddAccommodation) {
         title: 'Error!',
         description: error.message,
         status: 'error',
+        duration: 20000,
         isClosable: true,
       })
     },
