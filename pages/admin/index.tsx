@@ -182,10 +182,5 @@ export function StatItem({ icon, title, number }: StatItemProps) {
 function getCountForWeek<T extends { created_at?: string }>(items: T[] | undefined) {
   const week = getWeekArray()
 
-  return week.map(
-    day =>
-      items?.filter(item => {
-        return isSameDay(day, new Date(item.created_at!))
-      }).length ?? 0
-  )
+  return week.map(day => items?.filter(item => isSameDay(day, new Date(item.created_at!))).length ?? 0)
 }

@@ -46,7 +46,11 @@ export const Navigation = () => {
     <Box as="nav" position="fixed" width="full" bg="white" borderBottomRadius="lg" boxShadow={useColorModeValue('sm', 'sm-dark')} zIndex={99}>
       <HStack spacing="10" justify="space-between" fontFamily="jost">
         <Box px={4} py={3}>
-          <Logo />
+          <NextLink href={routes.base} passHref>
+            <Link>
+              <Logo />
+            </Link>
+          </NextLink>
         </Box>
         {isDesktop ? (
           <Flex justify="space-between" flex="1">
