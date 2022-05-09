@@ -190,7 +190,7 @@ export default function Accommodations() {
                     width="full"
                     onClick={() => {
                       setFilter(initialFilter)
-                      reset()
+                      reset(initialFilter)
                     }}
                   >
                     Clear

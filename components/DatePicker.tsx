@@ -43,21 +43,14 @@ export function ControlledDatePicker<T>(props: UseControllerProps<T> & Controlle
     field: { onChange, onBlur, name, ref, value },
   } = useController<T>(props)
 
-  const [dates, setDates] = useState<DateRange>(value as DateRange)
-
-  const handleChange = (dates: DateRange, event: React.SyntheticEvent<any, Event> | undefined) => {
-    setDates(dates)
-    onChange(dates, event)
-  }
-
-  const [start, end] = dates
+  const [start, end] = value as DateRange
 
   return (
     <ReactDatePicker
       {...props}
       startDate={start}
       endDate={end}
-      onChange={handleChange}
+      onChange={dates => onChange(dates)}
       onBlur={onBlur}
       name={name}
       ref={ref}

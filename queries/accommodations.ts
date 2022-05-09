@@ -192,7 +192,7 @@ function filterByBookings(accommodations: Accommodation[], from: Date, to: Date)
   return accommodations.filter(({ bookings }) => {
     if (!bookings?.length) return true
     const disabledDates = bookings?.reduce<Date[]>((acc, dates) => [...acc, ...dateRange(dates.from, dates.to)], [])
-    return includesSameDay([from, to], disabledDates)
+    return !includesSameDay(dateRange(from, to), disabledDates)
   })
 }
 
