@@ -165,7 +165,7 @@ export default function Accommodations() {
                     Date
                   </FormLabel>
 
-                  <ControlledDatePicker name="dateRange" control={control} minDate={new Date()} />
+                  <ControlledDatePicker name="dateRange" id="dateRange" control={control} minDate={new Date()} />
                 </FormControl>
 
                 <FormControl mb={4}>
