@@ -1,8 +1,10 @@
 import * as React from 'react'
 
 import {
+  Avatar,
   Box,
   Button,
+  Center,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -15,12 +17,18 @@ import {
   IconButton,
   Input,
   Link,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
   Stack,
+  Text,
   useBreakpointValue,
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
-import { FiMenu, FiSearch } from 'react-icons/fi'
+import { FiLogOut, FiMenu, FiSearch, FiUser, FiUsers } from 'react-icons/fi'
 import { useRef, useState } from 'react'
 
 import { Logo } from '../Logo'
@@ -34,16 +42,18 @@ import { useRouter } from 'next/router'
 import { useSignOut } from '@hooks/auth/useSignOut'
 
 export const Navigation = () => {
+  const { user } = useAuth()
+
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const menuBtnRef = useRef<HTMLButtonElement>(null)
-  const signOutMutation = useSignOut()
-  const [search, setSearch] = useState('')
 
-  const auth = useAuth()
+  const [search, setSearch] = useState('')
+  const menuBtnRef = useRef<HTMLButtonElement>(null)
+
+  const { mutate: signOut } = useSignOut()
 
   return (
-    <Box as="nav" position="fixed" width="full" bg="white" borderBottomRadius="lg" boxShadow={useColorModeValue('sm', 'sm-dark')} zIndex={99}>
+    <Box as="nav" position="fixed" width="full" bg="white" borderBottomRadius="lg" boxShadow={useColorModeValue('sm', 'sm-dark')} zIndex={99} px={6}>
       <HStack spacing="10" justify="space-between" fontFamily="jost">
         <Box px={4} py={3}>
           <NextLink href={routes.base} passHref>
@@ -60,13 +70,29 @@ export const Navigation = () => {
               ))}
             </Flex>
 
-            <HStack px={4} py={3}>
+            <HStack spacing={4} px={4} py={3}>
               <Searchbar />
 
-              {auth.user ? (
-                <Button variant="primary" onClick={() => signOutMutation.mutate()}>
-                  Sign Out
-                </Button>
+              {user ? (
+                <Menu>
+                  <MenuButton rounded="full">
+                    <Avatar size="sm" src="user_placeholder.jpg" />
+                  </MenuButton>
+                  <MenuList alignItems={'center'}>
+                    <Center>
+                      <Text>{user.email}</Text>
+                    </Center>
+                    <MenuDivider />
+                    <NextLink href={user.role === 'admin' ? routes.admin.base : routes.admin.accommodations.my} passHref>
+                      <MenuItem as="a" icon={user.role === 'admin' ? <FiUsers /> : <FiUser />}>
+                        {user.role === 'admin' ? 'Admin' : 'My Account'}
+                      </MenuItem>
+                    </NextLink>
+                    <MenuItem icon={<FiLogOut />} onClick={() => signOut()}>
+                      Sign Out
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
               ) : (
                 <NextLink href="/auth/sign-in" passHref>
                   <Button as="a" variant="primary">
@@ -105,7 +131,7 @@ export const Navigation = () => {
                 </DrawerBody>
 
                 <DrawerFooter>
-                  {auth.user ? (
+                  {user ? (
                     <Button variant="primary" width="full" onClick={() => signOutMutation.mutate()}>
                       Sign Out
                     </Button>
