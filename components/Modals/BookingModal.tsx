@@ -15,6 +15,7 @@ import {
   Select,
   Textarea,
   UseDisclosureProps,
+  useToast,
 } from '@chakra-ui/react'
 import { dateRange, includesSameDay } from '@utils/date'
 import { useEffect, useMemo } from 'react'
@@ -35,19 +36,23 @@ interface BookingModalProps extends UseDisclosureProps {
 
 export function BookingModal({ accommodationId, accommodationName, bookings, isOpen, onClose, initialValues }: BookingModalProps) {
   const { user } = useAuth()
+  const toast = useToast()
 
   const excludedDates = useMemo(() => {
     return bookings?.reduce<Date[]>((acc, { from, to }) => [...acc, ...dateRange(from, to)], [])
   }, [bookings])
 
   const formSchema = Yup.object().shape({
-    dateRange: Yup.array().test('rangeIncludesDisabledDates', 'Those dates are not available.', (value: Date[] | undefined) => validateDates(value)),
+    dateRange: Yup.array()
+      .test('validDateRange', 'You must select a valid date range.', (value: Date[] | undefined) => (value ? value.some(Boolean) : false))
+      .test('invalidDates', 'Those dates are not available.', (value: Date[] | undefined) => validateDates(value)),
   })
 
   const {
     register,
     watch,
     setValue,
+    handleSubmit,
     control,
     formState: { errors },
   } = useForm<AddBooking>({
@@ -84,10 +89,25 @@ export function BookingModal({ accommodationId, accommodationName, bookings, isO
     return !includesSameDay(range, excludedDates)
   }
 
+  const onSubmit = () => {
+    if (user) return mutate(onClose)
+
+    if (!toast.isActive('booking-form-toast')) {
+      toast({
+        id: 'booking-form-toast',
+        title: 'Error!',
+        description: 'You must be logged in to book an accommodation',
+        status: 'error',
+        duration: 20000,
+        isClosable: true,
+      })
+    }
+  }
+
   return (
     <Modal isOpen={isOpen!} onClose={onClose!}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent as="form" onSubmit={handleSubmit(onSubmit)}>
         <ModalHeader>Book for {accommodationName}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -124,7 +144,7 @@ export function BookingModal({ accommodationId, accommodationName, bookings, isO
           <Button variant="error" width="full" mr={3} onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="success" width="full" onClick={() => mutate(onClose)} isLoading={isLoading}>
+          <Button variant="success" width="full" type="submit" isLoading={isLoading}>
             Book
           </Button>
         </ModalFooter>

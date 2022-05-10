@@ -1,19 +1,26 @@
-import { GetServerSideProps } from 'next'
+import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult, PreviewData } from 'next'
+
+import { ParsedUrlQuery } from 'querystring'
+import { Public } from '@interfaces/auth'
+import { getUser } from '@queries/auth'
 import { supabase } from '@lib/supabase'
 
-export const enforceAuth: (inner?: GetServerSideProps) => GetServerSideProps = inner => {
+type EnforceAuth<P extends { [key: string]: any } = { [key: string]: any }, Q extends ParsedUrlQuery = ParsedUrlQuery, D extends PreviewData = PreviewData> = (
+  context: GetServerSidePropsContext<Q, D> & { user: Public.User | undefined }
+) => Promise<GetServerSidePropsResult<P>>
+
+export const enforceAuth: (inner?: EnforceAuth) => GetServerSideProps = inner => {
   return async ctx => {
     const { user } = await supabase.auth.api.getUserByCookie(ctx.req)
 
     if (!user) {
-      console.log('ctx.req.cookies', ctx.req.cookies['sb-refresh-token'])
-      const { data, error } = await supabase.auth.api.refreshAccessToken(ctx.req.cookies['sb-refresh-token'])
-      console.log(data, error)
+      await supabase.auth.api.refreshAccessToken(ctx.req.cookies['sb-refresh-token'])
       return { props: {}, redirect: { destination: '/auth/sign-in?force_logout=true', permanent: false } }
     }
 
     if (inner) {
-      return inner(ctx)
+      const publicUser = await getUser(user.id)
+      return inner({ ...ctx, user: publicUser })
     }
 
     return { props: {} }

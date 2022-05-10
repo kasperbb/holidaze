@@ -41,8 +41,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [])
 
-  console.log('user', user)
-
   async function updateSupabaseCookie(event: AuthChangeEvent, session: Session | null) {
     await fetch('/api/auth', {
       method: 'POST',

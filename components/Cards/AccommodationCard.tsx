@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, IconButton, Link, Text, chakra, useDisclosure } from '@chakra-ui/react'
+import { Button, Flex, Heading, IconButton, Link, Text, chakra, useDisclosure, useToast } from '@chakra-ui/react'
 
 import { Accommodation } from '@interfaces/accommodation'
 import { BookingModal } from '@components/Modals/BookingModal'
@@ -6,11 +6,29 @@ import { Card } from './Card'
 import { FiBookmark } from 'react-icons/fi'
 import NextLink from 'next/link'
 import { StarRating } from '../StarRating'
+import { useAuth } from '@context/AuthContext'
 import { useIsDesktop } from '@hooks/useIsDesktop'
 
 export function AccommodationCard({ id, name, images, price, rating, bookings }: Accommodation) {
   const modalProps = useDisclosure()
   const isDesktop = useIsDesktop()
+  const toast = useToast()
+  const { user } = useAuth()
+
+  function handleBookingClick() {
+    if (user) return modalProps.onOpen()
+
+    if (!toast.isActive('booking-form-toast')) {
+      toast({
+        id: 'booking-form-toast',
+        title: 'Error!',
+        description: 'You must be logged in to book an accommodation',
+        status: 'error',
+        duration: 20000,
+        isClosable: true,
+      })
+    }
+  }
 
   return (
     <>
@@ -36,7 +54,7 @@ export function AccommodationCard({ id, name, images, price, rating, bookings }:
           </Text>
 
           {isDesktop ? (
-            <Button variant="primary" leftIcon={<FiBookmark />} onClick={() => modalProps.onOpen()}>
+            <Button variant="primary" leftIcon={<FiBookmark />} onClick={handleBookingClick}>
               Book
             </Button>
           ) : (

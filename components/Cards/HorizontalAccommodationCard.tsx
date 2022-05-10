@@ -17,7 +17,7 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
   const { user } = useAuth()
 
   const averageRating = rating && rating.toFixed(0) !== 'NaN' ? rating?.toFixed(0) : 0
-  const shouldShowActionsButton = showEditButton && user?.id === user_id
+  const shouldShowActionsButton = showEditButton && (user?.id === user_id || user?.role === 'admin')
 
   return (
     <Card

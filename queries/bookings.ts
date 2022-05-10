@@ -18,6 +18,18 @@ export const getBookings = async () => {
   return data
 }
 
+export const getBookingsForUser = async (userId: string | undefined) => {
+  if (!userId) return
+
+  const { data, error } = await supabase.from<Booking>(TABLE).select(QUERY).eq('user_id', userId)
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return data
+}
+
 export const createBooking = async (obj: Booking) => {
   const { data, error } = await supabase.from<Booking>(TABLE).insert(obj).single()
 

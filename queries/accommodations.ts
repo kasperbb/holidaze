@@ -40,6 +40,18 @@ export const getFeaturedAccommodations = async () => {
   return addAverageRatingToAccommodations(data)
 }
 
+export const getAccommodationsForUser = async (userId: string | undefined) => {
+  if (!userId) return
+
+  const { data, error } = await supabase.from<Accommodation>(TABLE).select(QUERY).eq('user_id', userId)
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return addAverageRatingToAccommodations(data)
+}
+
 export const getAccommodation = async (id: number) => {
   const { data, error } = await supabase.from<Accommodation>(TABLE).select(QUERY).eq('id', id).single()
 

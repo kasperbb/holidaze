@@ -8,11 +8,13 @@ export const routes = {
     base: '/admin',
     accommodations: {
       base: '/admin/accommodations',
+      my: '/admin/accommodations/my',
       add: '/admin/accommodations/add',
       edit: '/admin/accommodations/edit',
     },
     bookings: {
       base: '/admin/bookings',
+      my: '/admin/bookings/my',
     },
     messages: {
       base: '/admin/messages',

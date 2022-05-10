@@ -30,15 +30,15 @@ export function BookingForm({ accommodationId, accommodationName, bookings }: Bo
   }, [bookings])
 
   const formSchema = Yup.object().shape({
-    dateRange: Yup.array().test('rangeIncludesDisabledDates', 'Those dates are not available.', (value: Date[] | undefined) => validateDates(value)),
+    dateRange: Yup.array()
+      .test('validDateRange', 'You must select a valid date range.', (value: Date[] | undefined) => (value ? value.some(Boolean) : false))
+      .test('invalidDates', 'Those dates are not available.', (value: Date[] | undefined) => validateDates(value)),
   })
 
   const {
     register,
     watch,
     handleSubmit,
-    setError,
-    clearErrors,
     control,
     formState: { errors },
   } = useForm<AddBooking>({
@@ -55,13 +55,7 @@ export function BookingForm({ accommodationId, accommodationName, bookings }: Bo
     return !includesSameDay(range, excludedDates)
   }
 
-  const onSubmit = (data: AddBooking) => {
-    if (!data.dateRange.some(Boolean)) {
-      return setError('dateRange', { type: 'custom', message: 'You must select a valid date range.' })
-    }
-
-    clearErrors('dateRange')
-
+  const onSubmit = () => {
     if (user) return modalProps.onOpen()
 
     if (!toast.isActive('booking-form-toast')) {

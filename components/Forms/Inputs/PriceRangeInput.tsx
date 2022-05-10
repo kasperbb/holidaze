@@ -1,6 +1,7 @@
 import { Badge, RangeSlider, RangeSliderFilledTrack, RangeSliderProps, RangeSliderThumb, RangeSliderTrack } from '@chakra-ui/react'
-import React, { useState } from 'react'
 import { UseControllerProps, useController } from 'react-hook-form'
+
+import React from 'react'
 
 interface PriceRangeInputProps extends Omit<RangeSliderProps, 'onChange'> {
   min?: number
