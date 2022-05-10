@@ -1,5 +1,3 @@
-import { Accommodation } from '@interfaces/accommodation'
-
 export function mod(n: number, m: number) {
   const remain = n % m
   return Math.floor(remain >= 0 ? remain : remain + m)

@@ -1,4 +1,4 @@
-import { Box, Container, Flex, FormControl, FormLabel, Grid, Heading, Image, Link, Select, Text } from '@chakra-ui/react'
+import { Box, Container, Flex, FormControl, FormLabel, Grid, Heading, Image, Link, Text } from '@chakra-ui/react'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
 import { Booking } from '@interfaces/bookings'

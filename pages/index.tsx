@@ -1,5 +1,6 @@
 import { Box, Container, Flex, Heading, Text } from '@chakra-ui/react'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
+import { getAccommodations, getFeaturedAccommodations } from '@queries/accommodations'
 
 import { AccommodationSlider } from '@components/FrontPage/AccommodationSlider'
 import { ExploreCard } from '@components/Cards/ExploreCard'
@@ -9,13 +10,12 @@ import Head from 'next/head'
 import { HeroSection } from '@components/FrontPage/Hero'
 import { Stats } from '@components/Stats'
 import { TrianglePattern } from '@components/Icons/TrianglePattern'
-import { getAccommodations } from '@queries/accommodations'
 
 export const getStaticProps: GetStaticProps = async () => {
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery('accommodations', () => getAccommodations())
-  await queryClient.prefetchQuery(['accommodations', 'featured'], () => getAccommodations({ featured: true }))
+  await queryClient.prefetchQuery(['accommodations', 'featured'], () => getFeaturedAccommodations())
 
   return {
     props: {
@@ -27,7 +27,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
 export default function Home() {
   const { data } = useQuery('accommodations', () => getAccommodations())
-  const { data: featured } = useQuery(['accommodations', 'featured'], () => getAccommodations({ featured: true }))
+  const { data: featured } = useQuery(['accommodations', 'featured'], () => getFeaturedAccommodations())
 
   return (
     <>

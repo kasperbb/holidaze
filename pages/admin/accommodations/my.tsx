@@ -1,4 +1,4 @@
-import { Container, Flex, FormControl, FormLabel, Grid, Heading, Select } from '@chakra-ui/react'
+import { Container, Flex, FormControl, FormLabel, Grid, Heading } from '@chakra-ui/react'
 import { HorizontalAccommodationCard, HorizontalAccommodationCardSkeleton } from '@components/Cards/HorizontalAccommodationCard'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 

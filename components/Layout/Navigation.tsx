@@ -132,7 +132,7 @@ export const Navigation = () => {
 
                 <DrawerFooter>
                   {user ? (
-                    <Button variant="primary" width="full" onClick={() => signOutMutation.mutate()}>
+                    <Button variant="primary" width="full" onClick={() => signOut()}>
                       Sign Out
                     </Button>
                   ) : (
