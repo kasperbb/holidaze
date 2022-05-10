@@ -26,7 +26,7 @@ export interface AdminNavItem {
 }
 
 export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
-  { name: 'Dashboard', icon: FiTrendingUp, href: routes.admin.base },
+  { name: 'Dashboard', icon: FiTrendingUp, href: routes.admin.base, protected: true },
   {
     name: 'Accommodations',
     icon: MdBed,

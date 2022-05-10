@@ -2,7 +2,6 @@ import { Accommodation, AddAccommodation } from '@interfaces/accommodation'
 import { useMutation, useQueryClient } from 'react-query'
 
 import { createAccommodation } from '@queries/accommodations'
-import { routes } from '@constants/routes'
 import { useAuth } from '@context/AuthContext'
 import { useRouter } from 'next/router'
 import { useToast } from '@chakra-ui/react'
@@ -15,7 +14,7 @@ export function useCreateAccommodation(accommodation: AddAccommodation) {
 
   return useMutation<Accommodation, Error>(() => createAccommodation({ ...accommodation, user_id: user?.id }), {
     onSuccess: data => {
-      router.push(routes.admin.accommodations.base)
+      router.back()
       toast({
         title: 'Success!',
         description: `Successfully created ${data.name}`,

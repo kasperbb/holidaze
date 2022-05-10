@@ -13,7 +13,6 @@ export function useDeleteAccommodation(id: number) {
 
   return useMutation<Accommodation, Error>(() => deleteAccommodation(id), {
     onSuccess: data => {
-      router.push(routes.admin.accommodations.base)
       toast({
         title: 'Success!',
         description: `Successfully deleted ${data.name}`,
