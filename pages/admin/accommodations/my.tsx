@@ -1,4 +1,4 @@
-import { Container, Flex, Grid, Heading, IconButton, Select } from '@chakra-ui/react'
+import { Container, Flex, Grid, Heading, Select } from '@chakra-ui/react'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
 import { Card } from '@components/Cards/Card'
@@ -8,6 +8,7 @@ import Head from 'next/head'
 import { HorizontalAccommodationCard } from '@components/Cards/HorizontalAccommodationCard'
 import NextLink from 'next/link'
 import { Public } from '@interfaces/auth'
+import { TooltipIconButton } from '@components/TooltipIconButton'
 import { enforceAuth } from '@utils/enforceAuth'
 import { getAccommodationsForUser } from '@queries/accommodations'
 import { routes } from '@constants/routes'
@@ -53,7 +54,7 @@ export default function AdminAccommodations({ user }: AdminAccommodationsProps) 
               </Select>
 
               <NextLink href={routes.admin.accommodations.add} passHref>
-                <IconButton as="a" icon={<FiPlus />} variant="primary" p={3} aria-label="Add accommodation" />
+                <TooltipIconButton icon={<FiPlus />} variant="primary" p={3} aria-label="Add accommodation" />
               </NextLink>
             </Flex>
           </Flex>

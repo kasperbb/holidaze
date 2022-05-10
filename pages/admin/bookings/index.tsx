@@ -5,12 +5,12 @@ import { Card } from '@components/Cards/Card'
 import { EmptyResults } from '@components/EmptyResults'
 import Head from 'next/head'
 import NextLink from 'next/link'
-import { enforceAuth } from '@utils/enforceAuth'
+import { enforceAdmin } from '@utils/enforceAuth'
 import { formatDate } from '@utils/formatDate'
 import { getBookings } from '@queries/bookings'
 import { routes } from '@constants/routes'
 
-export const getServerSideProps = enforceAuth(async () => {
+export const getServerSideProps = enforceAdmin(async () => {
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery(['bookings'], () => getBookings())

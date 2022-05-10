@@ -4,11 +4,11 @@ import { QueryClient, dehydrate, useQuery } from 'react-query'
 import { Card } from '@components/Cards/Card'
 import { EmptyResults } from '@components/EmptyResults'
 import Head from 'next/head'
-import { enforceAuth } from '@utils/enforceAuth'
+import { enforceAdmin } from '@utils/enforceAuth'
 import { getMessages } from '@queries/messages'
 import { maxLines } from '@utils/styleProps'
 
-export const getServerSideProps = enforceAuth(async () => {
+export const getServerSideProps = enforceAdmin(async () => {
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery('messages', () => getMessages())
