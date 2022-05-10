@@ -22,8 +22,8 @@ export function SortByInput<T>(props: UseControllerProps<T> & SortByInputProps) 
       ref={ref}
       value={value as string}
     >
-      <option value="created_at-asc">Newest</option>
-      <option value="created_at-desc">Oldest</option>
+      <option value="created_at-desc">Newest</option>
+      <option value="created_at-asc">Oldest</option>
       <option value="name-asc">A - Z</option>
       <option value="name-desc">Z - A</option>
     </Select>

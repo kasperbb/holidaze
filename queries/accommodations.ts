@@ -2,6 +2,7 @@ import { Accommodation, AccommodationFilter, AddAccommodation } from '@interface
 import { addAverageRatingToAccommodation, addAverageRatingToAccommodations } from '@utils/accommodations'
 import { dateRange, includesSameDay } from '@utils/date'
 
+import { getSortObject } from '@utils/common'
 import { supabase } from '@lib/supabase'
 import { uploadImages } from './upload'
 
@@ -17,11 +18,8 @@ const QUERY = `
   )
 `
 
-export const getAccommodations = async (options?: Record<string, unknown>) => {
-  const { data, error } = await supabase
-    .from<Accommodation>(TABLE)
-    .select(QUERY)
-    .match({ ...options })
+export const getAccommodations = async (column: keyof Accommodation = 'created_at', ascending = false) => {
+  const { data, error } = await supabase.from<Accommodation>(TABLE).select(QUERY).order(column, { ascending })
 
   if (error) {
     throw new Error(error.message)
@@ -40,10 +38,10 @@ export const getFeaturedAccommodations = async () => {
   return addAverageRatingToAccommodations(data)
 }
 
-export const getAccommodationsForUser = async (userId: string | undefined) => {
+export const getAccommodationsForUser = async (userId: string | undefined, column: keyof Accommodation = 'created_at', ascending = false) => {
   if (!userId) return
 
-  const { data, error } = await supabase.from<Accommodation>(TABLE).select(QUERY).eq('user_id', userId)
+  const { data, error } = await supabase.from<Accommodation>(TABLE).select(QUERY).eq('user_id', userId).order(column, { ascending })
 
   if (error) {
     throw new Error(error.message)
@@ -171,8 +169,8 @@ export const filterAccommodations = async ({ search, dateRange, priceRange, rati
   if (search) query = query.textSearch('name', search, { type: 'websearch' })
   if (priceRange && priceRange.length) query = query.gte('price', priceRange[0]).lte('price', priceRange[1])
   if (sortBy) {
-    const { name, ascending } = getSortObject(sortBy)
-    query = query.order(name, { ascending })
+    const { key, ascending } = getSortObject(sortBy)
+    query = query.order(key, { ascending })
   }
 
   const { data, error } = await query
@@ -192,12 +190,6 @@ export const filterAccommodations = async ({ search, dateRange, priceRange, rati
   }
 
   return accommodations
-}
-
-function getSortObject(sortBy: string) {
-  const [sortByKey, sortByDirection] = sortBy.split('-') as [keyof Accommodation, string]
-
-  return { name: sortByKey, ascending: sortByDirection !== 'desc' }
 }
 
 function filterByBookings(accommodations: Accommodation[], from: Date, to: Date) {

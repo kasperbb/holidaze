@@ -39,7 +39,7 @@ const initialFilter: Filter.State = {
   dateRange: [undefined, undefined],
   priceRange: [0, 300],
   rating: 0,
-  sortBy: 'created_at-asc',
+  sortBy: 'created_at-desc',
 }
 
 export const getServerSideProps: GetServerSideProps = async ctx => {

@@ -1,3 +1,5 @@
+import { Accommodation } from '@interfaces/accommodation'
+
 export function mod(n: number, m: number) {
   const remain = n % m
   return Math.floor(remain >= 0 ? remain : remain + m)
@@ -24,4 +26,10 @@ export function getRandomInt(min: number, max: number) {
 
 export function replaceSpacesStr(path: string) {
   return path.replace(/\s/g, '-').toLowerCase()
+}
+
+export function getSortObject(sortBy: string) {
+  const [sortByKey, sortByDirection] = sortBy.split('-') as [keyof Accommodation, string]
+
+  return { key: sortByKey, ascending: sortByDirection !== 'desc' }
 }

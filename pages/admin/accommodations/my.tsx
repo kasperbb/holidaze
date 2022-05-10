@@ -1,22 +1,25 @@
-import { Container, Flex, Grid, Heading, Select } from '@chakra-ui/react'
+import { Container, Flex, FormControl, FormLabel, Grid, Heading, Select } from '@chakra-ui/react'
+import { HorizontalAccommodationCard, HorizontalAccommodationCardSkeleton } from '@components/Cards/HorizontalAccommodationCard'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
 import { Card } from '@components/Cards/Card'
 import { EmptyResults } from '@components/EmptyResults'
 import { FiPlus } from 'react-icons/fi'
 import Head from 'next/head'
-import { HorizontalAccommodationCard } from '@components/Cards/HorizontalAccommodationCard'
 import NextLink from 'next/link'
 import { Public } from '@interfaces/auth'
+import { SortByInput } from '@components/Forms/Inputs/SortByInput'
 import { TooltipIconButton } from '@components/TooltipIconButton'
 import { enforceAuth } from '@utils/enforceAuth'
 import { getAccommodationsForUser } from '@queries/accommodations'
+import { getSortObject } from '@utils/common'
 import { routes } from '@constants/routes'
+import { useForm } from 'react-hook-form'
 
 export const getServerSideProps = enforceAuth(async ({ user }) => {
   const queryClient = new QueryClient()
 
-  if (user?.id) await queryClient.prefetchQuery(['accommodations', user.id], () => getAccommodationsForUser(user.id))
+  if (user?.id) await queryClient.prefetchQuery(['accommodations', user.id, 'created_at-desc'], () => getAccommodationsForUser(user.id))
 
   return {
     props: {
@@ -31,7 +34,13 @@ interface AdminAccommodationsProps {
 }
 
 export default function AdminAccommodations({ user }: AdminAccommodationsProps) {
-  const { data } = useQuery(['accommodations', user?.id], () => getAccommodationsForUser(user?.id))
+  const { watch, control } = useForm<{ sortBy: string }>({
+    defaultValues: { sortBy: 'created_at-desc' },
+  })
+
+  const { key, ascending } = getSortObject(watch('sortBy'))
+
+  const { data, isLoading, isFetching } = useQuery(['accommodations', user?.id, watch('sortBy')], () => getAccommodationsForUser(user?.id, key, ascending))
 
   return (
     <>
@@ -47,11 +56,12 @@ export default function AdminAccommodations({ user }: AdminAccommodationsProps) 
             </Heading>
 
             <Flex gap={4}>
-              <Select bgColor="white">
-                <option value="option1">Sort by default</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-              </Select>
+              <FormControl display="flex" alignItems="center" width="unset" gap={4}>
+                <FormLabel htmlFor="sortBy" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" m={0}>
+                  Sort by
+                </FormLabel>
+                <SortByInput name="sortBy" control={control} />
+              </FormControl>
 
               <NextLink href={routes.admin.accommodations.add} passHref>
                 <TooltipIconButton icon={<FiPlus />} variant="primary" p={3} aria-label="Add accommodation" />
@@ -61,9 +71,9 @@ export default function AdminAccommodations({ user }: AdminAccommodationsProps) 
         </Card>
 
         <Grid templateColumns="repeat(1, 1fr)" gap={4} width="full" my={10}>
-          {data?.map(accommodation => (
-            <HorizontalAccommodationCard key={accommodation.id} {...accommodation} showEditButton />
-          ))}
+          {isLoading || isFetching
+            ? Array.from({ length: 5 }).map((_, i) => <HorizontalAccommodationCardSkeleton key={i} />)
+            : data?.map(item => <HorizontalAccommodationCard key={item.id} {...item} showEditButton />)}
 
           <EmptyResults data={data}>No accommodations found</EmptyResults>
         </Grid>

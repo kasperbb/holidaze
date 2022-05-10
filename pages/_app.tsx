@@ -39,20 +39,20 @@ function MyApp({ Component, pageProps }: AppProps & { user: Public.User | undefi
   }, [])
 
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <ChakraProvider theme={theme}>
+    <QueryClientProvider client={queryClient}>
+      <Hydrate state={pageProps.dehydratedState}>
+        <ChakraProvider theme={theme}>
+          <ErrorBoundary>
             <AuthProvider>
               <Layout>
                 <Component {...pageProps} />
               </Layout>
             </AuthProvider>
-          </ChakraProvider>
-        </Hydrate>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </ErrorBoundary>
+          </ErrorBoundary>
+        </ChakraProvider>
+      </Hydrate>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
 }
 
