@@ -10,11 +10,18 @@ export const NAV_ITEMS = [
   { label: 'Contact', href: routes.contact.base },
 ]
 
+export interface FooterNavItem {
+  label: string
+  href: string
+  protected?: boolean
+  fallback?: Pick<FooterNavItem, 'label' | 'href'>
+}
+
 export const FOOTER_NAV_ITEMS = [
   { label: 'Home', href: routes.base },
   { label: 'Accommodations', href: routes.accommodations.base },
   { label: 'Contact', href: routes.contact.base },
-  { label: 'Admin', href: routes.admin.base, protected: true },
+  { label: 'Admin', href: routes.admin.base, protected: true, fallback: { label: 'My account', href: routes.admin.accommodations.my } },
 ]
 
 export interface AdminNavItem {

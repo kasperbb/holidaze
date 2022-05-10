@@ -22,24 +22,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null | undefined>(null)
 
   useEffect(() => {
-    const authSession = supabase.auth.session()
-    setUser(authSession?.user)
+    ;(async () => {
+      const authSession = supabase.auth.session()
+      setUserSession(authSession)
+    })()
 
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       updateSupabaseCookie(event, session)
-
-      if (session?.user) {
-        const data = await getUser(session.user.id)
-        setUser(data?.role ? { ...session.user, role: data.role } : session.user)
-      } else {
-        setUser(null)
-      }
+      setUserSession(session)
     })
 
     return () => {
       authListener?.unsubscribe()
     }
   }, [])
+
+  async function setUserSession(session: Session | null) {
+    if (session?.user) {
+      const data = await getUser(session.user.id)
+      setUser(data?.role ? { ...session.user, role: data.role } : session.user)
+    } else {
+      setUser(null)
+    }
+  }
 
   async function updateSupabaseCookie(event: AuthChangeEvent, session: Session | null) {
     await fetch('/api/auth', {

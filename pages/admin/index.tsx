@@ -9,7 +9,7 @@ import { MdBed } from 'react-icons/md'
 import NextLink from 'next/link'
 import { StarRating } from '@components/StarRating'
 import dynamic from 'next/dynamic'
-import { enforceAuth } from '@utils/enforceAuth'
+import { enforceAdmin } from '@utils/enforceAuth'
 import { getAccommodations } from '@queries/accommodations'
 import { getAllReviews } from '@queries/reviews'
 import { getBookings } from '@queries/bookings'
@@ -21,7 +21,7 @@ import { useQuery } from 'react-query'
 
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false })
 
-export const getServerSideProps = enforceAuth()
+export const getServerSideProps = enforceAdmin()
 
 export default function AdminHome() {
   const { data: accommodations, isLoading: accommodationsLoading } = useQuery(['accommodations'], () => getAccommodations())

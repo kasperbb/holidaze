@@ -2,14 +2,11 @@ import { useMutation, useQueryClient } from 'react-query'
 
 import { Accommodation } from '@interfaces/accommodation'
 import { deleteAccommodation } from '@queries/accommodations'
-import { routes } from '@constants/routes'
-import { useRouter } from 'next/router'
 import { useToast } from '@chakra-ui/react'
 
 export function useDeleteAccommodation(id: number) {
   const queryClient = useQueryClient()
   const toast = useToast()
-  const router = useRouter()
 
   return useMutation<Accommodation, Error>(() => deleteAccommodation(id), {
     onSuccess: data => {

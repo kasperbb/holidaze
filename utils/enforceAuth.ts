@@ -26,3 +26,26 @@ export const enforceAuth: (inner?: EnforceAuth) => GetServerSideProps = inner =>
     return { props: {} }
   }
 }
+
+export const enforceAdmin: (inner?: GetServerSideProps) => GetServerSideProps = inner => {
+  return async ctx => {
+    const { user } = await supabase.auth.api.getUserByCookie(ctx.req)
+
+    if (!user) {
+      await supabase.auth.api.refreshAccessToken(ctx.req.cookies['sb-refresh-token'])
+      return { props: {}, redirect: { destination: '/auth/sign-in?force_logout=true', permanent: false } }
+    }
+
+    const publicUser = await getUser(user.id)
+
+    if (publicUser?.role !== 'admin') {
+      return { props: {}, redirect: { destination: '/admin/error', permanent: false } }
+    }
+
+    if (inner) {
+      return inner(ctx)
+    }
+
+    return { props: {} }
+  }
+}

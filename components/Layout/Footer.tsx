@@ -1,7 +1,7 @@
 import { Box, Button, Container, Link, Stack, Text, VisuallyHidden } from '@chakra-ui/react'
+import { FOOTER_NAV_ITEMS, FooterNavItem } from '@constants/nav'
 import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa'
 
-import { FOOTER_NAV_ITEMS } from '@constants/nav'
 import { Logo } from '../Logo'
 import NextLink from 'next/link'
 import { ReactNode } from 'react'
@@ -40,19 +40,44 @@ const SocialButton = ({ children, label, href }: SocialButtonProps) => {
 
 export function Footer() {
   const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
 
-  const navItems = user ? FOOTER_NAV_ITEMS : FOOTER_NAV_ITEMS.filter(item => !item.protected)
+  function renderNavItem(item: FooterNavItem) {
+    if (isAdmin) {
+      return (
+        <NextLink key={item.href} href={item.href} passHref>
+          <Link>{item.label}</Link>
+        </NextLink>
+      )
+    }
+
+    if (item.protected && user) {
+      return (
+        item.fallback && (
+          <NextLink key={item.fallback.href} href={item.fallback.href} passHref>
+            <Link>{item.fallback.label}</Link>
+          </NextLink>
+        )
+      )
+    }
+
+    if (!item.protected) {
+      return (
+        <NextLink key={item.href} href={item.href} passHref>
+          <Link>{item.label}</Link>
+        </NextLink>
+      )
+    }
+
+    return null
+  }
 
   return (
     <Box as="footer" bg="gray.50" color="gray.700">
       <Container as={Stack} maxW={'6xl'} py={4} spacing={4} justify={'center'} align={'center'}>
         <Logo />
         <Stack direction={'row'} spacing={6}>
-          {navItems.map(({ label, href }) => (
-            <NextLink key={href} href={href} passHref>
-              <Link>{label}</Link>
-            </NextLink>
-          ))}
+          {FOOTER_NAV_ITEMS.map(item => renderNavItem(item))}
         </Stack>
       </Container>
 
