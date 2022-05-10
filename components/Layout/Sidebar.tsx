@@ -6,24 +6,23 @@ import { FiMenu } from 'react-icons/fi'
 import { IconType } from 'react-icons'
 import { Logo } from '@components/Logo'
 import NextLink from 'next/link'
-import { Public } from '@interfaces/auth'
 import { isActiveLink } from '@utils/nav'
+import { useAuth } from '@context/AuthContext'
 import { useRouter } from 'next/router'
 
 interface SidebarProps {
   children: ReactNode
-  user: Public.User | undefined
 }
 
-export function Sidebar({ children, user }: SidebarProps) {
+export function Sidebar({ children }: SidebarProps) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <Box minH="100vh">
-      <SidebarContent user={user} isOpen={isOpen} onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
+      <SidebarContent isOpen={isOpen} onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
 
       <Drawer autoFocus={false} isOpen={isOpen} placement="left" onClose={onClose} returnFocusOnClose={false} onOverlayClick={onClose} size="full">
         <DrawerContent>
-          <SidebarContent user={user} isOpen={isOpen} onClose={onClose} />
+          <SidebarContent isOpen={isOpen} onClose={onClose} />
         </DrawerContent>
       </Drawer>
 
@@ -39,10 +38,10 @@ export function Sidebar({ children, user }: SidebarProps) {
 interface SidebarContentProps extends BoxProps {
   onClose: () => void
   isOpen: boolean
-  user: Public.User | undefined
 }
 
-const SidebarContent = ({ user, isOpen, onClose, ...rest }: SidebarContentProps) => {
+const SidebarContent = ({ isOpen, onClose, ...rest }: SidebarContentProps) => {
+  const { user } = useAuth()
   const isAdmin = user?.role === 'admin'
 
   function renderNavItem(item: AdminNavItem) {

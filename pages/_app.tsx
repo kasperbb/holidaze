@@ -12,33 +12,14 @@ import type { AppProps } from 'next/app'
 import { AuthProvider } from '@context/AuthContext'
 import { ChakraProvider } from '@chakra-ui/react'
 import ErrorBoundary from '@components/ErrorBoundary'
-import { GetServerSidePropsContext } from 'next'
 import { Layout } from '@components/Layout/Layout'
 import { Public } from '@interfaces/auth'
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { getUser } from '@queries/auth'
 import { hotjar } from 'react-hotjar'
-import { supabase } from '@lib/supabase'
 import { theme } from '@theme/theme'
 import { useRouteChangeProgress } from '@hooks/useRouteChangeProgress'
 
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const { user } = await supabase.auth.api.getUserByCookie(ctx.req)
-
-  if (!user) {
-    return { props: { user: undefined } }
-  }
-
-  const publicUser = await getUser(user.id)
-
-  return {
-    props: {
-      user: publicUser,
-    },
-  }
-}
-
-function MyApp({ Component, pageProps, user }: AppProps & { user: Public.User | undefined }) {
+function MyApp({ Component, pageProps }: AppProps & { user: Public.User | undefined }) {
   useRouteChangeProgress()
 
   const [queryClient] = useState(
@@ -63,7 +44,7 @@ function MyApp({ Component, pageProps, user }: AppProps & { user: Public.User | 
         <Hydrate state={pageProps.dehydratedState}>
           <ChakraProvider theme={theme}>
             <AuthProvider>
-              <Layout user={user}>
+              <Layout>
                 <Component {...pageProps} />
               </Layout>
             </AuthProvider>
