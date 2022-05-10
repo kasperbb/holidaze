@@ -169,7 +169,7 @@ export const filterAccommodations = async ({ search, dateRange, priceRange, rati
   if (search) query = query.textSearch('name', search, { type: 'websearch' })
   if (priceRange && priceRange.length) query = query.gte('price', priceRange[0]).lte('price', priceRange[1])
   if (sortBy) {
-    const { key, ascending } = getSortObject(sortBy)
+    const { key, ascending } = getSortObject<Accommodation>(sortBy)
     query = query.order(key, { ascending })
   }
 

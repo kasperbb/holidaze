@@ -2,6 +2,7 @@ import { Container, Flex, FormControl, FormLabel, Grid, Heading, Select } from '
 import { HorizontalAccommodationCard, HorizontalAccommodationCardSkeleton } from '@components/Cards/HorizontalAccommodationCard'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
+import { Accommodation } from '@interfaces/accommodation'
 import { Card } from '@components/Cards/Card'
 import { EmptyResults } from '@components/EmptyResults'
 import { FiPlus } from 'react-icons/fi'
@@ -38,7 +39,7 @@ export default function AdminAccommodations({ user }: AdminAccommodationsProps) 
     defaultValues: { sortBy: 'created_at-desc' },
   })
 
-  const { key, ascending } = getSortObject(watch('sortBy'))
+  const { key, ascending } = getSortObject<Accommodation>(watch('sortBy'))
 
   const { data, isLoading, isFetching } = useQuery(['accommodations', user?.id, watch('sortBy')], () => getAccommodationsForUser(user?.id, key, ascending))
 

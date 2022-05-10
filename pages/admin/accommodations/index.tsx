@@ -34,7 +34,7 @@ export default function AdminHotels() {
     defaultValues: { sortBy: 'created_at-desc' },
   })
 
-  const { key, ascending } = getSortObject(watch('sortBy'))
+  const { key, ascending } = getSortObject<Accommodation>(watch('sortBy'))
 
   const { data, isLoading, isFetching } = useQuery(['accommodations', watch('sortBy')], () => getAccommodations(key, ascending))
 

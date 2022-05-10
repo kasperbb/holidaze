@@ -3,12 +3,21 @@ import { UseControllerProps, useController } from 'react-hook-form'
 
 import React from 'react'
 
-interface SortByInputProps extends Omit<RangeSliderProps, 'onChange'> {}
+interface SortByInputProps extends Omit<RangeSliderProps, 'onChange'> {
+  options?: { label: string; value: string }[]
+}
 
-export function SortByInput<T>(props: UseControllerProps<T> & SortByInputProps) {
+const defaultOptions = [
+  { label: 'Newest', value: 'created_at-desc' },
+  { label: 'Oldest', value: 'created_at-asc' },
+  { label: 'A - Z', value: 'name-asc' },
+  { label: 'Z - A', value: 'name-desc' },
+]
+
+export function SortByInput<T>({ options = defaultOptions, ...rest }: UseControllerProps<T> & SortByInputProps) {
   const {
     field: { onChange, onBlur, name, ref, value },
-  } = useController<T>(props)
+  } = useController<T>(rest)
 
   return (
     <Select
@@ -22,10 +31,11 @@ export function SortByInput<T>(props: UseControllerProps<T> & SortByInputProps) 
       ref={ref}
       value={value as string}
     >
-      <option value="created_at-desc">Newest</option>
-      <option value="created_at-asc">Oldest</option>
-      <option value="name-asc">A - Z</option>
-      <option value="name-desc">Z - A</option>
+      {options.map(({ label, value }) => (
+        <option key={value} value={value}>
+          {label}
+        </option>
+      ))}
     </Select>
   )
 }

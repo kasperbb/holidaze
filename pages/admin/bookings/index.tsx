@@ -1,19 +1,23 @@
-import { Box, Container, Flex, Grid, Heading, Image, Link, Select, Text } from '@chakra-ui/react'
+import { Box, Container, Flex, FormControl, FormLabel, Grid, Heading, Image, Link, Select, Text } from '@chakra-ui/react'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
+import { Booking } from '@interfaces/bookings'
 import { Card } from '@components/Cards/Card'
 import { EmptyResults } from '@components/EmptyResults'
 import Head from 'next/head'
 import NextLink from 'next/link'
+import { SortByInput } from '@components/Forms/Inputs/SortByInput'
 import { enforceAdmin } from '@utils/enforceAuth'
 import { formatDate } from '@utils/formatDate'
 import { getBookings } from '@queries/bookings'
+import { getSortObject } from '@utils/common'
 import { routes } from '@constants/routes'
+import { useForm } from 'react-hook-form'
 
 export const getServerSideProps = enforceAdmin(async () => {
   const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery(['bookings'], () => getBookings())
+  await queryClient.prefetchQuery(['bookings', 'created_at-desc'], () => getBookings())
 
   return {
     props: {
@@ -23,7 +27,13 @@ export const getServerSideProps = enforceAdmin(async () => {
 })
 
 export default function AdminBookings() {
-  const { data } = useQuery(['bookings'], () => getBookings())
+  const { watch, control } = useForm<{ sortBy: string }>({
+    defaultValues: { sortBy: 'created_at-desc' },
+  })
+
+  const { key, ascending } = getSortObject<Booking>(watch('sortBy'))
+
+  const { data } = useQuery(['bookings', watch('sortBy')], () => getBookings(key, ascending))
 
   return (
     <>
@@ -39,11 +49,19 @@ export default function AdminBookings() {
             </Heading>
 
             <Flex gap={4}>
-              <Select bgColor="white">
-                <option value="option1">Sort by default</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-              </Select>
+              <FormControl display="flex" alignItems="center" width="unset" gap={4}>
+                <FormLabel htmlFor="sortBy" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" m={0}>
+                  Sort by
+                </FormLabel>
+                <SortByInput
+                  name="sortBy"
+                  control={control}
+                  options={[
+                    { label: 'Newest', value: 'created_at-desc' },
+                    { label: 'Oldest', value: 'created_at-asc' },
+                  ]}
+                />
+              </FormControl>
             </Flex>
           </Flex>
         </Card>

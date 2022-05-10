@@ -28,8 +28,8 @@ export function replaceSpacesStr(path: string) {
   return path.replace(/\s/g, '-').toLowerCase()
 }
 
-export function getSortObject(sortBy: string) {
-  const [sortByKey, sortByDirection] = sortBy.split('-') as [keyof Accommodation, string]
+export function getSortObject<T = unknown>(sortBy: string) {
+  const [sortByKey, sortByDirection] = sortBy.split('-') as [keyof T, string]
 
   return { key: sortByKey, ascending: sortByDirection !== 'desc' }
 }

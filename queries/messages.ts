@@ -3,8 +3,8 @@ import { supabase } from '@lib/supabase'
 
 const TABLE = 'messages'
 
-export const getMessages = async () => {
-  const { data, error } = await supabase.from<Message>(TABLE).select()
+export const getMessages = async (column: keyof Message = 'created_at', ascending = false) => {
+  const { data, error } = await supabase.from<Message>(TABLE).select().order(column, { ascending })
 
   if (error) {
     throw new Error(error.message)

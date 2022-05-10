@@ -8,8 +8,8 @@ const QUERY = `
   accommodation:accommodation_id (*)
 `
 
-export const getBookings = async () => {
-  const { data, error } = await supabase.from<Booking>(TABLE).select(QUERY)
+export const getBookings = async (column: keyof Booking = 'created_at', ascending = false) => {
+  const { data, error } = await supabase.from<Booking>(TABLE).select(QUERY).order(column, { ascending })
 
   if (error) {
     throw new Error(error.message)
@@ -18,10 +18,10 @@ export const getBookings = async () => {
   return data
 }
 
-export const getBookingsForUser = async (userId: string | undefined) => {
+export const getBookingsForUser = async (userId: string | undefined, column: keyof Booking = 'created_at', ascending = false) => {
   if (!userId) return
 
-  const { data, error } = await supabase.from<Booking>(TABLE).select(QUERY).eq('user_id', userId)
+  const { data, error } = await supabase.from<Booking>(TABLE).select(QUERY).eq('user_id', userId).order(column, { ascending })
 
   if (error) {
     throw new Error(error.message)
