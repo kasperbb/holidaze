@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from 'react'
 
 import { getUser } from '@queries/auth'
 import { supabase } from '@lib/supabase'
-import { useQuery } from 'react-query'
 
 interface AuthContextValues {
   user: User | null | undefined
@@ -21,35 +20,28 @@ export const useAuth = () => {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null | undefined>(null)
-  const { data, refetch } = useQuery(['user', user?.id], () => getUser(user?.id), {
-    enabled: !!user,
-  })
 
   useEffect(() => {
     const authSession = supabase.auth.session()
     setUser(authSession?.user)
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       updateSupabaseCookie(event, session)
-      setUser(session?.user)
-      refetch()
+
+      if (session?.user) {
+        const data = await getUser(session.user.id)
+        setUser(data?.role ? { ...session.user, role: data.role } : session.user)
+      } else {
+        setUser(null)
+      }
     })
 
     return () => {
       authListener?.unsubscribe()
     }
-  }, [refetch])
+  }, [])
 
-  console.log('userRole', user?.role)
-
-  useEffect(() => {
-    if (data) {
-      setUser(prev => {
-        if (!prev) return null
-        return { ...prev, role: data.role }
-      })
-    }
-  }, [data])
+  console.log('user', user)
 
   async function updateSupabaseCookie(event: AuthChangeEvent, session: Session | null) {
     await fetch('/api/auth', {
