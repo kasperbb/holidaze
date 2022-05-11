@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 
+import { Location } from '@interfaces/location'
 import { MapRef } from 'react-map-gl'
 import { useDebounce } from './useDebouce'
 import { useSearchLocation } from './accommodations/useSearchLocation'
 
-export function useLocationState(query: string, initialState?: [latitude: number, longitude: number]) {
-  const [location, setLocation] = useState<[latitude: number, longitude: number]>(initialState ?? [60.3914191, 5.3248788])
+export function useLocationState(query: string, initialState?: Location.LongLat) {
+  const [location, setLocation] = useState<Location.LongLat>(initialState ?? [60.3914191, 5.3248788])
   const debouncedLocationQuery = useDebounce(query, 500)
   const ref = useRef<MapRef>(null)
 
@@ -19,9 +20,8 @@ export function useLocationState(query: string, initialState?: [latitude: number
 
   useEffect(() => {
     if (locationResponse) {
-      const { latitude, longitude } = locationResponse
-      setLocation([latitude, longitude])
-      ref.current?.flyTo({ center: [longitude, latitude], zoom: 13 })
+      setLocation(locationResponse)
+      ref.current?.flyTo({ center: locationResponse, zoom: 13 })
     }
   }, [locationResponse])
 

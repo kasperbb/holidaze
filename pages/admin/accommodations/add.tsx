@@ -118,8 +118,8 @@ export default function AdminAddAccommodation() {
                 <Input type="search" placeholder="Search location" onChange={e => setLocationQuery(e.target.value)} />
               </InputGroup>
               <Map
-                markerList={[{ latitude: location[0], longitude: location[1] }]}
-                onClick={({ lngLat }) => setLocation([lngLat.lat, lngLat.lng])}
+                markerList={[{ longitude: location[0], latitude: location[1] }]}
+                onClick={({ lngLat }) => setLocation([lngLat.lng, lngLat.lat])}
                 style={{ height: 250 }}
                 ref={mapRef}
               />

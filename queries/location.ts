@@ -1,7 +1,6 @@
 export async function searchLocation(query: string) {
   const res = await fetch(
-    `http://api.positionstack.com/v1/forward?access_key=${process.env.NEXT_PUBLIC_POSITIONSTACK_KEY}&query=${encodeURIComponent(query)}&limit=1`
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?limit=1&types=place&access_token=${process.env.NEXT_PUBLIC_MAPBOX_KEY}`
   )
-  const { data } = await res.json()
-  return data[0]
+  return await res.json()
 }
