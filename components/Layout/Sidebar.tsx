@@ -79,7 +79,7 @@ const SidebarContent = ({ isOpen, onClose, ...rest }: SidebarContentProps) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {ADMIN_NAV_ITEMS.map(item => renderNavItem(item))}
-      <Link as="button" variant="admin-nav" onClick={() => signOut()}>
+      <Link as="button" variant="admin-nav" color="error.500" onClick={() => signOut()}>
         <Icon
           mr="4"
           fontSize="16"
