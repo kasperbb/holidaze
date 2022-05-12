@@ -1,11 +1,12 @@
 import { Booking } from './bookings'
+import { Location } from './location'
 import { Review } from './reviews'
 
 export interface Accommodation {
   id: number
   name: string
   description: string
-  location: [latitude: number, longitude: number]
+  location: Location.LongLat
   price: number
   rooms: number
   images: Image[]
@@ -20,7 +21,7 @@ export interface Accommodation {
 export interface AddAccommodation {
   name: string
   description: string
-  location: [latitude: number, longitude: number]
+  location: Location.LongLat
   price: number
   rooms: number
   images: File[]

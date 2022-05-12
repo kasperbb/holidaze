@@ -49,7 +49,7 @@ export default function AccommodationDetails({ id }: { id: number }) {
     )
   }
 
-  const [latitude, longitude] = data.location
+  const [longitude, latitude] = data.location
 
   return (
     <>
@@ -106,7 +106,7 @@ export default function AccommodationDetails({ id }: { id: number }) {
                 Location
               </Heading>
 
-              <Map markerList={[{ latitude: latitude, longitude: longitude }]} lat={latitude} long={longitude} hasBorder />
+              <Map markerList={[{ longitude, latitude }]} long={longitude} lat={latitude} hasBorder />
             </Box>
 
             <Box mt={14}>
