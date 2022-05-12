@@ -1,6 +1,7 @@
 import { AuthChangeEvent, Session, User } from '@supabase/supabase-js'
 import React, { useContext, useEffect, useState } from 'react'
 
+import { Public } from '@interfaces/auth'
 import { getUser } from '@queries/auth'
 import { supabase } from '@lib/supabase'
 
@@ -19,13 +20,10 @@ export const useAuth = () => {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null | undefined>(null)
+  const [user, setUser] = useState<Public.User | null | undefined>(null)
 
   useEffect(() => {
-    ;(async () => {
-      const authSession = supabase.auth.session()
-      setUserSession(authSession)
-    })()
+    setUserSession(supabase.auth.session())
 
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       updateSupabaseCookie(event, session)
@@ -40,7 +38,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function setUserSession(session: Session | null) {
     if (session?.user) {
       const data = await getUser(session.user.id)
-      setUser(data?.role ? { ...session.user, role: data.role } : session.user)
+      setUser(data)
     } else {
       setUser(null)
     }

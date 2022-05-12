@@ -11,7 +11,7 @@ export function useSignOut() {
   return useMutation(() => signOut(), {
     onSuccess: () => {
       queryClient.removeQueries()
-      router.push(routes.base)
+      if (router.pathname.includes('admin')) router.push(routes.base)
     },
   })
 }

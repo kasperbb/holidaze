@@ -31,7 +31,9 @@ export const signIn = async ({ email, password }: Auth.User) => {
     throw new Error(error.message)
   }
 
-  return user
+  const publicUser = getUser(user?.id)
+
+  return publicUser
 }
 
 export const signOut = async () => {

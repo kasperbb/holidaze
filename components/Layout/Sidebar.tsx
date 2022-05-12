@@ -1,14 +1,15 @@
 import { ADMIN_NAV_ITEMS, AdminNavItem } from '@constants/nav'
 import { Box, BoxProps, CloseButton, Drawer, DrawerContent, Flex, FlexProps, Icon, IconButton, Link, LinkProps, Text, useDisclosure } from '@chakra-ui/react'
+import { FiLogOut, FiMenu } from 'react-icons/fi'
 import React, { ReactNode } from 'react'
 
-import { FiMenu } from 'react-icons/fi'
 import { IconType } from 'react-icons'
 import { Logo } from '@components/Logo'
 import NextLink from 'next/link'
 import { isActiveLink } from '@utils/nav'
 import { useAuth } from '@context/AuthContext'
 import { useRouter } from 'next/router'
+import { useSignOut } from '@hooks/auth/useSignOut'
 
 interface SidebarProps {
   children: ReactNode
@@ -42,6 +43,7 @@ interface SidebarContentProps extends BoxProps {
 
 const SidebarContent = ({ isOpen, onClose, ...rest }: SidebarContentProps) => {
   const { user } = useAuth()
+  const { mutate: signOut } = useSignOut()
   const isAdmin = user?.role === 'admin'
 
   function renderNavItem(item: AdminNavItem) {
@@ -77,6 +79,17 @@ const SidebarContent = ({ isOpen, onClose, ...rest }: SidebarContentProps) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {ADMIN_NAV_ITEMS.map(item => renderNavItem(item))}
+      <Link as="button" variant="admin-nav" onClick={() => signOut()}>
+        <Icon
+          mr="4"
+          fontSize="16"
+          _groupHover={{
+            color: 'white',
+          }}
+          as={FiLogOut}
+        />
+        Sign Out
+      </Link>
     </Box>
   )
 }
