@@ -2,6 +2,7 @@ import { Alert, AlertDescription, AlertIcon, AlertTitle, HStack, chakra, useToke
 import { CSSProperties, forwardRef, useState } from 'react'
 import ReactMapGL, { FullscreenControl, MapRef, Marker, MarkerProps, NavigationControl, Popup, PopupProps } from 'react-map-gl'
 
+import { MAP_LOCATION } from '@constants/map'
 import maplibregl from 'maplibre-gl'
 
 interface MapProps {
@@ -15,7 +16,9 @@ interface MapProps {
   hasBorder?: boolean
 }
 
-export const Map = forwardRef<MapRef, MapProps>(({ lat = 60.3914191, long = 5.3248788, zoom = 13, style, popupList, markerList, hasBorder, ...rest }, ref) => {
+const [LONG, LAT] = MAP_LOCATION
+
+export const Map = forwardRef<MapRef, MapProps>(({ long = LONG, lat = LAT, zoom = 13, style, popupList, markerList, hasBorder, ...rest }, ref) => {
   const [error, setError] = useState<string | null>(null)
   const xlBroderRadius = useToken('radii', '2xl')
   const mdBorderRadius = useToken('radii', 'md')

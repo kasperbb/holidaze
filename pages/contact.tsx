@@ -11,9 +11,9 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 const formSchema = Yup.object().shape({
-  name: Yup.string().required('Name is required.').min(2, 'Name must minimum 2 characters long.'),
+  name: Yup.string().required('Name is required.').min(2, 'Name must be at least 2 characters long.'),
   email: Yup.string().required('Email is required').email('Has to be a valid email.'),
-  message: Yup.string().required('Message is required').min(20, 'Message must be minimum 20 characters long.'),
+  message: Yup.string().required('Message is required').min(20, 'Message must be at least 20 characters long.'),
 })
 
 export default function Contact() {
