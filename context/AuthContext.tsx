@@ -1,4 +1,4 @@
-import { AuthChangeEvent, Session, User } from '@supabase/supabase-js'
+import { AuthChangeEvent, Session } from '@supabase/supabase-js'
 import React, { useContext, useEffect, useState } from 'react'
 
 import { Public } from '@interfaces/auth'
@@ -6,7 +6,7 @@ import { getUser } from '@queries/auth'
 import { supabase } from '@lib/supabase'
 
 interface AuthContextValues {
-  user: User | null | undefined
+  user: Public.User | null | undefined
 }
 
 interface AuthProviderProps {
