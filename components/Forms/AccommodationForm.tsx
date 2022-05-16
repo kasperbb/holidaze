@@ -24,7 +24,7 @@ interface AccommodationFormProps {
 const formSchema = Yup.object().shape({
   name: Yup.string().required('Name is required.').min(3, 'Name must be at least 3 characters long.'),
   description: Yup.string().required('Description is required.').min(20, 'Description must be at least 20 characters long.'),
-  price: Yup.string().required('Price is required.'),
+  price: Yup.string().required('Price is required.').min(0, 'Price must be at least 0.').max(500, 'Price must be 500 or lower.'),
   rooms: Yup.string().required('Rooms is required.'),
 })
 
