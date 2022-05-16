@@ -47,6 +47,7 @@ export const Card: ComponentStyleConfig = {
         flexDirection: ['column', 'row'],
         background: 'white',
         maxWidth: 'full',
+        width: 'full',
         borderRadius: '2xl',
         boxShadow: 'rgba(0, 0, 0, 0.04) 0px 2px 48px 0px',
         overflow: 'hidden',

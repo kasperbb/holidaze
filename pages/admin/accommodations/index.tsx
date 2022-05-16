@@ -1,11 +1,11 @@
 import { Container, Flex, FormControl, FormLabel, Grid, Heading } from '@chakra-ui/react'
+import { FiEdit, FiPlus } from 'react-icons/fi'
 import { HorizontalAccommodationCard, HorizontalAccommodationCardSkeleton } from '@components/Cards/HorizontalAccommodationCard'
 import { QueryClient, dehydrate, useQuery } from 'react-query'
 
 import { Accommodation } from '@interfaces/accommodation'
 import { Card } from '@components/Cards/Card'
 import { EmptyResults } from '@components/EmptyResults'
-import { FiPlus } from 'react-icons/fi'
 import Head from 'next/head'
 import NextLink from 'next/link'
 import { SortByInput } from '@components/Forms/Inputs/SortByInput'
@@ -15,6 +15,7 @@ import { getAccommodations } from '@queries/accommodations'
 import { getSortObject } from '@utils/common'
 import { routes } from '@constants/routes'
 import { useForm } from 'react-hook-form'
+import { useState } from 'react'
 
 export const getServerSideProps = enforceAdmin(async ctx => {
   const queryClient = new QueryClient()
@@ -30,6 +31,8 @@ export const getServerSideProps = enforceAdmin(async ctx => {
 })
 
 export default function AdminHotels() {
+  const [isEditMode, setIsEditMode] = useState(false)
+
   const { watch, control } = useForm<{ sortBy: string }>({
     defaultValues: { sortBy: 'created_at-desc' },
   })
@@ -59,9 +62,13 @@ export default function AdminHotels() {
                 <SortByInput name="sortBy" control={control} />
               </FormControl>
 
-              <NextLink href={routes.admin.accommodations.add} passHref>
-                <TooltipIconButton icon={<FiPlus />} variant="primary" p={3} aria-label="Add accommodation" />
-              </NextLink>
+              <Flex gap={4}>
+                <TooltipIconButton icon={<FiEdit />} variant="primary" p={3} aria-label="Edit accommodations" onClick={() => setIsEditMode(prev => !prev)} />
+
+                <NextLink href={routes.admin.accommodations.add} passHref>
+                  <TooltipIconButton as="a" icon={<FiPlus />} variant="primary" p={3} aria-label="Add accommodation" />
+                </NextLink>
+              </Flex>
             </Flex>
           </Flex>
         </Card>
@@ -69,7 +76,7 @@ export default function AdminHotels() {
         <Grid templateColumns="repeat(1, 1fr)" gap={4} width="full" my={10}>
           {isLoading || isFetching
             ? Array.from({ length: 5 }).map((_, i) => <HorizontalAccommodationCardSkeleton key={i} />)
-            : data?.map(item => <HorizontalAccommodationCard key={item.id} {...item} showEditButton />)}
+            : data?.map(item => <HorizontalAccommodationCard key={item.id} {...item} isEditMode={isEditMode} />)}
 
           <EmptyResults data={data}>No accommodations found</EmptyResults>
         </Grid>

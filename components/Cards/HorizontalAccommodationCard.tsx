@@ -10,48 +10,48 @@ import { useDeleteAccommodation } from '@hooks/accommodations/useDeleteAccommoda
 import { useToggleFeatured } from '@hooks/accommodations/useToggleFeatured'
 
 interface HorizontalAccommodationCardProps extends Accommodation {
-  showEditButton?: boolean
+  isEditMode?: boolean
 }
 
-export function HorizontalAccommodationCard({ id, name, images, price, rating, user_id, featured, showEditButton }: HorizontalAccommodationCardProps) {
+export function HorizontalAccommodationCard({ id, name, images, price, rating, user_id, featured, isEditMode }: HorizontalAccommodationCardProps) {
   const { user } = useAuth()
 
   const averageRating = rating && rating.toFixed(0) !== 'NaN' ? rating?.toFixed(0) : 0
-  const shouldShowActionsButton = showEditButton && (user?.id === user_id || user?.role === 'admin')
+  const shouldShowActionsButton = isEditMode && (user?.id === user_id || user?.role === 'admin')
 
   return (
     <NextLink href={`/accommodations/${id}`} passHref>
-      <Card
-        key={id}
-        as="a"
-        variant="horizontal"
-        imageSrc={images ? images[0].url : '/placeholder.png'}
-        imageAlt="Holidaze"
-        mb={4}
-        contentProps={{ width: 'full', display: 'flex', flexDirection: 'column' }}
-      >
-        <Flex align="center" justify="space-between" gap={10}>
-          <Heading as="h3" fontSize="25px" fontWeight="semibold">
-            {name}
-          </Heading>
-          {shouldShowActionsButton && <ActionsButton id={id} featured={featured} name={name} />}
-        </Flex>
-
-        <Flex align="center" justify="space-between" gap={10}>
-          <Flex align="center" color="orange.800" fontWeight="bold" fontSize="sm" gap={2} aria-label="Average rating">
-            <Badge display="flex" alignItems="center" fontSize="sm" borderRadius="md" colorScheme="orange" px={1}>
-              {averageRating}/5
-            </Badge>
-            Average
+      <Link borderRadius="2xl" width="full" mb={4}>
+        <Card
+          key={id}
+          variant="horizontal"
+          imageSrc={images ? images[0].url : '/placeholder.png'}
+          imageAlt="Holidaze"
+          contentProps={{ width: 'full', display: 'flex', flexDirection: 'column' }}
+        >
+          <Flex align="center" justify="space-between" gap={10}>
+            <Heading as="h3" fontSize="25px" fontWeight="semibold">
+              {name}
+            </Heading>
+            {shouldShowActionsButton && <ActionsButton id={id} featured={featured} name={name} />}
           </Flex>
-          <Text fontSize="20px" fontWeight="semibold" color="success.500" whiteSpace="nowrap">
-            €{price}
-            <chakra.span fontSize="14px" color="text.secondary" fontWeight="normal" ml={2}>
-              per night
-            </chakra.span>
-          </Text>
-        </Flex>
-      </Card>
+
+          <Flex align="flex-end" justify="space-between" flex="1 1 0%" gap={10}>
+            <Flex align="center" color="orange.800" fontWeight="bold" fontSize="sm" gap={2} aria-label="Average rating">
+              <Badge display="flex" alignItems="center" fontSize="sm" borderRadius="md" colorScheme="orange" px={1}>
+                {averageRating}/5
+              </Badge>
+              Average
+            </Flex>
+            <Text fontSize="20px" fontWeight="semibold" color="success.500" whiteSpace="nowrap">
+              €{price}
+              <chakra.span fontSize="14px" color="text.secondary" fontWeight="normal" ml={2}>
+                per night
+              </chakra.span>
+            </Text>
+          </Flex>
+        </Card>
+      </Link>
     </NextLink>
   )
 }
@@ -77,7 +77,7 @@ function ActionsButton({ id, featured, name }: Pick<Accommodation, 'id' | 'featu
 
   return (
     <Menu>
-      <MenuButton as={IconButton} aria-label="Options" icon={<FiMoreHorizontal />} variant="outline" isLoading={isLoading} />
+      <MenuButton as={IconButton} height={8} aria-label="Options" icon={<FiMoreHorizontal />} variant="outline" isLoading={isLoading} />
       <MenuList>
         <NextLink href={`${routes.admin.accommodations.edit}/${id}`} passHref>
           <MenuItem as="a" icon={<FiEdit />}>
