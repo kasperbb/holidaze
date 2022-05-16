@@ -37,7 +37,7 @@ import { useRouter } from 'next/router'
 const initialFilter: Filter.State = {
   search: '',
   dateRange: [undefined, undefined],
-  priceRange: [0, 300],
+  priceRange: [0, 500],
   rating: 0,
   sortBy: 'created_at-desc',
 }
