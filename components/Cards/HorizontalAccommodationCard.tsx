@@ -19,7 +19,7 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
   const averageRating = rating && rating.toFixed(0) !== 'NaN' ? rating?.toFixed(0) : 0
   const shouldShowActionsButton = isEditMode && (user?.id === user_id || user?.role === 'admin')
 
-  if (isEditMode) {
+  if (shouldShowActionsButton) {
     return (
       <Card
         key={id}
