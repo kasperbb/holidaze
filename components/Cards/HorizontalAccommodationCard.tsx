@@ -19,6 +19,41 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
   const averageRating = rating && rating.toFixed(0) !== 'NaN' ? rating?.toFixed(0) : 0
   const shouldShowActionsButton = isEditMode && (user?.id === user_id || user?.role === 'admin')
 
+  if (isEditMode) {
+    return (
+      <Card
+        key={id}
+        variant="horizontal"
+        imageSrc={images ? images[0].url : '/placeholder.png'}
+        imageAlt="Holidaze"
+        contentProps={{ width: 'full', display: 'flex', flexDirection: 'column' }}
+        mb={4}
+      >
+        <Flex align="center" justify="space-between" gap={10}>
+          <Heading as="h3" fontSize="25px" fontWeight="semibold">
+            {name}
+          </Heading>
+          <ActionsButton id={id} featured={featured} name={name} />
+        </Flex>
+
+        <Flex align="flex-end" justify="space-between" flex="1 1 0%" gap={10}>
+          <Flex align="center" color="orange.800" fontWeight="bold" fontSize="sm" gap={2} aria-label="Average rating">
+            <Badge display="flex" alignItems="center" fontSize="sm" borderRadius="md" colorScheme="orange" px={1}>
+              {averageRating}/5
+            </Badge>
+            Average
+          </Flex>
+          <Text fontSize="20px" fontWeight="semibold" color="success.500" whiteSpace="nowrap">
+            €{price}
+            <chakra.span fontSize="14px" color="text.secondary" fontWeight="normal" ml={2}>
+              per night
+            </chakra.span>
+          </Text>
+        </Flex>
+      </Card>
+    )
+  }
+
   return (
     <NextLink href={`/accommodations/${id}`} passHref>
       <Link borderRadius="2xl" width="full" mb={4}>
@@ -33,7 +68,6 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
             <Heading as="h3" fontSize="25px" fontWeight="semibold">
               {name}
             </Heading>
-            {shouldShowActionsButton && <ActionsButton id={id} featured={featured} name={name} />}
           </Flex>
 
           <Flex align="flex-end" justify="space-between" flex="1 1 0%" gap={10}>
