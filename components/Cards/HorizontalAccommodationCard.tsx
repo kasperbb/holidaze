@@ -30,7 +30,7 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
   } as const
 
   const imageStyles = {
-    maxHeight: { base: '200px', lg: '150px' },
+    maxHeight: { base: '200px', lg: '125px' },
   }
 
   if (shouldShowActionsButton) {

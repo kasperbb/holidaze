@@ -15,7 +15,7 @@ export function useToggleFeatured({ id, featured, name }: Pick<Accommodation, 'i
       router.push(routes.admin.accommodations.base)
       toast({
         title: 'Success!',
-        description: !featured ? `Successfully set ${name} as featured.` : `Successfully unset ${name} as featured.`,
+        description: !featured ? `Successfully set ${name} as featured.` : `Successfully removed ${name} from featured.`,
         status: 'success',
         duration: TOAST_DURATION,
         isClosable: true,

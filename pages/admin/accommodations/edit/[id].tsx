@@ -32,24 +32,21 @@ export default function AdminEditAccommodation({ id }: PropsWithId) {
   return (
     <>
       <Head>
-        <title>Edit {data?.name} — Holidaze</title>
+        <title>Edit Listing Information — Holidaze</title>
       </Head>
 
       <Container maxWidth="7xl">
         <Card as="div" maxWidth="full" width="full">
           <Flex align="center" gap={5}>
             <BackButton variant="primary" aria-label="Go back" />
-            <Heading as="h1" fontSize="24px" fontWeight={500}>
-              Edit {data?.name}
-            </Heading>
           </Flex>
         </Card>
 
         <Card variant="no-padding" maxWidth="full" width="full" my={10}>
           <Flex align="center" borderBottom="1px solid" borderColor="muted" py={6} px={8} gap={4}>
             <EditIcon width="20px" height="20px" />
-            <Heading as="h2" fontSize="24px" fontWeight={500}>
-              Listing Information
+            <Heading as="h1" fontSize="24px" fontWeight={500}>
+              Edit Listing Information
             </Heading>
           </Flex>
 
