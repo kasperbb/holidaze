@@ -43,12 +43,12 @@ export default function AdminBookings() {
 
       <Container maxWidth="7xl">
         <Card as="div" maxWidth="full" width="full">
-          <Flex direction={['column', 'row']} align="center" justify="space-between" gap={5}>
+          <Flex direction={{ base: 'column', lg: 'row' }} align="center" justify="space-between" gap={5}>
             <Heading as="h1" fontSize="24px" fontWeight={500}>
               {data?.length} Bookings
             </Heading>
 
-            <Flex gap={4}>
+            <Flex direction={{ base: 'column', sm: 'row' }} alignItems="center" gap={4}>
               <FormControl display="flex" alignItems="center" width="unset" gap={4}>
                 <FormLabel htmlFor="sortBy" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" m={0}>
                   Sort by

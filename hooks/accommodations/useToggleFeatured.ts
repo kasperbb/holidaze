@@ -1,40 +1,34 @@
-import { useMutation, useQueryClient } from 'react-query'
-
 import { Accommodation } from '@interfaces/accommodation'
+import { TOAST_DURATION } from '@constants/toast'
 import { routes } from '@constants/routes'
 import { toggleFeatured } from '@queries/accommodations'
+import { useMutation } from 'react-query'
 import { useRouter } from 'next/router'
 import { useToast } from '@chakra-ui/react'
 
 export function useToggleFeatured({ id, featured, name }: Pick<Accommodation, 'id' | 'featured' | 'name'>) {
-  const queryClient = useQueryClient()
   const toast = useToast()
   const router = useRouter()
 
-  const newFeaturedValue = !featured
-
-  return useMutation<Accommodation, Error>(() => toggleFeatured(id, newFeaturedValue), {
+  return useMutation<Accommodation, Error>(() => toggleFeatured(id, !featured), {
     onSuccess: () => {
       router.push(routes.admin.accommodations.base)
       toast({
         title: 'Success!',
-        description: newFeaturedValue ? `Successfully set ${name} as featured.` : `Successfully unset ${name} as featured.`,
+        description: !featured ? `Successfully set ${name} as featured.` : `Successfully unset ${name} as featured.`,
         status: 'success',
-        duration: 20000,
+        duration: TOAST_DURATION,
         isClosable: true,
       })
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast({
         title: 'Error!',
-        description: error.message,
+        description: `Something went wrong! Couldn't set ${name} as featured.`,
         status: 'error',
-        duration: 20000,
+        duration: TOAST_DURATION,
         isClosable: true,
       })
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(['accommodations'])
     },
   })
 }

@@ -1,8 +1,9 @@
-import { Badge, Flex, Heading, IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Skeleton, Text, chakra } from '@chakra-ui/react'
-import { FiEdit, FiMoreHorizontal, FiToggleLeft, FiToggleRight, FiTrash2 } from 'react-icons/fi'
+import { Badge, Button, ButtonGroup, Flex, FormControl, FormLabel, Heading, IconButton, Link, Skeleton, Switch, Text, chakra } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 
 import { Accommodation } from '@interfaces/accommodation'
 import { Card } from './Card'
+import { FiTrash2 } from 'react-icons/fi'
 import NextLink from 'next/link'
 import { routes } from '@constants/routes'
 import { useAuth } from '@context/AuthContext'
@@ -19,6 +20,19 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
   const averageRating = rating && rating.toFixed(0) !== 'NaN' ? rating?.toFixed(0) : 0
   const shouldShowActionsButton = isEditMode && (user?.id === user_id || user?.role === 'admin')
 
+  const cardStyles = {
+    width: 'full',
+    display: 'flex',
+    flexDirection: { base: 'column', lg: 'row' },
+    justifyContent: 'space-between',
+    alignItems: { base: 'flex-start', lg: 'flex-end' },
+    gap: 6,
+  } as const
+
+  const imageStyles = {
+    maxHeight: { base: '200px', lg: '150px' },
+  }
+
   if (shouldShowActionsButton) {
     return (
       <Card
@@ -26,30 +40,24 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
         variant="horizontal"
         imageSrc={images ? images[0].url : '/placeholder.png'}
         imageAlt="Holidaze"
-        contentProps={{ width: 'full', display: 'flex', flexDirection: 'column' }}
+        contentProps={cardStyles}
+        imageProps={imageStyles}
         mb={4}
       >
-        <Flex align="center" justify="space-between" gap={10}>
+        <Flex direction="column" gap={4}>
           <Heading as="h3" fontSize="25px" fontWeight="semibold">
             {name}
           </Heading>
-          <ActionsButton id={id} featured={featured} name={name} />
-        </Flex>
 
-        <Flex align="flex-end" justify="space-between" flex="1 1 0%" gap={10}>
           <Flex align="center" color="orange.800" fontWeight="bold" fontSize="sm" gap={2} aria-label="Average rating">
             <Badge display="flex" alignItems="center" fontSize="sm" borderRadius="md" colorScheme="orange" px={1}>
               {averageRating}/5
             </Badge>
             Average
           </Flex>
-          <Text fontSize="20px" fontWeight="semibold" color="success.500" whiteSpace="nowrap">
-            €{price}
-            <chakra.span fontSize="14px" color="text.secondary" fontWeight="normal" ml={2}>
-              per night
-            </chakra.span>
-          </Text>
         </Flex>
+
+        <ActionButtons id={id} featured={featured} name={name} />
       </Card>
     )
   }
@@ -57,33 +65,26 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
   return (
     <NextLink href={`/accommodations/${id}`} passHref>
       <Link borderRadius="2xl" width="full" mb={4}>
-        <Card
-          key={id}
-          variant="horizontal"
-          imageSrc={images ? images[0].url : '/placeholder.png'}
-          imageAlt="Holidaze"
-          contentProps={{ width: 'full', display: 'flex', flexDirection: 'column' }}
-        >
-          <Flex align="center" justify="space-between" gap={10}>
+        <Card key={id} variant="horizontal" imageSrc={images ? images[0].url : '/placeholder.png'} imageAlt="Holidaze" contentProps={cardStyles}>
+          <Flex direction="column" gap={4}>
             <Heading as="h3" fontSize="25px" fontWeight="semibold">
               {name}
             </Heading>
-          </Flex>
 
-          <Flex align="flex-end" justify="space-between" flex="1 1 0%" gap={10}>
             <Flex align="center" color="orange.800" fontWeight="bold" fontSize="sm" gap={2} aria-label="Average rating">
               <Badge display="flex" alignItems="center" fontSize="sm" borderRadius="md" colorScheme="orange" px={1}>
                 {averageRating}/5
               </Badge>
               Average
             </Flex>
-            <Text fontSize="20px" fontWeight="semibold" color="success.500" whiteSpace="nowrap">
-              €{price}
-              <chakra.span fontSize="14px" color="text.secondary" fontWeight="normal" ml={2}>
-                per night
-              </chakra.span>
-            </Text>
           </Flex>
+
+          <Text fontSize="20px" fontWeight="semibold" color="success.500" whiteSpace="nowrap">
+            €{price}
+            <chakra.span fontSize="14px" color="text.secondary" fontWeight="normal" ml={2}>
+              per night
+            </chakra.span>
+          </Text>
         </Card>
       </Link>
     </NextLink>
@@ -105,26 +106,38 @@ export function HorizontalAccommodationCardSkeleton() {
   )
 }
 
-function ActionsButton({ id, featured, name }: Pick<Accommodation, 'id' | 'featured' | 'name'>) {
-  const { mutate: toggle, isLoading } = useToggleFeatured({ id, featured, name })
-  const { mutate: remove } = useDeleteAccommodation(id)
+function ActionButtons({ id, featured, name }: Pick<Accommodation, 'id' | 'featured' | 'name'>) {
+  const { mutate: toggle, isError } = useToggleFeatured({ id, featured, name })
+  const { mutate: remove, isLoading } = useDeleteAccommodation(id)
+
+  const [isFeatured, setIsFeatured] = useState(featured)
+
+  useEffect(() => {
+    if (isError) setIsFeatured(prev => !prev)
+  }, [isError])
+
+  function handleToggle() {
+    toggle()
+    setIsFeatured(prev => !prev)
+  }
 
   return (
-    <Menu>
-      <MenuButton as={IconButton} height={8} aria-label="Options" icon={<FiMoreHorizontal />} variant="outline" isLoading={isLoading} />
-      <MenuList>
+    <Flex align="center">
+      <ButtonGroup size="sm" variant="outline" mr={4} isAttached>
         <NextLink href={`${routes.admin.accommodations.edit}/${id}`} passHref>
-          <MenuItem as="a" icon={<FiEdit />}>
+          <Button as="a" borderRightRadius={0} borderRight={0}>
             Edit
-          </MenuItem>
+          </Button>
         </NextLink>
-        <MenuItem icon={featured ? <FiToggleRight /> : <FiToggleLeft />} onClick={() => toggle()}>
-          {featured ? 'Unset featured' : 'Set featured'}
-        </MenuItem>
-        <MenuItem icon={<FiTrash2 />} onClick={() => remove()}>
-          Delete
-        </MenuItem>
-      </MenuList>
-    </Menu>
+        <IconButton borderLeftRadius={0} height="34px" aria-label={`Delete ${name}`} icon={<FiTrash2 />} onClick={() => remove()} isLoading={isLoading} />
+      </ButtonGroup>
+
+      <FormControl display="flex" alignItems="center">
+        <FormLabel htmlFor="featured" mb="0">
+          Featured:
+        </FormLabel>
+        <Switch id="featured" isChecked={isFeatured} onChange={handleToggle} />
+      </FormControl>
+    </Flex>
   )
 }

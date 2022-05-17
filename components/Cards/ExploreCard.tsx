@@ -12,7 +12,7 @@ export function ExploreCard() {
       variant={isDesktop ? 'horizontal' : undefined}
       imageSrc="/explore.jpg"
       imageAlt="Holidaze"
-      mb={4}
+      mb={8}
       contentProps={{ width: 'full', display: 'flex', flexDirection: 'column', alignItems: 'start', gap: 4, p: 12 }}
       imageProps={{ maxWidth: '350px', maxHeight: 'full', minWidth: '350px', height: 'unset' }}
     >
