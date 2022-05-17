@@ -2,6 +2,7 @@ import {
   Button,
   Collapse,
   Container,
+  Flex,
   FormControl,
   FormLabel,
   Grid,
@@ -81,9 +82,7 @@ function getInitialDateRange(query: ParsedUrlQuery): [from: Date | undefined, to
 export default function Accommodations() {
   const { query } = useRouter()
   const isDesktop = useIsDesktop()
-  const { isOpen, onToggle } = useDisclosure({
-    defaultIsOpen: true,
-  })
+  const { isOpen, onToggle } = useDisclosure()
 
   const [filter, setFilter] = useState<Filter.State>({
     ...initialFilter,
@@ -145,7 +144,7 @@ export default function Accommodations() {
                 {isOpen ? <FiChevronUp /> : <FiChevronDown />}
               </Button>
             )}
-            <Collapse in={isOpen} animateOpacity>
+            <Collapse in={isOpen || isDesktop} animateOpacity>
               <Card overflow="visible">
                 <FormControl mb={4}>
                   <FormLabel htmlFor="search" color="text.primary" whiteSpace="nowrap" fontSize="sm" fontWeight="normal" mb={2}>
@@ -184,7 +183,7 @@ export default function Accommodations() {
                   <StarRatingInput size={6} name="rating" control={control} />
                 </FormControl>
 
-                <HStack spacing={4}>
+                <Flex direction={{ base: 'column', lg: 'row' }} gap={4}>
                   <Button
                     variant="error"
                     width="full"
@@ -198,7 +197,7 @@ export default function Accommodations() {
                   <Button type="submit" width="full">
                     Apply
                   </Button>
-                </HStack>
+                </Flex>
               </Card>
             </Collapse>
           </GridItem>
