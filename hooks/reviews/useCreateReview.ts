@@ -5,7 +5,7 @@ import { createReview } from '@queries/reviews'
 import { useAuth } from '@context/AuthContext'
 import { useToast } from '@chakra-ui/react'
 
-export function useCreateReview(review: Review) {
+export function useCreateReview(review: Omit<Review, 'created_at'>) {
   const queryClient = useQueryClient()
   const toast = useToast()
   const { user } = useAuth()

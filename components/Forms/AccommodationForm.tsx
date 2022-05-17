@@ -83,8 +83,6 @@ export function AccommodationForm({ accommodation }: AccommodationFormProps) {
 
   const [longitude, latitude] = location
 
-  console.log('errors', errors, images)
-
   return (
     <Grid as="form" onSubmit={onSubmit} templateColumns="repeat(4, 1fr)" gap={6} p={8}>
       <FormControl gridColumn={['span 4 / span 4', 'span 2 / span 2']} isInvalid={Boolean(errors.name)} isRequired>
@@ -92,7 +90,7 @@ export function AccommodationForm({ accommodation }: AccommodationFormProps) {
           Business name
         </FormLabel>
         <Input id="name" type="text" {...register('name')} />
-        <FormHelperError error={errors.name}>Minimum 3 characters.</FormHelperError>
+        <FormHelperError error={errors.name}>{errors.name?.message}</FormHelperError>
       </FormControl>
 
       <FormControl gridColumn={['span 4 / span 4', 'span 1 / span 1']} isInvalid={Boolean(errors.rooms)} isRequired>

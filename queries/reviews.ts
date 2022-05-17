@@ -49,7 +49,7 @@ export const getReviews = async (accommodationId: number) => {
   return data
 }
 
-export const createReview = async (obj: Review) => {
+export const createReview = async (obj: Omit<Review, 'created_at'>) => {
   const { data, error } = await supabase.from<Review>(TABLE).insert(obj).single()
 
   if (error) {
