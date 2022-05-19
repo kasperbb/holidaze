@@ -31,6 +31,7 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
 
   const imageStyles = {
     maxHeight: { base: '200px', lg: '125px' },
+    height: { base: '200px', lg: '125px' },
   }
 
   if (shouldShowActionsButton) {
@@ -65,7 +66,14 @@ export function HorizontalAccommodationCard({ id, name, images, price, rating, u
   return (
     <NextLink href={`/accommodations/${id}`} passHref>
       <Link borderRadius="2xl" width="full" mb={4}>
-        <Card key={id} variant="horizontal" imageSrc={images ? images[0].url : '/placeholder.png'} imageAlt="Holidaze" contentProps={cardStyles}>
+        <Card
+          key={id}
+          variant="horizontal"
+          imageSrc={images ? images[0].url : '/placeholder.png'}
+          imageAlt="Holidaze"
+          contentProps={cardStyles}
+          imageProps={imageStyles}
+        >
           <Flex direction="column" gap={4}>
             <Heading as="h3" fontSize="25px" fontWeight="semibold">
               {name}

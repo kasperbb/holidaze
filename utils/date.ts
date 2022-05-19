@@ -20,9 +20,9 @@ export function includesSameDay(a: Date[] | undefined, b: Date[] | undefined) {
   return a?.some(dateOne => b?.some(dateTwo => isSameDay(dateOne, dateTwo))) ?? false
 }
 
-export function getWeekArray() {
+export function getDatesArray(days = 14) {
   const today = new Date()
-  return Array.from({ length: 7 })
+  return Array.from({ length: days })
     .map((_, index) => {
       return new Date(today.getFullYear(), today.getMonth(), today.getDate() - index)
     })

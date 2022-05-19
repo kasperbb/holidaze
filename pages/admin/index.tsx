@@ -1,6 +1,33 @@
-import { Container, Flex, Grid, Heading, Image, Link, Progress, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Container,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Image,
+  Link,
+  Progress,
+  Spinner,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  UseRadioGroupProps,
+  UseRadioProps,
+  useRadio,
+  useRadioGroup,
+} from '@chakra-ui/react'
 import { FiBookOpen, FiMessageSquare, FiStar } from 'react-icons/fi'
-import { getWeekArray, isSameDay } from '@utils/date'
+import { getDatesArray, isSameDay } from '@utils/date'
+import { getLineChartOptions, lineChartOptions } from '@constants/charts'
+import { useCallback, useState } from 'react'
 
 import { Card } from '@components/Cards/Card'
 import Head from 'next/head'
@@ -10,13 +37,12 @@ import NextLink from 'next/link'
 import { StarRating } from '@components/StarRating'
 import dynamic from 'next/dynamic'
 import { enforceAdmin } from '@utils/enforceAuth'
+import { formatDate } from '@utils/formatDate'
 import { getAccommodations } from '@queries/accommodations'
 import { getAllReviews } from '@queries/reviews'
 import { getBookings } from '@queries/bookings'
 import { getMessages } from '@queries/messages'
-import { lineChartOptions } from '@constants/charts'
 import { routes } from '@constants/routes'
-import { useCallback } from 'react'
 import { useQuery } from 'react-query'
 
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false })
@@ -29,27 +55,31 @@ export default function AdminHome() {
   const { data: reviews } = useQuery(['reviews'], () => getAllReviews())
   const { data: messages } = useQuery(['messages'], () => getMessages())
 
+  const [chartDays, setChartDays] = useState(14)
+
   const getChartData = useCallback(
     () => [
       {
         name: 'Accommodations',
-        data: getCountForWeek(accommodations),
+        data: getCountForDates(accommodations, chartDays),
       },
       {
         name: 'Bookings',
-        data: getCountForWeek(bookings),
+        data: getCountForDates(bookings, chartDays),
       },
       {
         name: 'Messages',
-        data: getCountForWeek(messages),
+        data: getCountForDates(messages, chartDays),
       },
       {
         name: 'Reviews',
-        data: getCountForWeek(reviews),
+        data: getCountForDates(reviews, chartDays),
       },
     ],
-    [accommodations, bookings, messages, reviews]
+    [accommodations, bookings, chartDays, messages, reviews]
   )
+
+  const getChartOptions = useCallback(() => getLineChartOptions(chartDays), [chartDays])
 
   return (
     <>
@@ -71,94 +101,115 @@ export default function AdminHome() {
         </Card>
 
         <Card width="full" mb={8}>
-          <Heading as="h2" fontSize="3xl" mb={4}>
-            Timeline
-          </Heading>
-          <ApexChart options={lineChartOptions} series={getChartData()} type="area" width="100%" height="100%" />
+          <Flex direction={{ base: 'column', lg: 'row' }} justify="space-between" gap={4} mb={4}>
+            <Heading as="h2" fontSize="3xl">
+              Timeline
+            </Heading>
+
+            <ChartNavigation value={chartDays} defaultValue={14} onChange={val => setChartDays(Number(val))} />
+          </Flex>
+
+          <ApexChart options={getChartOptions()} series={getChartData()} type="area" width="100%" height="100%" />
         </Card>
 
-        <Grid templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(2, 1fr)' }} width="full" gap={8}>
-          <Card width="full">
-            <Heading as="h2" fontSize="3xl" mb={4}>
-              Bookings
-            </Heading>
+        <Grid templateColumns={{ base: 'repeat(1, 1fr)', xl: 'repeat(5, 1fr)' }} width="full" gap={8}>
+          <GridItem width="full" colSpan={3}>
+            <Card as="div" width="full">
+              <Heading as="h2" fontSize="3xl" mb={4}>
+                Bookings
+              </Heading>
 
-            <Table variant="simple" size="sm">
-              <Thead>
-                <Tr>
-                  <Th>User</Th>
-                  <Th>Dates</Th>
-                  <Th>Accommodation</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {bookings?.slice(0, 10).map(({ id, from, to, accommodation, user }) => (
-                  <Tr key={id}>
-                    <Td display="flex" alignItems="center" gap={2}>
-                      <Image src="user_placeholder.jpg" alt="" width={6} height={6} borderRadius="full" />
-                      {user?.email}
-                    </Td>
-                    <Td title={`${Intl.DateTimeFormat('default').format(new Date(from))} - ${Intl.DateTimeFormat('default').format(new Date(to))}`}>
-                      {Intl.DateTimeFormat('default').format(new Date(from))} - {Intl.DateTimeFormat('default').format(new Date(to))}
-                    </Td>
-                    <Td display="flex" alignItems="center" gap={2}>
-                      <Image src={accommodation?.images[0].url ?? '/placeholder.png'} alt="" width={6} height={6} borderRadius="full" />
-                      {accommodation?.name}
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-
-            {bookingsLoading && (
-              <Flex width="full" justify="center" mt={8}>
-                <Spinner />
-              </Flex>
-            )}
-          </Card>
-
-          <Card width="full">
-            <Heading as="h2" fontSize="3xl" mb={4}>
-              Top Accommodations
-            </Heading>
-
-            <Table variant="simple" size="sm">
-              <Thead>
-                <Tr>
-                  <Th>Name</Th>
-                  <Th>Average Rating</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {accommodations
-                  ?.sort((a, b) => Number(b.rating) - Number(a.rating))
-                  .slice(0, 10)
-                  .map(({ id, name, rating, images }) => (
-                    <Tr key={id} _hover={{ bg: 'gray.50' }}>
-                      <Td>
-                        <NextLink href={`${routes.accommodations.base}/${id}`} passHref>
-                          <Link display="flex" alignItems="center" gap={2}>
-                            <Image src={images[0].url} alt="" width={6} height={6} borderRadius="full" />
-                            <Text color="text.primary" width="140px" isTruncated>
-                              {name}
-                            </Text>
-                          </Link>
-                        </NextLink>
-                      </Td>
-                      <Td>
-                        <StarRating rating={rating} />
-                      </Td>
+              <TableContainer>
+                <Table variant="simple" size="sm">
+                  <Thead>
+                    <Tr>
+                      <Th>User</Th>
+                      <Th>Dates</Th>
+                      <Th>Accommodation</Th>
                     </Tr>
-                  ))}
-              </Tbody>
-            </Table>
+                  </Thead>
+                  <Tbody>
+                    {bookings?.slice(0, 10).map(({ id, from, to, accommodation, user }) => (
+                      <Tr key={id} _hover={{ bg: 'gray.50' }}>
+                        <Td display="flex" alignItems="center" gap={2}>
+                          <NextLink href={`mailto:${user?.email}`} passHref>
+                            <Link display="flex" alignItems="center" gap={2}>
+                              <Image src="user_placeholder.jpg" alt="" width={6} height={6} borderRadius="full" />
+                              {user?.email}
+                            </Link>
+                          </NextLink>
+                        </Td>
+                        <Td>
+                          {formatDate(from, { weekday: undefined, year: undefined })} - {formatDate(to, { weekday: undefined, year: undefined })}
+                        </Td>
+                        <Td display="flex" alignItems="center" gap={2}>
+                          <NextLink href={`${routes.accommodations.base}/${id}`} passHref>
+                            <Link display="flex" alignItems="center" gap={2}>
+                              <Image src={accommodation?.images[0].url ?? '/placeholder.png'} alt="" width={6} height={6} borderRadius="full" />
+                              {accommodation?.name}
+                            </Link>
+                          </NextLink>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
 
-            {accommodationsLoading && (
-              <Flex width="full" justify="center" mt={8}>
-                <Spinner />
-              </Flex>
-            )}
-          </Card>
+              {bookingsLoading && (
+                <Flex width="full" justify="center" mt={8}>
+                  <Spinner />
+                </Flex>
+              )}
+            </Card>
+          </GridItem>
+
+          <GridItem width="full" colSpan={{ base: 3, xl: 2 }}>
+            <Card as="div" width="full">
+              <Heading as="h2" fontSize="3xl" mb={4}>
+                Top Accommodations
+              </Heading>
+
+              <TableContainer>
+                <Table variant="simple" size="sm">
+                  <Thead>
+                    <Tr>
+                      <Th>Name</Th>
+                      <Th>Average Rating</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {accommodations
+                      ?.sort((a, b) => Number(b.rating) - Number(a.rating))
+                      .slice(0, 10)
+                      .map(({ id, name, rating, images }) => (
+                        <Tr key={id} _hover={{ bg: 'gray.50' }}>
+                          <Td>
+                            <NextLink href={`${routes.accommodations.base}/${id}`} passHref>
+                              <Link display="flex" alignItems="center" gap={2}>
+                                <Image src={images[0].url} alt="" width={6} height={6} borderRadius="full" />
+                                <Text color="text.primary" width="140px" isTruncated>
+                                  {name}
+                                </Text>
+                              </Link>
+                            </NextLink>
+                          </Td>
+                          <Td>
+                            <StarRating rating={rating} />
+                          </Td>
+                        </Tr>
+                      ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+
+              {accommodationsLoading && (
+                <Flex width="full" justify="center" mt={8}>
+                  <Spinner />
+                </Flex>
+              )}
+            </Card>
+          </GridItem>
         </Grid>
       </Container>
     </>
@@ -171,7 +222,7 @@ interface StatItemProps {
   number: number
 }
 
-export function StatItem({ icon, title, number }: StatItemProps) {
+function StatItem({ icon, title, number }: StatItemProps) {
   const Icon = icon
   return (
     <Flex direction="column">
@@ -191,8 +242,86 @@ export function StatItem({ icon, title, number }: StatItemProps) {
   )
 }
 
-function getCountForWeek<T extends { created_at?: string }>(items: T[] | undefined) {
-  const week = getWeekArray()
+function ChartNavigation({ name, defaultValue, value, onChange }: UseRadioGroupProps) {
+  const options = [
+    { label: 'This week', value: 7 },
+    { label: 'Past 2 weeks', value: 14 },
+    { label: 'Past month', value: 30 },
+    { label: 'Past year', value: 365 },
+  ]
 
-  return week.map(day => items?.filter(item => isSameDay(day, new Date(item.created_at!))).length ?? 0)
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name,
+    defaultValue,
+    value,
+    onChange,
+  })
+
+  const group = getRootProps()
+
+  return (
+    <ButtonGroup size="sm" isAttached variant="outline" {...group}>
+      {options.map(({ label, value }, index) => (
+        <RadioButton key={value} index={index} length={options.length} {...getRadioProps({ value })}>
+          {label}
+        </RadioButton>
+      ))}
+    </ButtonGroup>
+  )
+}
+
+function RadioButton({ children, index, length, ...rest }: UseRadioProps & { children: React.ReactNode; index: number; length: number }) {
+  const { getInputProps, getCheckboxProps } = useRadio(rest)
+
+  const input = getInputProps()
+  const checkbox = getCheckboxProps()
+
+  let borderStyles
+
+  if (index === 0) {
+    borderStyles = {
+      borderRightRadius: 0,
+    }
+  }
+
+  if (index > 0 && index < length - 1) {
+    borderStyles = {
+      borderLeftRadius: 0,
+      borderRightRadius: 0,
+    }
+  }
+
+  if (index === length - 1) {
+    borderStyles = {
+      borderLeftRadius: 0,
+    }
+  }
+
+  return (
+    <Box as="label">
+      <input {...input} />
+      <Button
+        {...checkbox}
+        {...borderStyles}
+        as="div"
+        cursor="pointer"
+        _checked={{
+          bg: 'blue.500',
+          color: 'white',
+          borderColor: 'blue.600',
+        }}
+        _focus={{
+          boxShadow: 'outline',
+        }}
+      >
+        {children}
+      </Button>
+    </Box>
+  )
+}
+
+function getCountForDates<T extends { created_at?: string }>(items: T[] | undefined, days = 14) {
+  const dates = getDatesArray(days)
+
+  return dates.map(day => items?.filter(item => isSameDay(day, new Date(item.created_at!))).length ?? 0)
 }

@@ -53,8 +53,8 @@ export const Navigation = () => {
   const { mutate: signOut } = useSignOut()
 
   return (
-    <Box as="nav" position="fixed" width="full" bg="white" borderBottomRadius="lg" boxShadow={useColorModeValue('sm', 'sm-dark')} zIndex={99} px={6}>
-      <HStack spacing="10" justify="space-between" fontFamily="jost">
+    <Box as="nav" position="fixed" width="full" minH={16} bg="white" borderBottomRadius="lg" boxShadow={useColorModeValue('sm', 'sm-dark')} zIndex={99} px={6}>
+      <HStack minH={16} spacing="10" justify="space-between" align="center" fontFamily="jost">
         <Box px={4} py={3}>
           <NextLink href={routes.base} passHref>
             <Link>
@@ -127,6 +127,14 @@ export const Navigation = () => {
                         </Button>
                       </NextLink>
                     ))}
+
+                    {user && (
+                      <NextLink href={user.role === 'admin' ? routes.admin.base : routes.admin.accommodations.my} passHref>
+                        <Button as="a" variant="ghost" onClick={onClose}>
+                          {user.role === 'admin' ? 'Admin' : 'My Account'}
+                        </Button>
+                      </NextLink>
+                    )}
                   </Stack>
                 </DrawerBody>
 

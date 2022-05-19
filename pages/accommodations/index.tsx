@@ -7,7 +7,6 @@ import {
   FormLabel,
   Grid,
   GridItem,
-  HStack,
   Heading,
   Input,
   InputGroup,
@@ -121,7 +120,15 @@ export default function Accommodations() {
       <Container as="form" py={[20, 40]} onSubmit={handleSubmit(onSubmit)}>
         <Card
           variant="horizontal"
-          contentProps={{ width: 'full', display: 'flex', flexDirection: { base: 'column', md: 'row' }, alignItems: 'center', justifyContent: 'space-between' }}
+          as="div"
+          contentProps={{
+            width: 'full',
+            display: 'flex',
+            flexDirection: { base: 'column', md: 'row' },
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 4,
+          }}
           px={6}
         >
           <Heading as="h1" fontSize={['lg', 'xl', '2xl']} fontWeight="medium" textAlign="center">

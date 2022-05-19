@@ -1,7 +1,7 @@
 import { formatDate } from '@utils/formatDate'
-import { getWeekArray } from '@utils/date'
+import { getDatesArray } from '@utils/date'
 
-export const lineChartOptions = {
+export const getLineChartOptions = (days = 14) => ({
   chart: {
     toolbar: {
       show: false,
@@ -18,7 +18,7 @@ export const lineChartOptions = {
   },
   xaxis: {
     type: 'category' as const,
-    categories: getWeekArray().map(date => formatDate(date, { weekday: undefined })),
+    categories: getDatesArray(days).map(date => formatDate(date, { weekday: undefined })),
     labels: {
       style: {
         colors: '#c8cfca',
@@ -55,4 +55,4 @@ export const lineChartOptions = {
     colors: ['#2650D9', '#4FD1C5', '#2D3748', '#E69319'],
   },
   colors: ['#2650D9', '#4FD1C5', '#2D3748', '#E69319'],
-}
+})
