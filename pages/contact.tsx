@@ -7,6 +7,7 @@ import { FormHelperError } from '@components/Forms/FormHelperError'
 import Head from 'next/head'
 import { Message } from '@interfaces/messages'
 import { useCreateMessage } from '@hooks/messages/useCreateMessage'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -21,14 +22,19 @@ export default function Contact() {
     register,
     watch,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<Message>({ resolver: yupResolver(formSchema) })
 
-  const { mutate, isLoading } = useCreateMessage({ ...watch() })
+  const { mutate, isLoading, isSuccess } = useCreateMessage({ ...watch() })
 
   const onSubmit = handleSubmit(() => {
     mutate()
   })
+
+  useEffect(() => {
+    if (isSuccess) reset()
+  }, [isSuccess, reset])
 
   return (
     <>
