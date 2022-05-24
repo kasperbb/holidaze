@@ -26,7 +26,7 @@ import {
 } from '@chakra-ui/react'
 import { FiBookOpen, FiMessageSquare, FiStar } from 'react-icons/fi'
 import { getDatesArray, isSameDay } from '@utils/date'
-import { getLineChartOptions, lineChartOptions } from '@constants/charts'
+import { getLineChartOptions } from '@constants/charts'
 import { useCallback, useState } from 'react'
 
 import { Card } from '@components/Cards/Card'
