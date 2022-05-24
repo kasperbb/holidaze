@@ -34,6 +34,7 @@ export interface AccommodationFilter {
   priceRange: [number, number]
   rating: number
   sortBy: string
+  page: number
 }
 
 export interface Image {

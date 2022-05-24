@@ -16,19 +16,21 @@ import {
 import { FiChevronDown, FiChevronUp, FiSearch } from 'react-icons/fi'
 import { HorizontalAccommodationCard, HorizontalAccommodationCardSkeleton } from '@components/Cards/HorizontalAccommodationCard'
 import { QueryClient, dehydrate } from 'react-query'
+import { filterAccommodations, getAccommodationsCount } from '@queries/accommodations'
 import { useEffect, useState } from 'react'
 
 import { Card } from '@components/Cards/Card'
 import { ControlledDatePicker } from '@components/DatePicker'
+import { DEFAULT_PAGE_SIZE } from '@utils/pagination'
 import { EmptyResults } from '@components/EmptyResults'
 import { Filter } from '@interfaces/filter'
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
+import { Pagination } from '@components/Forms/Inputs/Pagination'
 import { ParsedUrlQuery } from 'querystring'
 import { PriceRangeInput } from '@components/Forms/Inputs/PriceRangeInput'
 import { SortByInput } from '@components/Forms/Inputs/SortByInput'
 import { StarRatingInput } from '@components/Forms/Inputs/StarRatingInput'
-import { filterAccommodations } from '@queries/accommodations'
 import { useFilterAccommodations } from '@hooks/accommodations/useFilterAccommodations'
 import { useForm } from 'react-hook-form'
 import { useIsDesktop } from '@hooks/useIsDesktop'
@@ -40,17 +42,19 @@ const initialFilter: Filter.State = {
   priceRange: [0, 500],
   rating: 0,
   sortBy: 'created_at-desc',
+  page: 1,
 }
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const queryClient = new QueryClient()
 
-  const initialDateRange = getInitialDateRange(ctx.query)
+  const initialDateRange = getInitialDateRange(query)
 
   const filter = {
     ...initialFilter,
     dateRange: initialDateRange,
-    search: typeof ctx.query.search === 'string' ? ctx.query.search : '',
+    search: typeof query.search === 'string' ? query.search : '',
+    page: typeof query.page === 'string' ? Number(query.page) : 1,
   }
 
   const key = {
@@ -60,9 +64,12 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 
   await queryClient.prefetchQuery(['accommodationsFilter', key], () => filterAccommodations(filter))
 
+  const count = await getAccommodationsCount()
+
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
+      maxPage: count ? Math.ceil(count / DEFAULT_PAGE_SIZE) : 1,
     },
   }
 }
@@ -78,15 +85,18 @@ function getInitialDateRange(query: ParsedUrlQuery): [from: Date | undefined, to
   return [undefined, undefined]
 }
 
-export default function Accommodations() {
+export default function Accommodations({ maxPage }: { maxPage: number }) {
   const { query } = useRouter()
   const isDesktop = useIsDesktop()
   const { isOpen, onToggle } = useDisclosure()
+
+  const [page, setPage] = useState<number>(Number(query.page) ?? 1)
 
   const [filter, setFilter] = useState<Filter.State>({
     ...initialFilter,
     dateRange: getInitialDateRange(query),
     search: typeof query.search === 'string' ? query.search : '',
+    page: page,
   })
 
   const { register, handleSubmit, reset, setValue, watch, control } = useForm<Filter.State>({
@@ -97,7 +107,11 @@ export default function Accommodations() {
     if (query.search) {
       setValue('search', typeof query.search === 'string' ? query.search : '')
     }
-  }, [query.search, setValue])
+
+    if (query.page) {
+      setValue('page', typeof query.page === 'string' ? Number(query.page) : 1)
+    }
+  }, [query, setValue])
 
   const { data, isLoading, isFetching } = useFilterAccommodations(filter)
 
@@ -106,6 +120,10 @@ export default function Accommodations() {
   useEffect(() => {
     setFilter(prev => ({ ...prev, sortBy: sortValue }))
   }, [sortValue])
+
+  useEffect(() => {
+    setFilter(prev => ({ ...prev, page: page }))
+  }, [page])
 
   const onSubmit = (data: Filter.State) => {
     setFilter(data)
@@ -214,6 +232,8 @@ export default function Accommodations() {
               : data?.map(item => <HorizontalAccommodationCard key={item.id} {...item} />)}
 
             <EmptyResults data={data}>No accommodations found</EmptyResults>
+
+            <Pagination totalPages={maxPage} currentPage={page} setPage={setPage} />
           </GridItem>
         </Grid>
       </Container>
