@@ -2,7 +2,6 @@ import { Accommodation, AccommodationFilter, AddAccommodation } from '@interface
 import { addAverageRatingToAccommodation, addAverageRatingToAccommodations } from '@utils/accommodations'
 import { dateRange, includesSameDay } from '@utils/date'
 
-import { getPagination } from '@utils/pagination'
 import { getSortObject } from '@utils/common'
 import { supabase } from '@lib/supabase'
 import { uploadImages } from './upload'
@@ -164,10 +163,8 @@ export const searchAccommodations = async (query: string) => {
   }))
 }
 
-export const filterAccommodations = async ({ search, dateRange, priceRange, rating, sortBy, page }: AccommodationFilter) => {
-  const { from, to } = getPagination(page)
-  console.log('page', page)
-  let query = supabase.from<Accommodation>(TABLE).select(QUERY).range(from, to)
+export const filterAccommodations = async ({ search, dateRange, priceRange, rating, sortBy }: AccommodationFilter) => {
+  let query = supabase.from<Accommodation>(TABLE).select(QUERY)
 
   if (search) query = query.textSearch('name', search, { type: 'websearch' })
   if (priceRange && priceRange.length) query = query.gte('price', priceRange[0]).lte('price', priceRange[1])
