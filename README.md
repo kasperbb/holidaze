@@ -1,4 +1,4 @@
-# Athes
+# Holidaze
 
 ![image](https://i.imgur.com/UYMymSO.png)
 
